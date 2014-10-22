@@ -21,10 +21,13 @@ body
 
 // Make a sticky footer out of .banner-pic on flexbox-supporting browsers.
 body
+  display: -webkit-flex
   display: flex
+  -webkit-flex-direction: column
   flex-direction: column
   min-height: 100vh
 .blurb
+  -webkit-flex: 1
   flex: 1
 
 .blurb
