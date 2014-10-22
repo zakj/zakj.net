@@ -1,0 +1,42 @@
+---
+# Empty frontmatter tells Jekyll to process this file. Partials go in _sass.
+---
+@import normalize
+@import min-width
+@import underline
+
+$text-color: #222
+$bg-color: #fff
+$font-stack: Helvetica Neue, Helvetica, sans-serif
+
+
+body
+  background: $bg-color
+  color: $text-color
+  font: 1em/1.5 $font-stack
+  +min-width(375px)
+    font-size: 1.1em
+  +min-width(750px)
+    font-size: 1.25em
+
+// Make a sticky footer out of .banner-pic on flexbox-supporting browsers.
+body
+  display: flex
+  flex-direction: column
+  min-height: 100vh
+.blurb
+  flex: 1
+
+.blurb
+  margin: 0 auto
+  max-width: 25em
+  padding: 2.5em
+
+.banner-pic
+  display: block
+  width: 100%
+
+a
+  color: $text-color
+  text-decoration: none
+  +underline(rgba($text-color, .3), $bg-color, 1px, 0px, $text-color)

@@ -1,0 +1,28 @@
+// Provide an underline style that can have a custom color applied, while
+// appearing behind any text descenders.
+//
+// Based on work by Gary Hepting: http://codepen.io/ghepting/pen/tLnHK/
+
+=underline($color, $bg-color, $size, $offset, $hover-color)
+  $end: $offset + $size
+  background-image: linear-gradient(to top, transparent, transparent $offset, $color $offset, $color $end, transparent $end)
+  text-shadow: 0 1px 0 $bg-color, -1px 1px 0 $bg-color, 1px 1px 0 $bg-color
+  &:hover
+    background-image: linear-gradient(to top, transparent, transparent $offset, $hover-color $offset, $hover-color $end, transparent $end)
+
+
+//
+  a.custom
+    text-decoration: none
+    position: relative
+    @if $breaking-underlines
+      text-shadow: -1px -1px 0 $background-color, 1px -1px 0 $background-color, -1px 1px 0 $background-color, 1px 1px 0 $background-color
+    +underline($link-color)
+    @media (-webkit-min-device-pixel-ratio: 1.5), (min-resolution: 144dpi)
+      +underline($link-color, 0.5)
+    &:hover, &:focus
+      +underline($link-color-active)
+      @media (-webkit-min-device-pixel-ratio: 1.5), (min-resolution: 144dpi)
+        +underline($link-color-active, 0.5)
+
+
