@@ -8,4 +8,4 @@ defaults:
     values:
       layout: base
 
-exclude: ['Gemfile', 'Gemfile.lock']
+exclude: ['Gemfile', 'Gemfile.lock', 'CNAME']
