@@ -11,4 +11,4 @@ defaults:
     values:
       layout: base
 
-exclude: ['Gemfile', 'Gemfile.lock', 'CNAME']
+exclude: ['Gemfile', 'Gemfile.lock', 'CNAME', 'vendor', 'bin']
