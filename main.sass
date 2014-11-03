@@ -6,7 +6,7 @@
 @import vars
 @import hide-text
 @import icons
-@import min-width
+@import breakpoint
 @import underline
 
 
@@ -14,9 +14,9 @@ body
   background: $bg-color
   color: $text-color
   font: 1em/1.5 $font-stack
-  +min-width(375px)
+  +breakpoint(375px)
     font-size: 1.1em
-  +min-width(750px)
+  +breakpoint(750px)
     font-size: 1.25em
 
 // Make a sticky footer out of .banner-pic on flexbox-supporting browsers.
