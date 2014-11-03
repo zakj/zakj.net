@@ -1,20 +1,31 @@
 $icon-size: 26px
 
 .icon
+  +hide-text
   background-color: $text-color
   background-position: center center
   background-repeat: no-repeat
   background-size: $icon-size $icon-size
-  border-radius: 26px
+  border-radius: $icon-size
   display: inline-block
   height: $icon-size
   width: $icon-size
 
+  position: relative
+  &:hover:after
+    background-image: linear-gradient(to bottom, rgba(255, 255, 255, .2), transparent)
+    content: ""
+    display: block
+    height: 60%
+    left: 0
+    position: absolute
+    right: 0
+    top: 0
+
 =icon($name)
   .#{$name}
-    +hide-text
     background-image: url('/img/' + $name + '.png')
-    @media only screen and (-webkit-min-device-pixel-ratio: 1.3)
+    +retina
       background-image: url('/img/' + $name + '@2x.png')
 
 +icon(email)
