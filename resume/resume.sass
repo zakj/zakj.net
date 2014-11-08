@@ -1,0 +1,126 @@
+---
+---
+
+$highlight: #930
+$h1-pt: 24pt
+$h2-pt: 7pt
+$h3-pt: 10pt
+$body-pt: 9pt
+$line-height: 13pt
+$header-line-thickness: 5pt
+$header-top-margin: 1.1em
+$header-space: 11em
+
+*
+  box-sizing: border-box
+body
+  background: #ccc
+  font: #{$body-pt}/#{$line-height} Proxima Nova, sans-serif
+  margin: 0
+  padding: 5em 1em
+.paper
+  background: white
+  box-shadow: 0 2px 5px rgba(0, 0, 0, .3)
+  height: 11in
+  margin: 0 auto
+  outline: 1px solid #aaa
+  width: 8.5in
+  padding: 0 .5in
+
+.paper
+  display: -webkit-flex
+  display: flex
+  -webkit-flex-direction: row-reverse
+  flex-direction: row-reverse
+aside
+  border-top: $header-line-thickness solid black
+  -webkit-flex: 1
+  flex: 1
+  margin-left: 2em
+  padding-top: $header-space
+  position: relative
+article
+  border-top: $header-line-thickness solid transparent
+  -webkit-flex: 3
+  flex: 3
+  padding-top: $header-space
+
+
+h1
+  font-family: YWFT Ultramagnetic Light, sans-serif
+  font-size: $h1-pt
+  font-weight: normal
+  line-height: 1em
+  margin-top: $header-top-margin
+  position: absolute
+  text-transform: uppercase
+  top: 0
+  white-space: nowrap
+
+aside ul
+  list-style: none
+  margin: 0
+  padding: 0
+aside a
+  background-image: none !important
+aside h2:not(:first-of-type)
+  margin-top: 2em
+
+h2
+  color: $highlight
+  font-size: $h2-pt
+  font-weight: normal
+  line-height: 1em
+  margin: 0
+  margin-bottom: .5em
+  text-transform: uppercase
+
+.date
+  font: italic $body-pt Minion Pro, Georgia, serif
+  margin-left: .5em
+
+.exp hr
+  background: black
+  border: none
+  border-top: .8pt solid black
+  margin: 0
+  margin-left: -.5in
+
+.exp
+  display: -webkit-flex
+  display: flex
+.exp__left
+  margin-right: 1em
+  text-align: right
+  -webkit-flex: 1
+  flex: 1
+.exp__right
+  -webkit-flex: 4
+  flex: 4
+.exp__company, .exp__title
+  font-size: $h3-pt
+  font-weight: bold
+  margin: 0
+.exp__location
+  text-transform: uppercase
+  font-size: $h2-pt
+.exp__date
+  @extend .date
+.exp__description > p
+  margin-top: 0
+
+
+@media print
+  @page
+    margin: 0
+  body
+    box-shadow: none
+    padding: 0
+  .paper
+    box-shadow: none
+    height: auto
+    outline: none
+    width: auto
+
+  h1
+    font-size: $h1-pt - 2

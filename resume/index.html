@@ -1,0 +1,159 @@
+---
+layout: base
+title: Résumé
+
+experience:
+  - company: Cabin
+    location: Los Angeles<br>Portland
+    title: Co-Founder &amp; Technical Director
+    from: April 2011
+    to: present
+    description: >
+      Yadda yadda yadda
+  - company: GOOD
+    location: Los Angeles
+    title: Senior Software Engineer
+    from: January 2011
+    to: March 2011
+    description: >
+      In the midst of a variety of consulting gigs with GOOD, I converted
+      briefly to a full-time employee to lead the charge cleaning up their web
+      stack. I tracked down and fixed various bugs in the old (PHP-based) back
+      end while working closely with designers and editors to implement new
+      features. I also kicked off a migration to Ruby on Rails 3
+      service-oriented architecture on the back end and Backbone on the front
+      end, with a successful staged rollout and features running in parallel on
+      both old and new stacks.
+      XXX A/B testing
+  - company: Freelance
+    location: Los Angeles<br>San Francisco
+    title: Technologist
+    from: January 2009
+    to: April 2011
+    description: >
+      Maintained a large media site. Designed and built a custom CMS. Designed
+      and built a web application targeted at educational institutions.
+      Designed and built a custom suite of human resources, project management,
+      and equipment tracking tools integrated with OpenDirectory
+      authentication. Built and maintained various web applications including
+      integration with Facebook, Twitter, and Google Maps.
+  - company: Etsy
+    location: San Francisco
+    title: Senior Software Engineer
+    from: August 2007
+    to: January 2009
+    description: >
+      Our team architected and built a new Python web application server for
+      Etsy's marketplace that drastically simplified the existing codebase
+      while also decreasing page-load times. I was also on a small team
+      responsible for architecting, building, and deploying the "Storque"—a CMS
+      application seamlessly integrated with the marketplace. The Storque
+      became an essential driver of traffic and engagement... though it's now
+      just called the Etsy Blog.
+  - company: Securify
+    location: Cupertino
+    title: Technical Lead Engineer
+    from: April 2004
+    to: August 2007
+    description: |
+      At Securify, I led a team responding to industry security
+      incidents—assessing potential customer impact and providing guidance or
+      intrusion-detection signature coverage as appropriate. To enable timely
+      and accurate responses, I designed and built a web application linking
+      software vulnerabilities to corresponding signatures and automated
+      detection scripts.
+
+      It was also my duty to plan and execute signature and
+      vulnerability-detection coverage for Securify's software suite, and to
+      use my comprehensive knowledge of common network protocols to identify
+      invalid traffic on customer networks and tailor network-traffic policies.
+
+      I'm proud to have headed up very successful internal transitions from CVS
+      to SVN (git/hg proved too much of a conceptual leap); a 90s-era version
+      of Bugtraq to a contemporary one; and scattered documentation to a
+      well-organized wiki.
+
+
+
+---
+
+<link href="http://madebycabin.com/static/fonts/proxima-nova.css" rel="stylesheet">
+<link href="http://madebycabin.com/static/fonts/ywft-ultramagnetic-light.css" rel="stylesheet">
+<link href="resume.css" rel="stylesheet">
+
+<div class="paper">
+  <aside>
+    <h1 style="font-family: YWFT Ultramagnetic Light">Zak Johnson</h1>
+
+    <h2>Code samples & public work</h2>
+    <ul>
+      <li><a href="http://madebycabin.com/" target="_blank">madebycabin.com</a>
+      <li><a href="https://github.com/cabin" target="_blank">github.com/cabin</a>
+      <li><a href="https://github.com/zakj" target="_blank">github.com/zakj</a>
+    </ul>
+
+    <h2>Expertise</h2>
+    Python, JavaScript, HTML/CSS, SASS/Compass, jQuery, Django, SQL, MongoDB,
+    Redis, PostgreSQL, MySQL, Vim, git, hg, regular expressions, application
+    and network security
+
+    <h2>Working knowledge</h2>
+    Ruby, Rails, PHP, SQLAlchemy, CherryPy, South, C, Perl, svn, cvs, LaTeX
+
+    <h2>Interests</h2>
+    Technology, collaboration, grammatical perfection, coffee, climbing,
+    camping, expressed curiosity, two notable felines, dive bars, and
+    lists.
+    XXX update this
+
+    <h2>Certifications</h2>
+    <ul>
+      <li>CISSP #71558 <span class="date">2005&ndash;2008</span></li>
+      <li>Cisco CCNA<span class="date">2000&ndash;2003</span></li>
+    </ul>
+
+    <h2>Contact</h2>
+    <ul>
+      <li><a href="mailto:zak@madebycabin.com">zak@madebycabin.com</a>
+      <li><a href="tel:4154122546">415-412-2546</a>
+    </ul>
+
+    <a href="https://www.google.com/maps?hl=en&q=87+E+Green+St,+91105">
+      <br>87 E Green St, Suite 304
+      <br>Pasadena, CA 91105
+    </a>
+
+    <h2>More info</h2>
+    <a href="https://www.linkedin.com/in/zakjohnson">linkedin.com/in/zakjohnson</a>
+    <a href="http://zakj.net/resume/">zakj.net/resume</a>
+  </aside>
+
+  <article>
+    <div class="exp">
+      <div class="exp__left"><hr></div>
+      <div class="exp__right"><h2>Experience</h2></div>
+    </div>
+
+    {% for exp in page.experience %}
+    <div class="exp">
+      <div class="exp__left">
+        <div class="exp__company">{{ exp.company }}</div>
+        <div class="exp__location">{{ exp.location }}</div>
+      </div>
+      <div class="exp__right">
+        <h3 class="exp__title">
+          {{ exp.title }}
+          <span class="exp__date">{{ exp.from }}&ndash;{{ exp.to }}</span>
+        </h3>
+        <div class="exp__description">{{ exp.description|markdownify }}</div>
+      </div>
+    </div>
+    {% endfor %}
+
+  </article>
+</div>
+
+{% comment %}
+XXX
+vim:ft=liquid
+{% endcomment %}
