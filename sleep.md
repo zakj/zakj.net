@@ -1,7 +1,7 @@
 ---
 title: Sleep!
 layout: base
-permalink: /sleep
+permalink: /sleep/
 ---
 
 <div>
