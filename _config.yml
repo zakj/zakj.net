@@ -4,11 +4,20 @@ gems:
 sass:
   style: :compressed
 
+collections:
+  notes:
+    output: true
+    permalink: /notes/:path/
+
 defaults:
-  -
-    scope:
+  - scope:
       type: pages
     values:
-      layout: base
+      layout: page
+  - scope:
+      type: notes
+    values:
+      layout: page
+
 
 exclude: ['Gemfile', 'Gemfile.lock', 'CNAME', 'vendor', 'bin', 'resume']

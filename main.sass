@@ -21,14 +21,20 @@ body
   +breakpoint(750px)
     font-size: 1.25em
 
-// Make a sticky footer out of .banner-pic on flexbox-supporting browsers.
+// Show pretty underlined links.
+a:not(.icon)
+  color: $text-color
+  text-decoration: none
+  +underline(rgba($text-color, .3), $bg-color, 1px, 0px, $text-color)
+
+// Make a sticky footer out of anything outside of .main.
 body
   display: -webkit-flex
   display: flex
   -webkit-flex-direction: column
   flex-direction: column
   min-height: 100vh
-.blurb
+.main
   -webkit-flex: 1
   flex: 1
 
@@ -37,14 +43,14 @@ body
   max-width: 25em
   padding: 2.5em
 
+.page
+  margin: 0 auto
+  max-width: 35em
+  padding: 2.5em 1em
+
 .social
   margin: 1.5em 0
 
 .banner-pic
   display: block
   width: 100%
-
-a:not(.icon)
-  color: $text-color
-  text-decoration: none
-  +underline(rgba($text-color, .3), $bg-color, 1px, 0px, $text-color)
