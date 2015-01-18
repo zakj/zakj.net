@@ -10,8 +10,15 @@
   <meta name="viewport" content="initial-scale=1">
 
   <link href="/main.css" rel="stylesheet">
+  {% include mixpanel.html %}
 </head>
 <body>
 {{ content }}
+<script>
+  mixpanel.track('Page viewed', {
+    Title: document.title,
+    Path: window.location.pathname
+  });
+</script>
 </body>
 </html>
