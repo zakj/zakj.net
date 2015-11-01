@@ -1,3 +1,5 @@
+highlighter: pygments
+
 gems:
   - jekyll-sitemap
 
@@ -20,4 +22,4 @@ defaults:
       layout: page
 
 
-exclude: ['Gemfile', 'Gemfile.lock', 'CNAME', 'vendor', 'bin', 'resume']
+exclude: ['Gemfile', 'Gemfile.lock', 'CNAME', 'vendor', 'bin', 'resume', 'tmp']

@@ -2,6 +2,7 @@
 # Empty frontmatter tells Jekyll to process this file. Partials go in _sass.
 ---
 @import normalize
+@import syntax
 
 @import vars
 @import breakpoint
@@ -21,11 +22,16 @@ body
   +breakpoint(750px)
     font-size: 1.25em
 
+h1
+  font-family: $header-font-stack
+  text-transform: uppercase
+  font-weight: normal
+
 // Show pretty underlined links.
 a:not(.icon)
   color: $text-color
   text-decoration: none
-  +underline(rgba($text-color, .3), $bg-color, 1px, 0px, $text-color)
+  +underline(rgba($text-color, .3), $bg-color, 0.05em, 0.14em, $text-color)
 
 // Make a sticky footer out of anything outside of .main.
 body
