@@ -18,6 +18,10 @@ body
     font-size: 1.1em
   +breakpoint(750px)
     font-size: 1.25em
+  +breakpoint(800px)
+    background-image: url(/img/zak-cover.jpg)
+    background-position: center center
+    background-size: cover
 
 h1
   font-family: $header-font-stack
@@ -37,11 +41,23 @@ body
   min-height: 100vh
 .main
   flex: 1
+  +breakpoint(800px)
+    display: flex
+    flex-direction: column
+    justify-content: center
+    padding-bottom: 4%
+    padding-right: 20%
+  +breakpoint(1200px)
+    padding-right: 25%
 
 .blurb
   margin: 0 auto
   max-width: 25em
   padding: 2.5em
+  +breakpoint(800px)
+    background-color: #fff
+    box-shadow: 0 0 1px rgba(#000, .3)
+    max-width: 19em
 
 .page
   margin: 0 auto
@@ -54,3 +70,5 @@ body
 .banner-pic
   display: block
   width: 100%
+  +breakpoint(800px)
+    display: none
