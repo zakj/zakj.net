@@ -1,0 +1,15 @@
+{
+  "source": "src",
+  "destination": "public",
+  "plugins": {
+    "metalsmith-layouts": {
+      "engine": "jade",
+      "default": "default.jade"
+    },
+    "metalsmith-mapsite": {
+      "hostname": "http://zakj.net/",
+      "omitExtension": true,
+      "omitIndex": true
+    }
+  }
+}
