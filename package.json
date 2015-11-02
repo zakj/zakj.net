@@ -1,13 +1,26 @@
 {
   "private": true,
   "scripts": {
-    "start": "metalsmith && node-sass --output-style compressed sass/main.sass public/main.css"
+    "start": "npm run metalsmith && npm run webpack-dev-server",
+    "dist": "npm run metalsmith && npm run webpack && npm run surge",
+    "metalsmith": "metalsmith",
+    "surge": "surge public zakj.net",
+    "webpack": "webpack -p",
+    "webpack-dev-server": "webpack-dev-server --hot --inline --content-base public --port 4000"
   },
   "devDependencies": {
+    "autoprefixer-loader": "^3.1.0",
+    "css-loader": "^0.21.0",
+    "extract-text-webpack-plugin": "^0.8.2",
     "jade": "^1.11.0",
     "metalsmith": "^2.1.0",
     "metalsmith-layouts": "^1.4.2",
     "metalsmith-mapsite": "^1.0.3",
-    "node-sass": "^3.4.1"
+    "node-sass": "^3.4.1",
+    "sass-loader": "^3.1.1",
+    "style-loader": "^0.13.0",
+    "surge": "^0.17.1",
+    "webpack": "^1.12.2",
+    "webpack-dev-server": "^1.12.1"
   }
 }
