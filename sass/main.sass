@@ -68,7 +68,12 @@ body
   margin: 1.5em 0
 
 .banner-pic
-  display: block
-  width: 100%
+  // 1600 by 880 -> 55% ratio
+  background-image: url(/img/zak-stripe.jpg)
+  background-size: cover
+  &:before
+    content: ""
+    display: block
+    padding-top: 55%
   +breakpoint(800px)
     display: none
