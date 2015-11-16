@@ -2,10 +2,10 @@ doctype html
 html(lang="en")
   head
     meta(charset="utf-8")
-    if title
-      title= title
+    if pageTitle
+      title= pageTitle
     else
-      title Zak Johnson
+      title= site.title
     if description
       meta(name="description", content=description)
     meta(name="viewport", content="initial-scale=1")

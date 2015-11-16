@@ -1,7 +1,15 @@
 {
   "source": "src",
   "destination": "public",
+  "metadata": {
+    "site": {
+      "title": "Zak Johnson"
+    }
+  },
   "plugins": {
+    "metalsmith-page-titles": {
+      "separator": " · "
+    },
     "metalsmith-layouts": {
       "engine": "jade",
       "default": "default.jade"
