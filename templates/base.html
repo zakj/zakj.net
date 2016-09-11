@@ -1,0 +1,14 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>{% block title %}zakj.net{% endblock %}</title>
+    <meta name="description" content="{% block description %}{% endblock %}">
+    <meta name="viewport" content="initial-scale=1">
+    <link rel="stylesheet" href="{{ '/gen/styles.css'|asseturl }}">
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Unica+One|PT+Serif:400italic,400">
+  </head>
+  <body>
+    {% block contents %}{% endblock %}
+  </body>
+</html>
