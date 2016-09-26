@@ -5,6 +5,7 @@ var webpack = require('webpack');
 
 module.exports = {
   entry: {
+    'nato': './nato',
     'styles': './sass/main.sass',
   },
 
