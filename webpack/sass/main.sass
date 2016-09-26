@@ -17,10 +17,12 @@ body
     font-size: 1.1em
   +breakpoint(750px)
     font-size: 1.25em
-  +breakpoint(800px)
-    background-image: url(/img/zak-cover.jpg)
-    background-position: center center
-    background-size: cover
+
+  &.index
+    +breakpoint(800px)
+      background-image: url(/img/zak-cover.jpg)
+      background-position: center center
+      background-size: cover
 
 h1, h2, h3
   font-family: $header-font-stack

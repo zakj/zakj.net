@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block title %}{{ this.title }}{% endblock %}
+
+{% block extra_head %}
+  {% for url in this.styles %}
+    <link rel="stylesheet" href="{{ ('/gen/' + url)|asseturl }}">
+  {% endfor %}
+{% endblock %}
+
+{% block extra_body %}
+  {% for url in this.scripts %}
+    <script src="{{ ('/gen/' + url)|asseturl }}"></script>
+  {% endfor %}
+{% endblock %}
+
+{% block contents %}
+  {{ this.body }}
+{% endblock %}
