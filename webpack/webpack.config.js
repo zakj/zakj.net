@@ -5,8 +5,10 @@ var webpack = require('webpack');
 
 module.exports = {
   entry: {
+    'ladder': './ladder',
     'nato': './nato',
     'styles': './sass/main.sass',
+    'vendor': ['maquette'],
   },
 
   output: {
@@ -40,9 +42,14 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin(),
     new ExtractTextPlugin('[name].css', {
-      allChunks: true
+      allChunks: true,
     }),
-    new webpack.optimize.UglifyJsPlugin(),
+    new webpack.optimize.UglifyJsPlugin({compress: {warnings: false}}),
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'vendor',
+      filename: 'vendor.bundle.js',
+      minChunks: Infinity,
+    }),
   ],
 
   devtool: 'source-map',

@@ -9,6 +9,7 @@
 {% endblock %}
 
 {% block extra_body %}
+  <script src="{{ '/gen/vendor.bundle.js'|asseturl }}"></script>
   {% for url in this.scripts %}
     <script src="{{ ('/gen/' + url)|asseturl }}"></script>
   {% endfor %}

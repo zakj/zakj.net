@@ -1,0 +1,41 @@
+.ladder
+  border-radius: 5px
+  display: flex
+  flex-direction: column
+  height: 100vh
+  max-width: 25em
+  padding-bottom: 2em
+  padding-top: 25vh
+  text-align: center
+  width: 100%
+
+  .header
+    height: 70px
+    position: relative
+    h1
+      margin: 0
+      position: absolute
+      width: 100%
+
+  .count
+    position: relative
+    div
+      position: absolute
+      width: 100%
+
+.count
+  font-size: 60px
+
+@media (min-width: 400px)
+  body
+    background: #999
+  .ladder
+    background: #fff
+    box-shadow: 0 1px 8px #666
+    height: auto
+    margin: 3em auto
+    padding-top: 0
+  .header
+    margin-top: 30px
+  .count
+    height: 100px
