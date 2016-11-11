@@ -5,10 +5,11 @@ var webpack = require('webpack');
 
 module.exports = {
   entry: {
+    'flex': './flex',
     'ladder': './ladder',
     'nato': './nato',
     'styles': './sass/main.sass',
-    'vendor': ['maquette'],
+    'vendor': ['gsap', 'maquette', 'vue'],
   },
 
   output: {
@@ -27,6 +28,10 @@ module.exports = {
         test: /\.sass$/,
         exclude: path.resolve(__dirname, 'node_modules'),
         loader: ExtractTextPlugin.extract('style', 'css!sass'),
+      },
+      {
+        test: /\.vue$/,
+        loader: 'vue',
       },
     ],
   },

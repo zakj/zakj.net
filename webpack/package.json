@@ -15,10 +15,14 @@
     "sass-loader": "^4.0.2",
     "source-map-loader": "^0.1.5",
     "style-loader": "^0.13.1",
+    "vue-loader": "^9.7.0",
     "webpack": "^1.13.2",
     "webpack-dev-server": "^1.16.1"
   },
   "dependencies": {
-    "maquette": "^2.3.5"
+    "gsap": "^1.19.0",
+    "lodash": "^4.16.4",
+    "maquette": "^2.3.5",
+    "vue": "^2.0.5"
   }
 }
