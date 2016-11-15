@@ -18,12 +18,6 @@ body
   +breakpoint(750px)
     font-size: 1.25em
 
-  &.index
-    +breakpoint(800px)
-      background-image: url(/img/zak-cover.jpg)
-      background-position: center center
-      background-size: cover
-
 h1, h2, h3
   font-family: $header-font-stack
   text-transform: uppercase
@@ -69,12 +63,19 @@ body
   margin: 1.5em 0
 
 .banner-pic
-  // 1600 by 880 -> 55% ratio
   background-image: url(/img/zak-stripe.jpg)
   background-size: cover
   &:before
     content: ""
     display: block
-    padding-top: 55%
+    // Set element size to match image dimension ratio.
+    padding-top: percentage(880 / 1600)
   +breakpoint(800px)
-    display: none
+    background-image: url(/img/zak-cover.jpg)
+    background-position: center center
+    bottom: 0
+    left: 0
+    position: absolute
+    right: 0
+    top: 0
+    z-index: -1
