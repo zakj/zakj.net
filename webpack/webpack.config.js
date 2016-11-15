@@ -1,5 +1,6 @@
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
+var autoprefixer = require('autoprefixer');
 var path = require('path');
 var webpack = require('webpack');
 
@@ -27,7 +28,7 @@ module.exports = {
       {
         test: /\.sass$/,
         exclude: path.resolve(__dirname, 'node_modules'),
-        loader: ExtractTextPlugin.extract('style', 'css!sass'),
+        loader: ExtractTextPlugin.extract('style', 'css!postcss!sass'),
       },
       {
         test: /\.vue$/,
@@ -55,6 +56,10 @@ module.exports = {
       filename: 'vendor.bundle.js',
       minChunks: Infinity,
     }),
+  ],
+
+  postcss: [
+    autoprefixer({browsers: ['last 2 versions']}),
   ],
 
   devtool: 'source-map',
