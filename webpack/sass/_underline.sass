@@ -6,6 +6,6 @@
 =underline($color, $bg-color, $size, $offset, $hover-color)
   $end: $offset + $size
   background-image: linear-gradient(to top, transparent, transparent $offset, $color $offset, $color $end, transparent $end)
-  text-shadow: 0 1px 0 $bg-color, -1px 1px 0 $bg-color, 1px 1px 0 $bg-color
+  text-shadow: -1px -1px 0 $bg-color, -1px 1px 0 $bg-color, 1px -1px 0 $bg-color, 1px 1px 0 $bg-color
   &:hover
     background-image: linear-gradient(to top, transparent, transparent $offset, $hover-color $offset, $hover-color $end, transparent $end)
