@@ -7,4 +7,4 @@ build:
 deploy: build
 	surge `lektor project-info --output-path` zakj.net
 
-.PHONY: build deploy
+.PHONY: build deploy serve
