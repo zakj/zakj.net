@@ -1,0 +1,74 @@
+==================================================================
+https://keybase.io/zakj
+--------------------------------------------------------------------
+
+I hereby claim:
+
+  * I am an admin of https://zakj.net
+  * I am zakj (https://keybase.io/zakj) on keybase.
+  * I have a public key with fingerprint E471 507F 4FA9 893C 28AD  11B9 54B6 E467 A8FF 950A
+
+To do so, I am signing this object:
+
+{
+    "body": {
+        "key": {
+            "eldest_kid": "010108a0b9e517ac08ee8a3eb22b20253e088df9f7a727af4ee6c1b6b4de33529e670a",
+            "fingerprint": "e471507f4fa9893c28ad11b954b6e467a8ff950a",
+            "host": "keybase.io",
+            "key_id": "54b6e467a8ff950a",
+            "kid": "010108a0b9e517ac08ee8a3eb22b20253e088df9f7a727af4ee6c1b6b4de33529e670a",
+            "uid": "d070ac6a7c77630555d61ab61aee9900",
+            "username": "zakj"
+        },
+        "service": {
+            "hostname": "zakj.net",
+            "protocol": "https:"
+        },
+        "type": "web_service_binding",
+        "version": 1
+    },
+    "ctime": 1481045703,
+    "expire_in": 157680000,
+    "prev": "2d3a3ff6a1a460824a0cfc32f764d262fe0f7afb17f37bfc029f15da5c7e49c0",
+    "seqno": 7,
+    "tag": "signature"
+}
+
+which yields the signature:
+
+-----BEGIN PGP MESSAGE-----
+Version: Keybase OpenPGP v2.0.58
+Comment: https://keybase.io/crypto
+
+yMM+AnicrVJtUFRVGN5FwHZhYYUVm1HZvAyNk4j3+2PRcchxMRkXK50U0O3ce8+F
+C7S77d1FPlzQTQUZZmxisM3KmcKUiiaB0fhIaDE0MBosEI1izBgKwsiPsdEIusvU
+TD/62Tlz5sz7nud5zvO+835uWKTRa7P73E1T6Y/M2ivBY17NLuuDy+UI7xRLEUs5
+UggXLlgkQsVjL5RFxIKgmLpZgPIcpDAGCCgLIQsIyOM4j6M4RUCUZUWJkxjA4AyQ
+SAhpAeNpnhQhQVA4B2kGBUgKIsmOPOh2uWWHR5WFJINRKCOREuBYjhBwFogYxnMU
+ydOQpBnAShJHLRDznUqIoZrjgQJTZaeaUwP7gr3/wP/Pvr0LciKqRgINGIFhaAKl
+KEqkMcCrB0KOQ9EQUIFuB3gJqugyUFiA+FIQNVMsCzDU1FAV/3pNdUCPynG5nR6n
+4CxSs/kej0uxhFieUlcItg/y9r8F7LzsENX+qYxi6FZkpwOxYCpS8MghRYxkMZSk
+GJRIQWCJS3ZDuxxCUAzNouoK/QOLVUlcJAAhSTTAAEmjLE4CVJAEApcYmhRxGpcg
+qvZD4jFGIhheElCckzBKBJTAQJITQlUq8GWHE7Ewqk2Qp0oqcp4DeLxuiPh6grnh
+Gq1eExkRFporjV5n/GfasvbFzuf9OHzFmzyR9to75wIjObImptrvAHuPNInMktt1
+6ES0zhj9xdbhizsGw34y2h5uCp+rGFnpRF81jyREWA3KjZaxzQOzvcu9Zfkn730a
+1XrAH35mz4szJe++cKx1rkmn7Vwz0Z04/nRj7BmzI3Ndxq6NDbaCroO3fntm6KkL
+aQnPjayd3R5jLjStXBM/YYibHWs/mXvcVDP2yqMTWam25YWbi2qrw5Y+YT4cFmgb
+398aVZnS91GL742Bzul1lcsOn8UwlPJvyce/Puf7Y+xUTUpljfuT2AOGxOiA2Te/
+O/j9UNHZ3Ll06591iaQfaA9Nc1/uSHrzZuPdm++3dKQxT65uuL7KLxvPD/hf1/ve
+ut8ndg7t2TnYiOhjyle0RVQk2nuSpnZPLt2bdCRwS7c+qlf7Xu/E6eaOi121ML8q
+8Pv4nfZD9Ub7pvnVGzJaMw4mm+q/S4i7c+lBwoeVHywq8A48jDtv+3Ztszb4w2T3
+sHVU/1XV8dGsiH7Qd7XB9HhETtR6XXZRWfTRbUKOcdXoTEljQdCjD+9q524osfFV
+6Rce++wS9mvNtO/yNmvVqcaAwWXauWXjVO4vzfhixRalq2mb/bj7eSry2gpTz5DN
+sP/ZQFt83fVqY70/OWjYcLvinrujd9k32zNnrPdLr/Zfa+j3vn261vLz4q30ZFPT
+icGs9LvuzOzIwSXKX5pFtuw=
+=3LXs
+-----END PGP MESSAGE-----
+
+And finally, I am proving ownership of this host by posting or
+appending to this document.
+
+View my publicly-auditable identity here: https://keybase.io/zakj
+
+==================================================================
