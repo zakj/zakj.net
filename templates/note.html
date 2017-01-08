@@ -6,6 +6,7 @@
   {% for url in this.styles %}
     <link rel="stylesheet" href="{{ ('/gen/' + url)|asseturl }}">
   {% endfor %}
+  {{ this.extra_head|safe }}
 {% endblock %}
 
 {% block extra_body %}
