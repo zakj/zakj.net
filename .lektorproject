@@ -1,5 +1,0 @@
-[project]
-name = zakj.net
-
-[packages]
-lektor-webpack-support = 0.1

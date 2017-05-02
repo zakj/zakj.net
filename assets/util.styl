@@ -1,0 +1,34 @@
+text-color = #222
+bg-color = #fff
+font-stack = "PT Serif", serif
+header-font-stack = "Unica One", sans-serif
+
+
+// Shortcut for min-width media queries.
+breakpoint(w)
+  @media screen and (min-width: w)
+    {block}
+
+
+// Shortcut for cross-platform high-resolution support.
+retina()
+  @media screen and (min-resolution: 1.3dppx)
+    {block}
+
+
+// Provide an underline style that can have a custom color applied, while
+// appearing behind any text descenders.
+// Based on work by Gary Hepting: http://codepen.io/ghepting/pen/tLnHK/
+underline(color, bg-color, size, offset, hover-color)
+  end = offset + size
+  background-image linear-gradient(to top, transparent, transparent offset, color offset, color end, transparent end)
+  text-shadow -1px -1px 0 bg-color, -1px 1px 0 bg-color, 1px -1px 0 bg-color, 1px 1px 0 bg-color
+  &:hover
+    background-image linear-gradient(to top, transparent, transparent offset, hover-color offset, hover-color end, transparent end)
+
+
+// Hide text to replace it with a background image.
+hide-text()
+  overflow hidden
+  text-indent 110%
+  white-space nowrap

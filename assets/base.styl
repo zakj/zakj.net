@@ -1,0 +1,38 @@
+@require "util"
+
+
+body
+  background bg-color
+  color text-color
+  font 1em/1.5 font-stack
+  margin 0
+  +breakpoint(375px)
+    font-size 1.1em
+  +breakpoint(750px)
+    font-size 1.25em
+
+*
+  box-sizing border-box
+
+input, select
+  font inherit
+
+h1, h2, h3
+  font-family header-font-stack
+  text-transform uppercase
+  font-weight normal
+
+// Show pretty underlined links in body text.
+p a
+  color text-color
+  text-decoration none
+  underline(alpha(text-color, .3), bg-color, 0.05em, 0.14em, text-color)
+
+.page
+  margin 0 auto
+  padding 0 20px
+  +breakpoint(420px)
+    max-width 30em
+
+.page h1
+  text-align center

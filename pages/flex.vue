@@ -1,5 +1,7 @@
 <template>
-  <div class="demo">
+  <div class="page">
+    <h1>display: flex</h1>
+
     <label>flex-direction
     <select v-model="style.flexDirection">
       <option value="">row (default)</option>
@@ -52,17 +54,57 @@
     </select>
     </label>
 
-    <div class="container" :style="style">
+    <div class="container" :style="nonEmptyStyle">
       <div v-for="numeral in items" class="child">{{ numeral }}</div>
     </div>
   </div>
 </template>
 
-<script>
-  import { TweenLite } from 'gsap';
 
-  module.exports = {
-    data: function() {
+<style lang="stylus" scoped>
+  label
+    display block
+    margin 10px 0
+    &.disabled
+      opacity .6
+    i
+      margin-right 5px
+
+  .container
+    background #fbfbfb
+    border 1px solid #ccc
+    border-radius 4px
+    display flex
+    height 350px
+    margin-top 2em
+    position relative
+    width 100%
+
+  .child
+    background #aaa
+    border-radius 3px
+    color #fff
+    line-height 50px
+    margin 10px
+    text-align center
+    width 13%
+
+    &:nth-child(3)
+      background #777
+      width 16%
+      line-height 60px
+</style>
+
+
+<script>
+  import pickBy from 'lodash/pickBy';
+
+  export default {
+    head: {
+      title: 'display: flex',
+    },
+
+    data() {
       return {
         transitionDuration: .6,
         style: {
@@ -75,21 +117,26 @@
         checker: false,
       };
     },
+
     computed: {
-      items: function() {
+      items() {
         return ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII']
           .slice(0, this.numItems);
       },
-      numItems: function() {
+      numItems() {
         return this.wrapped ? 8 : 4;
       },
-      wrapped: function() {
+      nonEmptyStyle() {
+        return pickBy(this.style);
+      },
+      wrapped() {
         return this.style.flexWrap.indexOf('wrap') === 0;
       },
     },
+
     watch: {
       style: {
-        handler: function() {
+        handler() {
           const container = this.$el.querySelector('.container');
           const children = Array.prototype.map.call(
             container.children,
@@ -117,45 +164,3 @@
     },
   };
 </script>
-
-<style>
-  .demo {
-    margin: 0 auto;
-  }
-  label {
-    display: block;
-    margin: 10px 0;
-  }
-  label.disabled {
-    opacity: .6;
-  }
-  .container {
-    background: #fbfbfb;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    display: flex;
-    height: 350px;
-    margin-top: 2em;
-    position: relative;
-    width: 560px;
-  }
-  .child {
-    background: #aaa;
-    border-radius: 3px;
-    box-sizing: border-box;
-    color: #fff;
-    line-height: 50px;
-    margin: 10px;
-    text-align: center;
-    width: 80px;
-  }
-  .child:nth-child(3) {
-    background: #777;
-    width: 96px;
-    line-height: 60px;
-  }
-
-  h1 {
-    text-align: center;
-  }
-</style>
