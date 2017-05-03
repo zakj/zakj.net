@@ -17,13 +17,16 @@ body
 input, select
   font inherit
 
+a
+  cursor pointer
+
 h1, h2, h3
   font-family header-font-stack
   text-transform uppercase
   font-weight normal
 
 // Show pretty underlined links in body text.
-p a
+a:not(.no-underline)
   color text-color
   text-decoration none
   underline(alpha(text-color, .3), bg-color, 0.05em, 0.14em, text-color)

@@ -1,5 +1,5 @@
 <template>
-  <a :href="href" :class="icon"><slot></slot></a>
+  <a :href="href" :class="icon" class="no-underline"><slot></slot></a>
 </template>
 
 

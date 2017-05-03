@@ -12,7 +12,7 @@ module.exports = {
       {name: 'viewport', content: 'initial-scale=1'},
     ],
     link: [
-      {rel: 'stylesheet', href: '//fonts.googleapis.com/css?family=Unica+One|PT+Serif:400italic,400'},
+      {rel: 'stylesheet', href: '//fonts.googleapis.com/css?family=PT+Serif:400,400i|Unica+One'},
     ],
   },
   css: [
