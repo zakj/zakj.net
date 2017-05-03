@@ -5,7 +5,7 @@
     <div class="result">
       <span v-for="code in codedText">{{ code }}</span>
     </div>
-    <input autofocus v-model="text">
+    <input v-focus.lazy="true" v-model="text">
     <ul>
       <li v-for="code in alphabet">{{ code }}</li>
     </ul>
@@ -52,6 +52,7 @@
 
 <script>
   import alphabet from '~assets/nato-alphabet';
+  import { focus } from 'vue-focus';
 
   function mapInput(c) {
     c = c.toLowerCase();
@@ -61,6 +62,8 @@
   }
 
   export default {
+    directives: {focus},
+
     head: {
       title: 'NATO alphabet',
     },
