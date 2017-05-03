@@ -34,7 +34,7 @@
     flex-direction column
     flex-wrap wrap
     list-style-type none
-    max-height 350px
+    max-height 370px
     padding 0
     padding-left 50px
 
