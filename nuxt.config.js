@@ -2,7 +2,11 @@ module.exports = {
   build: {
     vendor: ['gsap'],
   },
-  plugins: ['~plugins/vue-touch-events'],
+  plugins: [
+    '~plugins/components',
+    '~plugins/vue-config',
+    '~plugins/vue-touch-events',
+  ],
   loading: false,
   head: {
     htmlAttrs: {lang: 'en'},

@@ -1,6 +1,6 @@
 <template>
   <div class="page">
-    <h1>display: flex</h1>
+    <h1><back-link>display: flex</back-link></h1>
 
     <label>flex-direction
     <select v-model="style.flexDirection">

@@ -1,6 +1,6 @@
 <template>
   <div class="page">
-    <h1>NATO alphabet</h1>
+    <h1><back-link>NATO alphabet</back-link></h1>
 
     <div class="result">
       <span v-for="code in codedText">{{ code }}</span>
