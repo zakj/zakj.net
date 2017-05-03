@@ -1,5 +1,5 @@
 <template>
-  <div class="ladder" @click="nextExercise">
+  <div class="ladder" v-touch="nextExercise">
     <div class="header">
       <transition name="title">
         <h1 :key="exercise.title">{{exercise.title}}</h1>

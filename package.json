@@ -13,7 +13,8 @@
     "gsap": "^1.19.1",
     "lodash": "^4.17.4",
     "normalize.css": "^6.0.0",
-    "nuxt": "^0.10.6"
+    "nuxt": "^0.10.6",
+    "vue2-touch-events": "^0.2.0"
   },
   "devDependencies": {
     "stylus": "^0.54.5",

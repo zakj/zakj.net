@@ -3938,6 +3938,10 @@ vue-template-es2015-compiler@^1.2.2:
   version "1.5.2"
   resolved "https://registry.yarnpkg.com/vue-template-es2015-compiler/-/vue-template-es2015-compiler-1.5.2.tgz#a0a6c50c941d2a4abda963f2f42c337ac450ee95"
 
+vue2-touch-events@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/vue2-touch-events/-/vue2-touch-events-0.2.0.tgz#d9f235a095fb44b5e439e290405c6578cd11ce00"
+
 vue@^2.2.6:
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/vue/-/vue-2.3.0.tgz#bc44db0488c5245c788304c7683efe7b4c862d82"
