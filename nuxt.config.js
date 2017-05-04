@@ -23,4 +23,7 @@ module.exports = {
     'normalize.css',
     {src: '~assets/base.styl', lang: 'stylus'},
   ],
+  generate: {
+    minify: {conservativeCollapse: true},
+  },
 };
