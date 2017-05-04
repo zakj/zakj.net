@@ -12,8 +12,8 @@
   "dependencies": {
     "gsap": "^1.19.1",
     "lodash": "^4.17.4",
-    "normalize.css": "^6.0.0",
-    "nuxt": "^0.10.6",
+    "normalize.css": "^7.0.0",
+    "nuxt": "^0.10.7",
     "vue-config": "^1.0.0",
     "vue-focus": "^2.1.0",
     "vue2-touch-events": "^0.2.0"
