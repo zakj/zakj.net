@@ -1,6 +1,6 @@
 module.exports = {
   build: {
-    vendor: ['gsap'],
+    vendor: ['gsap', 'lodash'],
   },
   plugins: [
     '~plugins/components',
