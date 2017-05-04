@@ -2,7 +2,8 @@
   "private": true,
   "scripts": {
     "start": "nuxt",
-    "dist": "nuxt generate"
+    "dist": "nuxt generate",
+    "analyze": "nuxt build --analyze"
   },
   "config": {
     "nuxt": {
@@ -10,7 +11,7 @@
     }
   },
   "dependencies": {
-    "gsap": "^1.19.1",
+    "animejs": "^2.0.2",
     "lodash": "^4.17.4",
     "normalize.css": "^7.0.0",
     "nuxt": "^0.10.7",

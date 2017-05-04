@@ -1,6 +1,6 @@
 module.exports = {
   build: {
-    vendor: ['gsap', 'lodash'],
+    vendor: ['animejs'],
   },
   plugins: [
     '~plugins/components',

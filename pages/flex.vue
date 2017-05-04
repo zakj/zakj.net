@@ -97,6 +97,7 @@
 
 
 <script>
+  import anime from 'animejs';
   import pickBy from 'lodash/pickBy';
 
   export default {
@@ -106,7 +107,7 @@
 
     data() {
       return {
-        transitionDuration: .6,
+        transitionDuration: 600,
         style: {
           flexDirection: '',
           flexWrap: '',
@@ -140,21 +141,23 @@
           const container = this.$el.querySelector('.container');
           const children = Array.prototype.map.call(
             container.children,
-            child => ({child, first: child.getBoundingClientRect()}));
+            child => ({child, start: child.getBoundingClientRect()}));
           requestAnimationFrame(() => {
-            children.forEach(({child, first}) => {
-              const last = child.getBoundingClientRect()
-              TweenLite.from(child, this.transitionDuration, {
-                x: first.left - last.left,
-                y: first.top - last.top,
-              });
-              TweenLite.fromTo(child, this.transitionDuration / 2, {
-                height: first.height,
-                width: first.width,
-              }, {
-                height: last.height,
-                width: last.width,
-                onComplete: () => TweenLite.set(child, {height: '', width: ''}),
+            children.forEach(({child, start}) => {
+              const end = child.getBoundingClientRect();
+              const dx = start.left - end.left;
+              const dy = start.top - end.top;
+              child.style.transform = `translate(${dx}px, ${dy}px)`;
+              anime({
+                targets: child,
+                translateX: dx,
+                translateY: dy,
+                direction: 'reverse',
+                duration: this.transitionDuration,
+                easing: 'easeInOutQuad',
+                complete: function(anim) {
+                  anim.animatables.forEach(a => a.target.removeAttribute('style'));
+                },
               });
             });
           });
