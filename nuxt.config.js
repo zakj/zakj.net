@@ -1,5 +1,9 @@
 module.exports = {
   build: {
+    postcss: [
+      require('css-mqpacker')(),
+      require('autoprefixer')({browsers: ['last 3 versions']}),
+    ],
     vendor: ['animejs'],
   },
   css: [
