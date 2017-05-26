@@ -26,8 +26,9 @@ module.exports = {
   },
   loading: false,
   plugins: [
+    '~plugins/vue-config',  // first, so it can be used by other plugins
     '~plugins/components',
-    '~plugins/vue-config',
+    '~plugins/sentry',
     '~plugins/vue-touch-events',
   ],
 };
