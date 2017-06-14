@@ -18,6 +18,7 @@
     "raven-js": "^3.15.0",
     "vue-config": "^1.0.0",
     "vue-focus": "^2.1.0",
+    "vue-marked": "^0.1.0",
     "vue2-touch-events": "^0.2.0"
   },
   "devDependencies": {

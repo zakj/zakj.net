@@ -1349,6 +1349,10 @@ decamelize@^1.0.0, decamelize@^1.1.1, decamelize@^1.1.2:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/decamelize/-/decamelize-1.2.0.tgz#f6534d15148269b20352e7bee26f501f9a191290"
 
+dedent@^0.7.0:
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/dedent/-/dedent-0.7.0.tgz#2495ddbaf6eb874abb0e1be9df22d2e5a544326c"
+
 deep-extend@^0.4.0, deep-extend@~0.4.0:
   version "0.4.1"
   resolved "https://registry.yarnpkg.com/deep-extend/-/deep-extend-0.4.1.tgz#efe4113d08085f4e6f9687759810f807469e2253"
@@ -2505,6 +2509,10 @@ lru-cache@^4.0.1, lru-cache@^4.0.2:
 macaddress@^0.2.8:
   version "0.2.8"
   resolved "https://registry.yarnpkg.com/macaddress/-/macaddress-0.2.8.tgz#5904dc537c39ec6dbefeae902327135fa8511f12"
+
+marked@^0.3.6:
+  version "0.3.6"
+  resolved "https://registry.yarnpkg.com/marked/-/marked-0.3.6.tgz#b2c6c618fccece4ef86c4fc6cb8a7cbf5aeda8d7"
 
 math-expression-evaluator@^1.2.14:
   version "1.2.17"
@@ -4138,6 +4146,14 @@ vue-loader@^11.3.4:
     vue-style-loader "^2.0.0"
     vue-template-es2015-compiler "^1.2.2"
 
+vue-marked@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/vue-marked/-/vue-marked-0.1.0.tgz#a76b50a8602623dc0ec23de520a110eae6852ad5"
+  dependencies:
+    dedent "^0.7.0"
+    marked "^0.3.6"
+    vue "^2.3.4"
+
 vue-meta@^0.5.6:
   version "0.5.6"
   resolved "https://registry.yarnpkg.com/vue-meta/-/vue-meta-0.5.6.tgz#e4b56838167f0aa40a202f45e1eec6fb91861689"
@@ -4194,6 +4210,10 @@ vue-template-es2015-compiler@^1.2.2:
 vue2-touch-events@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/vue2-touch-events/-/vue2-touch-events-0.2.0.tgz#d9f235a095fb44b5e439e290405c6578cd11ce00"
+
+vue@^2.3.4:
+  version "2.3.4"
+  resolved "https://registry.yarnpkg.com/vue/-/vue-2.3.4.tgz#5ec3b87a191da8090bbef56b7cfabd4158038171"
 
 vue@~2.2.6:
   version "2.2.6"

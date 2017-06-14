@@ -1,32 +1,38 @@
 <template>
-  <div class="container">
-    <div class="main">
+  <div :class="$style.container">
+    <div :class="$style.main">
       <transition mode="out-in">
-        <div class="blurb" v-if="!showProjects" key="blurb">
-          <p>Hello! I'm a full-stack developer with a background in information security.
-          I've been building and breaking things on the web since the nineties—previously with companies like
-          <a href="http://www.etsy.com/">Etsy</a>
-          and
-          <a href="http://www.good.is">GOOD</a>,
-          and more recently independently or with my partner as
-          <a href="http://madebycabin.com/">Cabin</a>.</p>
+        <div :class="$style.blurb" v-if="!showProjects" key="blurb">
+          <vue-marked>
+            Hello! I'm a design-minded full-stack developer with a background
+            in information security. I've been building and breaking things on
+            the web since the nineties---most recently with companies like
+            [Etsy][], [GOOD][], and [Cabin][]. I currently lead a team of
+            product engineers at [Mixpanel][].
 
-          <p>I'm passionate about simplicity,
-          <a href="https://en.wikipedia.org/wiki/Vim_(text_editor)">text editors</a>,
-          <a href="https://www.python.org/">significant whitespace</a>, and
-          <a href="http://public.wsu.edu/~brians/errors/">grammar</a>.</p>
+            I'm passionate about simplicity, [text editors][vimrc],
+            [significant whitespace][python], and [grammar][].
 
-          <p class="links">
+            [Etsy]: https://www.etsy.com/
+            [GOOD]: https://www.good.is
+            [Cabin]: http://madebycabin.com/
+            [Mixpanel]: https://mixpanel.com/
+            [vimrc]: https://github.com/zakj/dotfiles/blob/master/vimrc
+            [python]: https://www.python.org/
+            [grammar]: https://brians.wsu.edu/common-errors-in-english-usage/
+          </vue-marked>
+
+          <p :class="$style.links">
             <icon href="https://twitter.com/zakj" class="twitter">@zakj</icon>
             <icon href="https://github.com/zakj" class="github">zakj on GitHub</icon>
             <icon href="mailto:me@zakj.net" class="email">me@zakj.net</icon>
             <icon href="https://www.linkedin.com/in/zakjohnson" class="linkedin">LinkedIn</icon>
-            <a v-if="this.$config.projects" @click="toggleProjects" class="projects-link">Projects</a>
+            <a v-if="this.$config.projects" @click="toggleProjects" :class="$style.projectsLink">Projects</a>
           </p>
 
         </div>
 
-        <div class="projects" v-else key="projects">
+        <div :class="$style.projects" v-else key="projects">
           <h2><back-link :click="toggleProjects">Projects</back-link></h2>
           <p>Links to some little toys and projects I've been working on.</p>
           <ul>
@@ -40,11 +46,11 @@
       </transition>
     </div>
 
-    <div class="banner-pic"></div>
+    <div :class="$style.bannerPic"></div>
   </div>
 </template>
 
-<style lang="stylus" scoped>
+<style lang="stylus" module>
   @require '~assets/util'
 
   // Make a sticky footer out of anything outside of .main.
@@ -68,22 +74,13 @@
 
   .blurb, .projects
     padding 2.5em
-    > :first-child
+    > :first-child, div > :first-child
       margin-top 0
     > :last-child
       margin-bottom 0
     +breakpoint(800px)
       background-color #fff
       box-shadow 0 0 1px alpha(#000, .3)
-
-  +breakpoint(800px)
-    .v-enter-active, .v-leave-active
-      transition all 200ms ease
-    .v-leave-active
-      transition-duration 100ms
-    .v-enter, .v-leave-to
-      transform scale(.85)
-      opacity 0
 
   .links
     display flex
@@ -99,7 +96,7 @@
       content ""
       display block
       // Set element size to match image dimension ratio.
-      padding-top: percentage(880 / 1600)
+      padding-top round(percentage(880 / 1600))
     +breakpoint(800px)
       background-image url('~assets/img/zak-cover.jpg')
       background-position center center
@@ -111,7 +108,21 @@
       z-index -1
 </style>
 
+<style lang="stylus" scoped>
+  @require '~assets/util'
+  +breakpoint(800px)
+    .v-enter-active, .v-leave-active
+      transition all 200ms ease
+    .v-leave-active
+      transition-duration 100ms
+    .v-enter, .v-leave-to
+      transform scale(.85)
+      opacity 0
+</style>
+
 <script>
+  import VueMarked from 'vue-marked';
+
   export default {
     head: {
       title: 'Zak Johnson',
@@ -119,6 +130,8 @@
         {hid: 'description', name: 'description', content: ''},
       ],
     },
+
+    components: {VueMarked},
 
     data() {
       return {
