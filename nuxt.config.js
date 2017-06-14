@@ -1,5 +1,16 @@
 module.exports = {
   build: {
+    extend: function (config) {
+      config.module.rules.forEach(function (rule) {
+        if (rule.loader === 'vue-loader') {
+          rule.query = rule.query || {};
+          rule.query.cssModules = {
+            localIdentName: '[local]_[hash:base64:5]',
+            camelCase: true,
+          };
+        }
+      });
+    },
     postcss: [
       require('css-mqpacker')(),
       require('autoprefixer')({browsers: ['last 3 versions']}),
