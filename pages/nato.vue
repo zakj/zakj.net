@@ -51,7 +51,7 @@
 
 
 <script>
-  import alphabet from '~assets/nato-alphabet';
+  import alphabet from '~/assets/nato-alphabet';
   import { focus } from 'vue-focus';
 
   function mapInput(c) {

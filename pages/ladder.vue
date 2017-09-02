@@ -72,7 +72,7 @@
 
 
 <script>
-  import touchIcon from '~assets/ladder-apple-touch-icon.png';
+  import touchIcon from '~/assets/ladder-apple-touch-icon.png';
 
   const EXERCISES = [
     {

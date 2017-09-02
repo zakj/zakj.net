@@ -3,8 +3,8 @@ module.exports = {
     extend: function (config) {
       config.module.rules.forEach(function (rule) {
         if (rule.loader === 'vue-loader') {
-          rule.query = rule.query || {};
-          rule.query.cssModules = {
+          rule.options = rule.options || {};
+          rule.options.cssModules = {
             localIdentName: '[local]_[hash:base64:5]',
             camelCase: true,
           };
@@ -19,7 +19,7 @@ module.exports = {
   },
   css: [
     'normalize.css',
-    {src: '~assets/base.styl', lang: 'stylus'},
+    {src: '~/assets/base.styl', lang: 'stylus'},
   ],
   generate: {
     minify: {conservativeCollapse: true},

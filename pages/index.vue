@@ -90,7 +90,7 @@
       margin-left auto
 
   .banner-pic
-    background-image url('~assets/img/zak-stripe.jpg')
+    background-image url('~/assets/img/zak-stripe.jpg')
     background-size cover
     &:before
       content ""
@@ -98,7 +98,7 @@
       // Set element size to match image dimension ratio.
       padding-top round(percentage(880 / 1600))
     +breakpoint(800px)
-      background-image url('~assets/img/zak-cover.jpg')
+      background-image url('~/assets/img/zak-cover.jpg')
       background-position center center
       bottom 0
       left 0
