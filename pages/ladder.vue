@@ -10,6 +10,17 @@
         <div :key="exercise.title">{{count}}</div>
       </transition>
     </div>
+    <div class="rung">
+      <div>
+        <a class="rung-button no-underline"
+          :class="{disabled: rungNumber <= minRung}"
+          v-touch="setPreviousRung">&minus;</a>
+        {{rungNumber}}
+        <a class="rung-button no-underline"
+          :class="{disabled: rungNumber >= maxRung}"
+          v-touch="setNextRung">+</a>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -18,7 +29,9 @@
   @require '~assets/util'
 
   .ladder
+    background #000
     border-radius 5px
+    color #fff
     display flex
     flex-direction column
     height 100vh
@@ -43,6 +56,17 @@
       position absolute
       width 100%
 
+  .rung
+    display flex
+    flex 1
+    flex-direction column-reverse
+
+  .rung-button
+    padding 5px 10px
+    &.disabled
+      pointer-events none
+      opacity .1
+
   .title-enter-active, .count-enter-active
     transition all 350ms ease
 
@@ -57,12 +81,14 @@
     opacity 0
     transform translateX(-30%) scale(.5)
 
-  +breakpoint(400px)
+  +breakpoint(640px)
     .ladder
-      background #fff
+      background bg-color
       box-shadow 0 1px 8px #666
+      color text-color
       height auto
       margin 3em auto
+      min-height 450px
       padding-top 0
     .header
       margin-top 30px
@@ -153,6 +179,7 @@
       title: 'Ladder',
       meta: [
         {name: 'apple-mobile-web-app-capable', content: 'yes'},
+        {name: 'viewport', content: 'initial-scale=1, viewport-fit=cover'},
       ],
       link: [
         {rel: 'apple-touch-icon', sizes: '512x512', href: touchIcon},
@@ -163,6 +190,8 @@
       return {
         exerciseIndex: 0,
         rungNumber: 16,
+        maxRung: Math.max(...Object.keys(LADDER)),
+        minRung: Math.min(...Object.keys(LADDER)),
       };
     },
 
@@ -185,6 +214,16 @@
         if (this.exerciseIndex < EXERCISES.length - 1) {
           this.exerciseIndex++;
         }
+      },
+
+      setNextRung(e) {
+        e.stopPropagation();
+        this.rungNumber = Math.min(this.rungNumber + 1, this.maxRung);
+      },
+
+      setPreviousRung(e) {
+        e.stopPropagation();
+        this.rungNumber = Math.max(this.rungNumber - 1, this.minRung);
       },
     }
   };
