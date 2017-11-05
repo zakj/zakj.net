@@ -37,6 +37,8 @@
     height 100vh
     max-width 25em
     padding-bottom 2em
+    // TODO: max(2em, env(safe-area-inset-bottom))
+    padding-bottom 5em
     padding-top 25vh
     text-align center
     width 100%
