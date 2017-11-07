@@ -30,7 +30,6 @@
 
   .ladder
     background #000
-    border-radius 5px
     color #fff
     display flex
     flex-direction column
@@ -86,6 +85,7 @@
   +breakpoint(640px)
     .ladder
       background bg-color
+      border-radius 5px
       box-shadow 0 1px 8px #666
       color text-color
       height auto
