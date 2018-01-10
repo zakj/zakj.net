@@ -150,9 +150,8 @@
               child.style.transform = `translate(${dx}px, ${dy}px)`;
               anime({
                 targets: child,
-                translateX: dx,
-                translateY: dy,
-                direction: 'reverse',
+                translateX: [dx, 0],
+                translateY: [dy, 0],
                 duration: this.transitionDuration,
                 easing: 'easeInOutQuad',
                 complete: function(anim) {
