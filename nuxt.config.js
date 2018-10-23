@@ -1,29 +1,37 @@
+import cssMqPacker from 'css-mqpacker';
+import autoprefixer from 'autoprefixer';
+
 module.exports = {
   build: {
-    extend: function (config) {
-      config.module.rules.forEach(function (rule) {
-        if (rule.loader === 'vue-loader') {
-          rule.options = rule.options || {};
-          rule.options.cssModules = {
-            localIdentName: '[local]_[hash:base64:5]',
-            camelCase: true,
-          };
-        }
-      });
+    html: {
+      // Defaults (nuxt doesn't merge these when changing them).
+      collapseBooleanAttributes: true,
+      decodeEntities: true,
+      minifyCSS: true,
+      minifyJS: true,
+      processConditionalComments: true,
+      removeEmptyAttributes: true,
+      removeRedundantAttributes: true,
+      trimCustomFragments: true,
+      useShortDoctype: true,
+
+      // Customizations.
+      minify: {conservativeCollapse: true},
+    },
+    loaders: {
+      cssModules: {
+        camelCase: true,
+      },
     },
     postcss: [
-      require('css-mqpacker')(),
-      require('autoprefixer')({browsers: ['last 3 versions']}),
+      cssMqPacker(),
+      autoprefixer({browsers: ['last 3 versions']}),
     ],
-    vendor: ['animejs'],
   },
   css: [
     'normalize.css',
     {src: '~/assets/base.styl', lang: 'stylus'},
   ],
-  generate: {
-    minify: {conservativeCollapse: true},
-  },
   head: {
     htmlAttrs: {lang: 'en'},
     link: [
@@ -37,9 +45,9 @@ module.exports = {
   },
   loading: false,
   plugins: [
-    '~plugins/vue-config',  // first, so it can be used by other plugins
-    '~plugins/components',
-    '~plugins/sentry',
-    '~plugins/vue-touch-events',
+    '~/plugins/vue-config',  // first, so it can be used by other plugins
+    '~/plugins/components',
+    '~/plugins/sentry',
+    '~/plugins/vue-touch-events',
   ],
 };
