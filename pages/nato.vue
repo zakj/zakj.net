@@ -14,8 +14,6 @@
 
 
 <style lang="stylus" scoped>
-  @require '~assets/util'
-
   .result
     display flex
     flex-wrap wrap

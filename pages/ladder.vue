@@ -26,8 +26,6 @@
 
 
 <style lang="stylus" scoped>
-  @require '~assets/util'
-
   .ladder
     background #000
     color #fff

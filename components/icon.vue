@@ -4,7 +4,6 @@
 
 
 <style lang="stylus" scoped>
-  @require '~assets/util'
   icon-size = 26px
 
   a

@@ -10,8 +10,6 @@
 </template>
 
 <style lang="stylus" scoped>
-  @require '~assets/util'
-
   div
     align-items center
     display flex

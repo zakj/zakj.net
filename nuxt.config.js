@@ -44,10 +44,16 @@ module.exports = {
     titleTemplate: '%s · zakj.net',
   },
   loading: false,
+  modules: [
+    '@nuxtjs/style-resources',
+  ],
   plugins: [
     '~/plugins/vue-config',  // first, so it can be used by other plugins
     '~/plugins/components',
     '~/plugins/sentry',
     '~/plugins/vue-touch-events',
   ],
+  styleResources: {
+    stylus: ['~assets/util.styl'],
+  },
 };

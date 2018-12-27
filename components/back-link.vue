@@ -4,8 +4,6 @@
 </template>
 
 <style lang="stylus" scoped>
-  @require '~assets/util'
-
   a
     color text-color
     position relative

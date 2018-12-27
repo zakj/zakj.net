@@ -51,8 +51,6 @@
 </template>
 
 <style lang="stylus" module>
-  @require '~assets/util'
-
   // Make a sticky footer out of anything outside of .main.
   .container
     display flex
@@ -109,7 +107,6 @@
 </style>
 
 <style lang="stylus" scoped>
-  @require '~assets/util'
   +breakpoint(800px)
     .v-enter-active, .v-leave-active
       transition all 200ms ease
