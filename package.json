@@ -11,20 +11,20 @@
     }
   },
   "dependencies": {
-    "animejs": "^2.2.0",
-    "lodash": "^4.17.11",
-    "normalize.css": "^8.0.0",
-    "nuxt": "^2.2.0",
-    "raven-js": "^3.27.0",
-    "vue-config": "^1.0.0",
-    "vue-focus": "^2.1.0",
-    "vue-marked": "^0.1.1",
-    "vue2-touch-events": "^1.0.0"
+    "animejs": "2.2.0",
+    "lodash": "4.17.11",
+    "normalize.css": "8.0.1",
+    "nuxt": "2.3.4",
+    "raven-js": "3.27.0",
+    "vue-config": "1.0.0",
+    "vue-focus": "2.1.0",
+    "vue-marked": "0.1.1",
+    "vue2-touch-events": "1.1.1"
   },
   "devDependencies": {
     "css-mqpacker": "7.0.0",
-    "eslint-plugin-html": "^4.0.6",
-    "stylus": "^0.54.5",
-    "stylus-loader": "^3.0.2"
+    "eslint-plugin-html": "5.0.0",
+    "stylus": "0.54.5",
+    "stylus-loader": "3.0.2"
   }
 }
