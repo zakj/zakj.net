@@ -34,9 +34,6 @@ module.exports = {
   ],
   head: {
     htmlAttrs: {lang: 'en'},
-    link: [
-      {rel: 'stylesheet', href: '//fonts.googleapis.com/css?family=PT+Serif:400,400i|Unica+One'},
-    ],
     meta: [
       {name: 'charset', content: 'utf-8'},
       {name: 'viewport', content: 'initial-scale=1'},
