@@ -51,6 +51,7 @@ module.exports = {
     '~/plugins/vue-config',  // first, so it can be used by other plugins
     '~/plugins/components',
     '~/plugins/sentry',
+    '~/plugins/vue-scrollto',
     '~/plugins/vue-touch-events',
   ],
   styleResources: {
