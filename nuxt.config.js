@@ -53,6 +53,7 @@ module.exports = {
     '~/plugins/sentry',
     '~/plugins/vue-scrollto',
     '~/plugins/vue-touch-events',
+    '~/plugins/vue-viewport-overlap',
   ],
   styleResources: {
     stylus: ['~assets/util.styl'],
