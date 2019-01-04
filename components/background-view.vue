@@ -12,7 +12,7 @@
     position fixed
     right 0
     top 0
-    transition background-color 600ms ease-in
+    transition background-color $light-dark-transition-ms ease-in
     z-index -1
 </style>
 

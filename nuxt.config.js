@@ -3,6 +3,25 @@ import autoprefixer from 'autoprefixer';
 
 module.exports = {
   build: {
+    extend: config => {
+      const svgRule = config.module.rules.find(rule => rule.test.test('.svg'));
+      svgRule.test = /\.(png|jpe?g|gif|webp)$/;
+      config.module.rules.push({
+        test: /\.svg$/,
+        loader: 'vue-svg-loader',
+        options: {
+          svgo: {
+            plugins: [
+              {cleanupIDs: false},
+              {collapseGroups: false},
+              {convertShapeToPath: false},
+              {removeHiddenElems: false},
+              {removeViewBox: false},
+            ],
+          },
+        },
+      });
+    },
     html: {
       // Defaults (nuxt doesn't merge these when changing them).
       collapseBooleanAttributes: true,

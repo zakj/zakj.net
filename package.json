@@ -1,7 +1,7 @@
 {
   "private": true,
   "scripts": {
-    "start": "nuxt",
+    "start": "HOST=0.0.0.0 nuxt",
     "dist": "nuxt generate",
     "analyze": "nuxt build --analyze"
   },
@@ -26,6 +26,7 @@
     "css-mqpacker": "7.0.0",
     "eslint-plugin-html": "5.0.0",
     "stylus": "0.54.5",
-    "stylus-loader": "3.0.2"
+    "stylus-loader": "3.0.2",
+    "vue-svg-loader": "^0.11.0"
   }
 }

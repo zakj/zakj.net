@@ -40,7 +40,7 @@
 <style lang="stylus" module>
   .container, .container a
     color $light-text-color
-    transition color 400ms ease-in
+    transition color $light-dark-transition-ms ease-in
   .light-bg, .light-bg a
     color $dark-text-color
 
