@@ -1,144 +1,139 @@
 <template>
-  <div :class="$style.container">
-    <div :class="$style.main">
-      <transition mode="out-in">
-        <div :class="$style.blurb" v-if="!showProjects" key="blurb">
-          <vue-marked>
-            Hello! I'm a design-minded full-stack developer with a background
-            in information security. I've been building and breaking things on
-            the web since the nineties---most recently with companies like
-            [Etsy][], [GOOD][], and [Cabin][]. I currently lead a team of
-            product engineers at [Mixpanel][].
+  <div :class="{[$style.container]: true, [$style.lightBg]: lightBackground}">
+    <main>
+      <section :class="$style.splash" id="splash" v-viewport-overlap="overlapHandler">
+        <h1>Whiskey&nbsp;&amp; a&nbsp;dash of&nbsp;bitters.</h1>
+      </section>
 
-            I'm passionate about simplicity, [text editors][vimrc],
-            [significant whitespace][python], and [grammar][].
+      <section :class="$style.bio" id="bio" v-viewport-overlap="overlapHandler">
+        <h2>Bio</h2>
 
-            [Etsy]: https://www.etsy.com/
-            [GOOD]: https://www.good.is
-            [Cabin]: http://madebycabin.com/
-            [Mixpanel]: https://mixpanel.com/
-            [vimrc]: https://github.com/zakj/dotfiles/blob/master/vimrc
-            [python]: https://www.python.org/
-            [grammar]: https://brians.wsu.edu/common-errors-in-english-usage/
-          </vue-marked>
+        <p>Hello! I’m Zak Johnson, a design-minded full-stack developer with
+        a background in information security. I’ve been building and breaking
+        things on the web since the nineties at companies like Etsy, GOOD,
+        and Cabin. I currently lead a team of product engineers at Mixpanel.</p>
 
-          <p :class="$style.links">
-            <icon href="https://twitter.com/zakj" class="twitter">@zakj</icon>
-            <icon href="https://github.com/zakj" class="github">zakj on GitHub</icon>
-            <icon href="mailto:me@zakj.net" class="email">me@zakj.net</icon>
-            <icon href="https://www.linkedin.com/in/zakjohnson" class="linkedin">LinkedIn</icon>
-            <a v-if="this.$config.projects" @click="toggleProjects" :class="$style.projectsLink">Projects</a>
-          </p>
+        <p>I’m passionate about simplicity, text editors, significant
+        whitespace, and grammar. (TODO text, links, etc)</p>
+      </section>
 
-        </div>
+      <section :class="$style.history" id="history" v-viewport-overlap="overlapHandler">
+        <h2>History</h2>
+      </section>
 
-        <div :class="$style.projects" v-else key="projects">
-          <h2><back-link :click="toggleProjects">Projects</back-link></h2>
-          <p>Links to some little toys and projects I've been working on.</p>
-          <ul>
-            <li><nuxt-link to="/flex">Flex playground</nuxt-link></li>
-            <li><nuxt-link to="/nato">NATO alphabet</nuxt-link></li>
-            <li><nuxt-link to="/ladder">Exercise ladder</nuxt-link></li>
-            <li><a href=XXX>Linkhunter</a>, a Chrome extension for Pinboard</li>
-            <li><a href=XXX>mourning</a>, a color scheme for vim</li>
-          </ul>
-        </div>
-      </transition>
-    </div>
+      <section :class="$style.code" id="code" ref="code" v-viewport-overlap="overlapHandler">
+        <h2>Code</h2>
+      </section>
 
-    <div :class="$style.bannerPic"></div>
+      <section :class="$style.qa" id="qa" v-viewport-overlap="overlapHandler">
+        <h2>Q / A</h2>
+      </section>
+    </main>
+
+    <BackgroundView />
+    <HeaderLogo />
+    <NavMenu />
+    <SocialMenu />
   </div>
 </template>
 
 <style lang="stylus" module>
-  // Make a sticky footer out of anything outside of .main.
-  .container
+  .container, .container a
+    color $light-text-color
+    transition color 400ms ease-in
+  .light-bg, .light-bg a
+    color $dark-text-color
+
+  .splash
+    align-items center
     display flex
-    flex-direction column
-    min-height 100vh
-  .main
-    flex 1
-    margin 0 auto
-    max-width 30em
-    +breakpoint(800px)
-      display flex
-      flex-direction column
-      justify-content center
-      margin-bottom 4%
-      margin-left 15%
-      max-width 25em
-    +breakpoint(1200px)
-      margin-left 20%
+    // background-image url('~/assets/splash-bg.jpg')
+    // background-size cover
+    // background-position bottom right
 
-  .blurb, .projects
-    padding 2.5em
-    > :first-child, div > :first-child
-      margin-top 0
-    > :last-child
-      margin-bottom 0
-    +breakpoint(800px)
-      background-color #fff
-      box-shadow 0 0 1px alpha(#000, .3)
+  .bio
+    // background-color #dbc69e
+    // transition background-color 200ms ease-in
 
-  .links
-    display flex
-    margin 1.5em 0
-    .projects-link
-      line-height 26px  // icon size
-      margin-left auto
+  .history
+    // background-color #1d7c87
 
-  .banner-pic
-    background-image url('~/assets/img/zak-stripe.jpg')
-    background-size cover
-    &:before
-      content ""
-      display block
-      // Set element size to match image dimension ratio.
-      padding-top round(percentage(880 / 1600))
-    +breakpoint(800px)
-      background-image url('~/assets/img/zak-cover.jpg')
-      background-position center center
-      bottom 0
-      left 0
-      position absolute
-      right 0
-      top 0
-      z-index -1
-</style>
+  .code
+    // background-color #fff
+    // color $dark-text-color
 
-<style lang="stylus" scoped>
-  +breakpoint(800px)
-    .v-enter-active, .v-leave-active
-      transition all 200ms ease
-    .v-leave-active
-      transition-duration 100ms
-    .v-enter, .v-leave-to
-      transform scale(.85)
-      opacity 0
+  .qa
+    // background-color #4a4a4a
 </style>
 
 <script>
-  import VueMarked from 'vue-marked';
+  import {mapGetters, mapMutations} from 'vuex';
+
+  import BackgroundView from '~/components/background-view';
+  import HeaderLogo from '~/components/header-logo';
+  import NavMenu from '~/components/nav-menu';
+  import SocialMenu from '~/components/social-menu';
 
   export default {
     head: {
       title: 'Zak Johnson',
       meta: [
-        {hid: 'description', name: 'description', content: ''},
+        {hid: 'description', name: 'description', content: 'XXX'},
       ],
     },
 
-    components: {VueMarked},
+    components: {BackgroundView, HeaderLogo, NavMenu, SocialMenu},
+
+    computed: {
+      bg() {
+        const colorsRGB = {
+          bio: '#dbc69e',
+          history: '#1d7c87',
+          code: '#fff',
+          qa: '#4a4a4a',
+        };
+        const colorsHSL = {
+          bio: 'hsl(39, 46%, 74%)',
+          history: 'hsl(186, 65%, 32%)',
+          code: 'hsl(0, 0%, 100%)',
+          qa: 'hsl(0, 0%, 29%)',
+        };
+        const colors = colorsHSL;
+        return colors[this.greatestOverlapElement && this.greatestOverlapElement.id] || 'transparent';
+      },
+
+      greatestOverlapElement() {
+        return this.elementOverlaps
+          .map(([el, overlap]) => ({el, overlap}))
+          .filter(({overlap}) => overlap > 0)
+          .sort((a, b) => b.overlap - a.overlap)
+          .map(({el}) => el)[0] || null;
+      },
+
+      ...mapGetters(['lightBackground']),
+    },
 
     data() {
       return {
-        showProjects: false,
-      };
+        elementOverlaps: [],
+      }
     },
 
     methods: {
-      toggleProjects() {
-        this.showProjects = !this.showProjects;
+      overlapHandler(el, overlap) {
+        // Vue is not reactive on Map, so we translate as needed.
+        const map = new Map(this.elementOverlaps);
+        // TODO: pass name from callers, just use an object?
+        map.set(el, overlap);
+        this.elementOverlaps = Array.from(map);
+      },
+
+      ...mapMutations(['setCurrentSection']),
+    },
+
+    watch: {
+      greatestOverlapElement: function(section) {
+        this.setCurrentSection(section.id);
       },
     },
   };

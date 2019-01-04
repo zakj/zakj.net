@@ -12,6 +12,8 @@ $light-text-color = #fff
 $desktop = 750px
 $small-padding = 24px
 $large-padding = 64px
+$small-nav-height = 16px
+$large-nav-height = 20px
 
 
 // Shortcut for min-width media queries.
@@ -42,3 +44,20 @@ hide-text()
   overflow hidden
   text-indent 110%
   white-space nowrap
+
+
+$side-nav
+  bottom 0
+  font $small-nav-height/1 $header-font-stack
+  margin 0 $small-padding
+  position fixed
+  text-align center
+  text-transform uppercase
+  top 0
+  user-select none
+  writing-mode vertical-rl
+  +breakpoint($desktop)
+    font-size $large-nav-height
+    margin 0 $large-padding
+  a
+    padding 0.7em 0

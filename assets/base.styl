@@ -28,14 +28,19 @@
 body
   // background bg-color
   color $light-text-color
-  font 1em/1.5 $body-font-stack
-  +breakpoint(375px)
-    font-size 1.1em
-  +breakpoint(750px)
-    font-size 1.25em
+  font 17px/20px $body-font-stack
+  +breakpoint($desktop)
+    font-size 32px
+    line-height 37px
 
 *
   box-sizing border-box
+
+section
+  min-height 100vh
+  padding $small-padding * 2 ($small-padding * 2 + $small-nav-height)
+  +breakpoint($desktop)
+    padding $large-padding * 2 ($large-padding * 2 + $large-nav-height - 4px)
 
 input, select
   font inherit
@@ -48,16 +53,35 @@ h1, h2, h3
   font-family $header-font-stack
   text-transform uppercase
 
-// Show pretty underlined links in body text.
-a:not(.no-underline)
-  color text-color
-  underline(alpha(text-color, .3), bg-color, 0.05em, 0.14em, text-color)
+h1
+  font-size 72px
+  line-height 68px
+  margin 0
+h2
+  font-size 52px
+  line-height 1.6
+  margin 0
++breakpoint($desktop)
+  h1
+    font-size 152px
+    line-height 144px
+  h2
+    font-size 72px
 
-.page
-  margin 0 auto
-  padding 0 20px 30px
-  +breakpoint(420px)
-    max-width 30em
+p
+  max-width 25em
 
-.page h1
-  text-align center
+
+// // Show pretty underlined links in body text.
+// a:not(.no-underline)
+//   color text-color
+//   underline(alpha(text-color, .3), bg-color, 0.05em, 0.14em, text-color)
+
+// .page
+//   margin 0 auto
+//   padding 0 20px 30px
+//   +breakpoint(420px)
+//     max-width 30em
+
+// .page h1
+//   text-align center

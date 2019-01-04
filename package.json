@@ -18,7 +18,6 @@
     "raven-js": "3.27.0",
     "vue-config": "1.0.0",
     "vue-focus": "2.1.0",
-    "vue-marked": "0.1.1",
     "vue-scrollto": "^2.13.0",
     "vue2-touch-events": "1.1.1"
   },
