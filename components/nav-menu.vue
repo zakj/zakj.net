@@ -11,7 +11,10 @@
 <style lang="stylus" module>
   .nav
     @extend $side-nav
-    left 0
+    right 0
+    +breakpoint($desktop)
+      left 0
+      right auto
 </style>
 
 

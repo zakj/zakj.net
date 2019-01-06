@@ -2,7 +2,7 @@
   <div :class="{container: true, 'light-bg': lightBackground}">
     <main>
       <section :class="$style.splash" id="splash" v-viewport-overlap="overlapHandler">
-        <h1>Whiskey&nbsp;&amp; a&nbsp;dash of&nbsp;bitters.</h1>
+        <h1>Whiskey ginger&nbsp;&amp; a&nbsp;dash&nbsp;of bitters.</h1>
       </section>
 
       <section :class="$style.bio" id="bio" v-viewport-overlap="overlapHandler">
@@ -10,18 +10,25 @@
 
         <p>Hello! I’m Zak Johnson, a design-minded full-stack developer with
         a background in information security. I’ve been building and breaking
-        things on the web since the nineties at companies like Etsy, GOOD,
-        and Cabin. I currently lead a team of product engineers at Mixpanel.</p>
+        things on the web since the nineties at companies like
+        <a href="https://www.etsy.com/">Etsy</a>,
+        <a href="https://www.good.is/">GOOD</a>, and
+        <a href="http://madebycabin.com/">Cabin</a>. I currently lead a team
+        of product engineers at
+        <a href="https://mixpanel.com/">Mixpanel</a>.</p>
 
-        <p>I’m passionate about simplicity, text editors, significant
-        whitespace, and grammar. (TODO text, links, etc)</p>
+        <p>I’m passionate about simplicity,
+        <a href="https://github.com/zakj/dotfiles/blob/master/vimrc">text
+        editors</a>,
+        <a href="https://www.python.org/">significant whitespace</a>, and
+        <a href="https://brians.wsu.edu/common-errors-in-english-usage/">grammar</a>.</p>
       </section>
 
       <section :class="$style.history" id="history" v-viewport-overlap="overlapHandler">
         <h2>History</h2>
       </section>
 
-      <section :class="$style.code" id="code" ref="code" v-viewport-overlap="overlapHandler">
+      <section :class="$style.code" id="code" v-viewport-overlap="overlapHandler">
         <h2>Code</h2>
       </section>
 

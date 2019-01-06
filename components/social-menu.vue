@@ -10,8 +10,11 @@
 
 <style lang="stylus" module>
   .social
-    @extend $side-nav
-    right 0
+    display none
+    +breakpoint($desktop)
+      @extend $side-nav
+      display block
+      right 0
 </style>
 
 

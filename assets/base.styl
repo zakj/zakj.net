@@ -39,8 +39,9 @@
   box-sizing border-box
 
 section
+  // TODO: fix changing vh on mobile safari when address-bar chrome is visible/not
   min-height 100vh
-  padding $small-padding * 2 ($small-padding * 2 + $small-nav-height)
+  padding $small-padding * 2 ($small-padding * 2 + $small-nav-height) $small-padding * 2 $small-padding
   +breakpoint($desktop)
     padding $large-padding * 2 ($large-padding * 2 + $large-nav-height - 4px)
 
@@ -61,17 +62,24 @@ h1, h2, h3
   text-transform uppercase
 
 h1
-  font-size 72px
-  line-height 68px
+  font-size 64px
+  line-height 0.9
   margin 0
+  max-width 8em
 h2
   font-size 52px
   line-height 1.6
   margin 0
+// TODO: noodle with breakpoints a bit more
++breakpoint(700px)
+  h1
+    font-size 72px
 +breakpoint($desktop)
   h1
-    font-size 152px
-    line-height 144px
+    font-size 96px
++breakpoint(1040px)
+  h1
+    font-size 128px
   h2
     font-size 72px
 
