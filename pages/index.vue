@@ -85,23 +85,6 @@
     components: {BackgroundView, HeaderLogo, NavMenu, SocialMenu},
 
     computed: {
-      bg() {
-        const colorsRGB = {
-          bio: '#dbc69e',
-          history: '#1d7c87',
-          code: '#fff',
-          qa: '#4a4a4a',
-        };
-        const colorsHSL = {
-          bio: 'hsl(39, 46%, 74%)',
-          history: 'hsl(186, 65%, 32%)',
-          code: 'hsl(0, 0%, 100%)',
-          qa: 'hsl(0, 0%, 29%)',
-        };
-        const colors = colorsHSL;
-        return colors[this.greatestOverlapElement && this.greatestOverlapElement.id] || 'transparent';
-      },
-
       greatestOverlapElement() {
         return this.elementOverlaps
           .map(([el, overlap]) => ({el, overlap}))
