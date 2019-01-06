@@ -1,5 +1,5 @@
 <template>
-  <div :class="{[$style.container]: true, [$style.lightBg]: lightBackground}">
+  <div :class="{container: true, 'light-bg': lightBackground}">
     <main>
       <section :class="$style.splash" id="splash" v-viewport-overlap="overlapHandler">
         <h1>Whiskey&nbsp;&amp; a&nbsp;dash of&nbsp;bitters.</h1>
@@ -38,12 +38,6 @@
 </template>
 
 <style lang="stylus" module>
-  .container, .container a
-    color $light-text-color
-    transition color $light-dark-transition-ms ease-in
-  .light-bg, .light-bg a
-    color $dark-text-color
-
   .splash
     align-items center
     display flex

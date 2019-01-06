@@ -62,3 +62,20 @@ $side-nav
     margin 0 $large-padding
   a
     padding 0.7em 0
+    position relative
+    text-decoration none
+  a::after
+    background-color $light-text-color
+    content ""
+    display block
+    height calc(100% - 1.4em)
+    position absolute
+    top 0.7em
+    transform scaleY(0)
+    transform-origin top center
+    transition background-color $light-dark-transition-ms ease-in, transform 150ms ease-in
+    width 2px
+    :global(.light-bg) &
+      background-color $dark-text-color
+  a:hover::after
+    transform scaleY(1)

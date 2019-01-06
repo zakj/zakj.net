@@ -29,10 +29,10 @@
       height $large-mark-size
       width $large-mark-size
     g
-      fill #fff
+      fill $light-text-color
       transition fill $light-dark-transition-ms ease-in
     &.dark g
-      fill #000
+      fill $dark-text-color
 </style>
 
 <script>
@@ -57,6 +57,8 @@ export default {
 
   watch: {
     hover(isHovered) {
+      // TODO: don't use hover state on touch devices (or just on small screens?)
+      // TODO: factor out this animation to use when the mobile menu is open
       if (this.timeline) this.timeline.pause();
       const mark = this.$el.querySelector(`.${this.$style.mark}`);
       const topClip = mark.querySelector('#mark-top-clip rect');

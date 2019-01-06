@@ -25,10 +25,12 @@
     url('~assets/fonts/GT-Sectra-Regular.woff2') format('woff2'),
     url('~assets/fonts/GT-Sectra-Regular.woff') format('woff')
 
-body
-  // background bg-color
+.container
   color $light-text-color
   font 17px/20px $body-font-stack
+  transition color $light-dark-transition-ms ease-in
+  &.light-bg
+    color $dark-text-color
   +breakpoint($desktop)
     font-size 32px
     line-height 37px
@@ -46,8 +48,13 @@ input, select
   font inherit
 
 a
+  color $light-text-color
   cursor pointer
-  text-decoration none
+  transition color $light-dark-transition-ms ease-in
+  // TODO link styles
+  // text-decoration none
+  .light-bg &
+    color $dark-text-color
 
 h1, h2, h3
   font-family $header-font-stack
@@ -76,12 +83,3 @@ p
 // a:not(.no-underline)
 //   color text-color
 //   underline(alpha(text-color, .3), bg-color, 0.05em, 0.14em, text-color)
-
-// .page
-//   margin 0 auto
-//   padding 0 20px 30px
-//   +breakpoint(420px)
-//     max-width 30em
-
-// .page h1
-//   text-align center
