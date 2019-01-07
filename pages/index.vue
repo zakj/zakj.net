@@ -33,7 +33,7 @@
       </section>
 
       <section :class="$style.qa" id="qa" v-viewport-overlap="overlapHandler">
-        <h2>Q / A</h2>
+        <h2>Q/A</h2>
       </section>
     </main>
 
