@@ -48,6 +48,7 @@ hide-text()
 
 
 $side-nav
+  $padding = 12px
   bottom 0
   font $small-nav-height/1 $header-font-stack
   margin 0 $small-padding
@@ -61,21 +62,24 @@ $side-nav
     font-size $large-nav-height
     margin 0 $large-padding
   a
-    padding 0.7em 0
+    padding $padding 0
     position relative
     text-decoration none
   a::after
     background-color $light-text-color
     content ""
     display block
-    height calc(100% - 1.4em)
+    height "calc(100% - %s)" % ($padding * 2 + 2)
     position absolute
-    top 0.7em
+    top $padding + 1px
     transform scaleY(0)
     transform-origin top center
     transition background-color $light-dark-transition-ms ease-in, transform 150ms ease-in
     width 2px
     :global(.light-bg) &
       background-color $dark-text-color
+    +breakpoint($desktop)
+      width 3px
   a:hover::after
     transform scaleY(1)
+

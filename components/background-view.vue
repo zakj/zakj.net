@@ -40,10 +40,10 @@ import {mapState} from 'vuex';
 
 const SECTION_COLORS = {
   splash: 'hsl(209, 18%, 34%)',
-  bio: 'hsl(39, 46%, 74%)',
-  history: 'hsl(186, 65%, 32%)',
-  code: 'hsl(0, 0%, 100%)',
-  qa: 'hsl(0, 0%, 29%)',
+  bio: '#ccba97',
+  history: '#1d7c87',
+  code: '#fff',
+  qa: '#4a4a4a',
 };
 
 const SECTION_OPACITIES = {
