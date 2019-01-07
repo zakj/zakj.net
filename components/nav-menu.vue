@@ -20,7 +20,6 @@
   .marker
     background-color $light-text-color
     left -3px
-    opacity 0.3
     position absolute
     transition background-color $light-dark-transition-ms ease-in
     width 2px
@@ -59,19 +58,21 @@ export default {
         const bio = this.$refs.bio;
         const rect = bio.getBoundingClientRect();
         to.top = `${rect.top + itemPadding}px`;
-        to.height = 0;
       }
       else {
         const rect = navItem.getBoundingClientRect();
         to.top = `${rect.top + itemPadding}px`;
         to.height = `${rect.height - itemPadding * 2}px`;
       }
-      this.markerAnimation = anime({
+      this.markerAnimation = anime.timeline({
         duration: 200,
-        easing: 'easeInQuad',
+        easing: 'easeOutQuad',
         targets: marker,
-        ...to,
-      });
+      }).add(to);
+      // Prevent the market disappearing before it reaches the top of the first item.
+      if (!navItem) {
+        this.markerAnimation.add({height: 0, offset: 50});
+      }
     },
   },
 
