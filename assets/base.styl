@@ -29,11 +29,12 @@
   color $light-text-color
   font 17px/20px $body-font-stack
   transition color $light-dark-transition-ms ease-in
+  -webkit-font-smoothing antialiased  // thinner rendering
   &.light-bg
     color $dark-text-color
   +breakpoint($desktop)
-    font-size 32px
-    line-height 37px
+    font-size 28px
+    line-height 34px
 
 *
   box-sizing border-box
