@@ -21,11 +21,13 @@
     position absolute
 
   .image
-    background-position bottom right
-    background-size cover
     background-image url('~/assets/splash-bg.jpg')
+    background-position bottom right 20%
+    background-size cover
     transition transform 200ms ease-in
-    // &.swiped
+    +breakpoint($desktop)
+      background-position bottom right
+    // &.swiped  // TODO evaluate this
     //   transform translateY(-100vh)
 
   .color

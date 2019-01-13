@@ -10,6 +10,7 @@ $dark-text-color = #222
 $light-text-color = #fff
 $light-dark-transition-ms = 600ms
 
+$mobile = -750px
 $desktop = 750px
 $small-padding = 24px
 $large-padding = 64px
@@ -19,8 +20,12 @@ $large-nav-height = 20px
 
 // Shortcut for min-width media queries.
 breakpoint(w)
-  @media screen and (min-width: w)
-    {block}
+  if (w > 0)
+    @media screen and (min-width: w)
+      {block}
+  else
+    @media screen and (max-width: w * -1 - 1)
+      {block}
 
 
 // Shortcut for cross-platform high-resolution support.
@@ -47,7 +52,7 @@ hide-text()
   white-space nowrap
 
 
-$side-nav
+side-nav()
   $padding = 12px
   bottom 0
   font $small-nav-height/1 $header-font-stack
@@ -76,11 +81,9 @@ $side-nav
       transform scaleY(0)
       transform-origin top center
       transition background-color $light-dark-transition-ms ease-in, transform 150ms ease-in
-      width 2px
+      width 3px
       :global(.light-bg) &
         background-color $dark-text-color
-      +breakpoint($desktop)
-        width 3px
     a:hover::after
       transform scaleY(1)
 

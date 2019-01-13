@@ -1,6 +1,6 @@
 <template>
   <nav :class="$style.nav">
-    <div :class="{[$style.marker]: true, [$style.dark]: lightBackground}" ref="marker"></div>
+    <div :class="$style.marker" ref="marker"></div>
     <a href="#bio" v-scroll-to="'#bio'" ref="bio">Bio</a>
     <a href="#history" v-scroll-to="'#history'" ref="history">History</a>
     <a href="#code" v-scroll-to="'#code'" ref="code">Code</a>
@@ -11,7 +11,7 @@
 
 <style lang="stylus" module>
   .nav
-    @extend $side-nav
+    side-nav()
     right 0
     +breakpoint($desktop)
       left 0
@@ -23,7 +23,7 @@
     position absolute
     transition background-color $light-dark-transition-ms ease-in
     width 2px
-    &.dark
+    :global(.light-bg) &
       background-color $dark-text-color
     +breakpoint($desktop)
       width 3px
@@ -32,13 +32,12 @@
 
 <script>
 import anime from 'animejs';
-import {mapGetters, mapState} from 'vuex';
+import {mapState} from 'vuex';
 
 const itemPadding = 12;
 
 export default {
   computed: {
-    ...mapGetters(['lightBackground']),
     ...mapState(['currentSection']),
   },
 

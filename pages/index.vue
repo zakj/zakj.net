@@ -39,8 +39,9 @@
 
     <BackgroundView />
     <HeaderLogo />
-    <NavMenu />
     <SocialMenu />
+    <NavMenu />
+    <SocialMenuIcon />
   </div>
 </template>
 
@@ -68,22 +69,26 @@
 </style>
 
 <script>
-  import {mapGetters, mapMutations} from 'vuex';
+  import {mapGetters, mapMutations, mapState} from 'vuex';
 
   import BackgroundView from '~/components/background-view';
   import HeaderLogo from '~/components/header-logo';
   import NavMenu from '~/components/nav-menu';
   import SocialMenu from '~/components/social-menu';
+  import SocialMenuIcon from '~/components/social-menu-icon';
 
   export default {
-    head: {
-      title: 'Zak Johnson',
-      meta: [
-        {hid: 'description', name: 'description', content: 'XXX'},
-      ],
+    head() {
+      return {
+        title: 'Zak Johnson',
+        meta: [
+          {hid: 'description', name: 'description', content: 'XXX'},
+        ],
+        bodyAttrs: this.socialMenuOpen ? {class: 'no-scroll'} : {},
+      };
     },
 
-    components: {BackgroundView, HeaderLogo, NavMenu, SocialMenu},
+    components: {BackgroundView, HeaderLogo, NavMenu, SocialMenu, SocialMenuIcon},
 
     computed: {
       greatestOverlapElement() {
@@ -95,6 +100,7 @@
       },
 
       ...mapGetters(['lightBackground']),
+      ...mapState(['socialMenuOpen']),
     },
 
     data() {
