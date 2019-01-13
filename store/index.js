@@ -5,7 +5,7 @@ export const state = () => ({
 
 export const getters = {
   lightBackground: state => {
-    return !state.socialMenuOpen && ['code'].includes(state.currentSection)
+    return !state.socialMenuOpen && ['code'].includes(state.currentSection);
   },
 };
 
@@ -16,5 +16,5 @@ export const mutations = {
 
   toggleSocialMenu(state, open=undefined) {
     state.socialMenuOpen = typeof open === 'boolean' ? open : !state.socialMenuOpen;
-  }
+  },
 };

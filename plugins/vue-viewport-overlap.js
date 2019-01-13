@@ -12,7 +12,7 @@ function updateOverlaps() {
   const viewportRect = {top: 0, bottom: viewportHeight};
   for (const [el, binding] of bindings.entries()) {
     binding(el, computeOverlap(el.getBoundingClientRect(), viewportRect));
-  };
+  }
 }
 
 function throttle(fn, timeout = 0) {
@@ -24,7 +24,7 @@ function throttle(fn, timeout = 0) {
       waiting = false;
       fn();
     }, timeout);
-  }
+  };
 }
 
 const throttledUpdate = throttle(updateOverlaps, 50);
