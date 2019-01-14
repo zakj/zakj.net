@@ -25,7 +25,7 @@
       </section>
 
       <section :class="$style.history" id="history" v-viewport-overlap="overlapHandler">
-        <h2>History</h2>
+        <HistoryGraph />
       </section>
 
       <section :class="$style.code" id="code" v-viewport-overlap="overlapHandler">
@@ -73,6 +73,7 @@
 
   import BackgroundView from '~/components/background-view';
   import HeaderLogo from '~/components/header-logo';
+  import HistoryGraph from '~/components/history-graph';
   import NavMenu from '~/components/nav-menu';
   import SocialMenu from '~/components/social-menu';
   import SocialMenuIcon from '~/components/social-menu-icon';
@@ -88,7 +89,7 @@
       };
     },
 
-    components: {BackgroundView, HeaderLogo, NavMenu, SocialMenu, SocialMenuIcon},
+    components: {BackgroundView, HistoryGraph, HeaderLogo, NavMenu, SocialMenu, SocialMenuIcon},
 
     computed: {
       greatestOverlapElement() {
@@ -106,7 +107,7 @@
     data() {
       return {
         elementOverlaps: [],
-      }
+      };
     },
 
     methods: {
