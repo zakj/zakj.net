@@ -1,6 +1,6 @@
 <template>
-  <svg :height="height" :width="width" :class="$style.pie">
-    <g :transform="`translate(${width / 2}, ${height / 2 * 1.1})`" fill="white">
+  <svg :height="height" :width="width" :viewBox="`0 0 ${innerSize} ${innerSize}`" :class="$style.pie">
+    <g :transform="`translate(${innerSize / 2}, ${innerSize / 2 * 1.1})`" fill="white">
       <path
         v-for="(arcData, i) in arcs"
         :key="`path-${i}`" :d="arc(arcData)"
@@ -8,6 +8,8 @@
         :style="{opacity: arcOpacity(i)}"
         @mouseenter="$emit('hover', i)"
       />
+      <text :class="$style.label" text-anchor="middle" dominant-baseline="text-after-edge" x="-1" y="45">{{selectedLabel}}</text>
+      <text :class="$style.sub" text-anchor="middle" dominant-baseline="text-before-edge" x="-1" y="32">{{selectedSub}}</text>
     </g>
   </svg>
 </template>
@@ -20,6 +22,19 @@
   .selected
     fill $copper-color
     transform scale(1.1)
+
+  .label, .sub
+    font-family $header-font-stack
+
+  .label
+    font-size 80px
+    font-weight bold
+
+  .sub
+    font-size 12px
+    letter-spacing 0.5px
+    opacity .6
+    text-transform uppercase
 </style>
 
 
@@ -31,18 +46,27 @@ export default {
     arcs() {
       return this.pie(this.data);
     },
+
+    selectedLabel() {
+      return this.data[this.selected].label;
+    },
+
+    selectedSub() {
+      return this.data[this.selected].sub;
+    },
   },
 
   data() {
     return {
       arc: arc()
-        .innerRadius(0)
+        .innerRadius(75)
         .outerRadius(({index}) => {
-          const maxSize = Math.min(this.height, this.width) / 2;
-          return maxSize - (this.data.length - index) * this.staggerSize;
+          const maxRadius = this.innerSize / 2;
+          return maxRadius - (this.data.length - index) * this.staggerSize;
         }),
+      innerSize: 500,
       pie: pie().value(d => d.size).sortValues(null),
-      staggerSize: 8,
+      staggerSize: 6,
     };
   },
 
