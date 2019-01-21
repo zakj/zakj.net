@@ -1,6 +1,8 @@
 export const state = () => ({
   currentSection: 'splash',
   socialMenuOpen: false,
+  windowHeight: null,
+  windowWidth: null,
 });
 
 export const getters = {
@@ -16,5 +18,10 @@ export const mutations = {
 
   toggleSocialMenu(state, open=undefined) {
     state.socialMenuOpen = typeof open === 'boolean' ? open : !state.socialMenuOpen;
+  },
+
+  setWindowSize(state, {width, height}) {
+    state.windowWidth = width;
+    state.windowHeight = height;
   },
 };

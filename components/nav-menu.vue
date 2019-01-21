@@ -38,7 +38,7 @@ const itemPadding = 12;
 
 export default {
   computed: {
-    ...mapState(['currentSection']),
+    ...mapState(['currentSection', 'windowHeight']),
   },
 
   data() {
@@ -48,7 +48,7 @@ export default {
   },
 
   methods: {
-    moveMarker(section) {
+    moveMarker(section, {animate=true}={}) {
       if (this.markerAnimation) this.markerAnimation.pause();
       const marker = this.$refs.marker;
       const navItem = this.$refs[this.currentSection];
@@ -63,14 +63,21 @@ export default {
         to.top = `${rect.top + itemPadding}px`;
         to.height = `${rect.height - itemPadding * 2}px`;
       }
-      this.markerAnimation = anime.timeline({
-        duration: 200,
-        easing: 'easeOutQuad',
-        targets: marker,
-      }).add(to);
-      // Prevent the market disappearing before it reaches the top of the first item.
-      if (!navItem) {
-        this.markerAnimation.add({height: 0, offset: 50});
+      if (animate) {
+        this.markerAnimation = anime.timeline({
+          duration: 200,
+          easing: 'easeOutQuad',
+          targets: marker,
+        }).add(to);
+        // Prevent the marker disappearing before it reaches the top of the first item.
+        if (!navItem) {
+          this.markerAnimation.add({height: 0, offset: 50});
+        }
+      }
+      else {
+        marker.style.top = to.top;
+        marker.style.height = to.height;
+        return;
       }
     },
   },
@@ -82,6 +89,10 @@ export default {
   watch: {
     currentSection(section) {
       this.moveMarker(section);
+    },
+
+    windowHeight() {
+      this.moveMarker(this.currentSection, {animate: false});
     },
   },
 };

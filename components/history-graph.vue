@@ -10,7 +10,7 @@
     </ul>
     <div :class="$style.date">{{dateRange(selectedItem)}}</div>
     <p :class="$style.description">{{selectedItem.description}}</p>
-    <StaggeredPie :class="$style.graph" @hover="hoverPie" :data="historyPie" :selected="selectedIndex" :height="650" :width="650" />
+    <StaggeredPie :class="$style.graph" @hover="hoverPie" :data="historyPie" :selected="selectedIndex" :height="pieSize" :width="pieSize" />
   </div>
 </template>
 
@@ -65,6 +65,7 @@
 import distanceInWordsStrict from 'date-fns/distance_in_words_strict';
 import parse from 'date-fns/parse';
 import zip from 'lodash/zip';
+import {mapState} from 'vuex';
 
 import StaggeredPie from '~/components/staggered-pie';
 
@@ -112,9 +113,16 @@ export default {
       });
     },
 
+    pieSize() {
+      // TODO: figure out the right numbers here
+      return Math.max(this.windowWidth, this.windowHeight) / 2;
+    },
+
     selectedItem() {
       return this.history[this.selectedIndex];
     },
+
+    ...mapState(['windowHeight', 'windowWidth']),
   },
 
   data() {

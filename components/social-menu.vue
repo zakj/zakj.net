@@ -1,6 +1,6 @@
 <template>
-  <nav :class="$style.social">
-    <div :class="{[$style.menu]: true, [$style.open]: socialMenuOpen}">
+  <nav :class="{[$style.social]: true, [$style.open]: socialMenuOpen}">
+    <div :class="$style.menu">
       <a href="https://twitter.com/zakj"><span :class="$style.at">@</span>zakj</a>
       <a href="https://github.com/zakj">GitHub</a>
       <a href="https://www.linkedin.com/in/zakjohnson">LinkedIn</a>
@@ -14,15 +14,18 @@
   +breakpoint($mobile)
     .social
       bottom 0
+      display none
       left 0
       position fixed
       right 0
       top 0
+      &.open
+        display block
 
     .menu
       background-color #1d7c87
       bottom 0
-      display none
+      display flex
       flex-direction column
       font-family $header-font-stack
       font-size 56px
@@ -36,8 +39,6 @@
       right 0
       text-transform uppercase
       top 0
-      &.open
-        display flex
       a
         text-decoration none
     .at

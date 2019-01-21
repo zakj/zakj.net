@@ -69,6 +69,7 @@
 </style>
 
 <script>
+  import throttle from 'lodash/throttle';
   import {mapGetters, mapMutations, mapState} from 'vuex';
 
   import BackgroundView from '~/components/background-view';
@@ -101,7 +102,7 @@
       },
 
       ...mapGetters(['lightBackground']),
-      ...mapState(['socialMenuOpen']),
+      ...mapState(['socialMenuOpen', 'windowHeight', 'windowWidth']),
     },
 
     data() {
@@ -119,7 +120,22 @@
         this.elementOverlaps = Array.from(map);
       },
 
-      ...mapMutations(['setCurrentSection']),
+      updateWindowSize: throttle(function (event) {
+        const height = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+        const width = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+        this.setWindowSize({width, height});
+      }, 20),
+
+      ...mapMutations(['setCurrentSection', 'setWindowSize']),
+    },
+
+    mounted() {
+      this.updateWindowSize();
+      window.addEventListener('resize', this.updateWindowSize);
+    },
+
+    destroyed() {
+      window.removeEventListener('resize', this.updateWindowSize);
     },
 
     watch: {
