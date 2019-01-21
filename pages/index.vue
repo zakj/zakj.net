@@ -1,5 +1,5 @@
 <template>
-  <div :class="{container: true, 'light-bg': lightBackground}">
+  <div :class="{container: true, 'light-bg': isLightBackground}">
     <main>
       <section :class="$style.splash" id="splash" v-viewport-overlap="overlapHandler">
         <h1>Whiskey ginger&nbsp;&amp; a&nbsp;dash&nbsp;of bitters.</h1>
@@ -101,7 +101,7 @@
           .map(({el}) => el)[0] || null;
       },
 
-      ...mapGetters(['lightBackground']),
+      ...mapGetters(['isLightBackground']),
       ...mapState(['socialMenuOpen', 'windowHeight', 'windowWidth']),
     },
 
@@ -124,7 +124,7 @@
         const height = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
         const width = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
         this.setWindowSize({width, height});
-      }, 20),
+      }, 20, {leading: false}),
 
       ...mapMutations(['setCurrentSection', 'setWindowSize']),
     },

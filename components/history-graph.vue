@@ -64,35 +64,51 @@
 <script>
 import distanceInWordsStrict from 'date-fns/distance_in_words_strict';
 import parse from 'date-fns/parse';
+import debounce from 'lodash/debounce';
 import zip from 'lodash/zip';
-import {mapState} from 'vuex';
+import {mapState, mapMutations} from 'vuex';
 
 import StaggeredPie from '~/components/staggered-pie';
 
 const historyRaw = [
-  ['1980-04', 'Brisbane', 'Zak springs forth, product of the unholy union between an Aussie and an American.'],
+  ['1980-04', 'Brisbane',
+    'Zak springs forth, product of the unholy union between an Aussie and an American.',
+    require('~/assets/history/01-AU.jpg')],
   ['1984-06', 'San Diego', 'Australia cannot contain Zak and his family for long… though he still misses proper fish & chips.'],
   ['1989-12', 'Portland', 'Clean air and green trees summon him northwards. A blur of school.'],
   ['1998-04', 'San Diego', 'XXX'],
   ['2000-01', 'Washington, DC', 'Zak kicks off an information security startup and loses faith in anyone’s ability to keep secrets.'],
   ['2004-05', 'San Francisco', 'Venturing at last into full-time web development, Zak takes a job at Etsy, and later begins consulting.'],
   ['2008-03', 'Oakland', 'XXX'],
-  ['2010-09', 'Los Angeles', 'Zak joins Bek at GOOD, having been lured back to southern California.'],
-  ['2011-04', 'Idyllwild', 'An excursion to the woods to build Cabin.'],
-  ['2011-10', 'Portland', 'Silicon Forest—home to our favorite espresso, exquisite cuisine, and unstoppable green.'],
-  ['2013-12', 'Los Angeles', 'Hello again, sunshine! Some things are just too good not to play on repeat.'],
-  ['2014-11', 'San Francisco', `The verdict is in! San Francisco, we're yours.`],
-  ['2016-08', 'Oakland', 'FLYTRAP'],
-].map(([startDate, place, description]) => ({startDate: parse(startDate), place, description}));
+  ['2010-09', 'Los Angeles',
+    'Zak joins Bek at GOOD, having been lured back to southern California.',
+    require('~/assets/history/06-WEHO.jpg')],
+  ['2011-04', 'Idyllwild',
+    'An excursion to the woods to build Cabin.',
+    require('~/assets/history/07-IDY.jpg')],
+  ['2011-10', 'Portland',
+    'Silicon Forest—home to our favorite espresso, exquisite cuisine, and unstoppable green.',
+    require('~/assets/history/08-PDX.jpg')],
+  ['2013-12', 'Los Angeles',
+    'Hello again, sunshine! Some things are just too good not to play on repeat.',
+    require('~/assets/history/09-LA.jpg')],
+  ['2014-11', 'San Francisco',
+    `The verdict is in! San Francisco, we're yours.`,
+    require('~/assets/history/10-SF.jpg')],
+  ['2016-08', 'Oakland',
+    'FLYTRAP',
+    require('~/assets/history/11-OAK.jpg')],
+].map(([startDate, place, description, img]) => ({startDate: parse(startDate), place, description, img}));
 
 const history = zip(historyRaw, historyRaw.slice(1).concat({startDate: parse(new Date())}))
   .map(([current, next]) => {
-    const {startDate, place, description} = current;
+    const {startDate, place, description, img} = current;
     const endDate = next.startDate;
     return {
       description,
       duration: endDate - startDate,
       endDate,
+      img,
       place,
       startDate,
     };
@@ -142,6 +158,23 @@ export default {
     hoverPie(index) {
       this.selectedIndex = index;
     },
+
+    ...mapMutations(['setHistoryBackgroundImage']),
+  },
+
+  mounted() {
+    const images = this.history.map(({img}) => img).filter(img => img);
+    this.setHistoryBackgroundImage(images[0]);
+    // Preload.
+    images.forEach(img => {
+      document.createElement('img').setAttribute('src', img);
+    });
+  },
+
+  watch: {
+    selectedItem: debounce(function (item) {
+      this.setHistoryBackgroundImage(item.img);
+    }, 400),
   },
 };
 </script>

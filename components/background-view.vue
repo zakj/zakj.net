@@ -1,6 +1,17 @@
 <template>
   <div :class="$style.bg">
-    <div :class="{[$style.image]: true, [$style.swiped]: currentSection !== 'splash'}"></div>
+    <div
+      :class="$style.image"
+      :style="{backgroundImage: `url(${backgroundImage})`}"
+      ></div>
+<!--
+  TODO
+  separate history background from splash background
+  only show history background element when currentSection === history
+  fade-through history background changes --- save previous background, add new element, fade through
+  only show splash based on currentSection?
+  fade in from low-quality splash background on load
+-->
     <div :class="$style.color" :style="{backgroundColor: sectionColor, opacity: sectionOpacity}"></div>
   </div>
 </template>
@@ -21,14 +32,12 @@
     position absolute
 
   .image
-    background-image url('~/assets/splash-bg.jpg')
     background-position bottom right 20%
     background-size cover
+    filter grayscale(100%) blur(3px)
     transition transform 200ms ease-in
     +breakpoint($desktop)
       background-position bottom right
-    // &.swiped  // TODO evaluate this
-    //   transform translateY(-100vh)
 
   .color
     background-color hsl(209, 18%, 34%)
@@ -38,7 +47,7 @@
 
 
 <script>
-import {mapState} from 'vuex';
+import {mapGetters, mapState} from 'vuex';
 
 const SECTION_COLORS = {
   splash: 'hsl(209, 18%, 34%)',
@@ -61,6 +70,7 @@ export default {
     sectionOpacity() {
       return this.currentSection in SECTION_OPACITIES ? SECTION_OPACITIES[this.currentSection] : 1;
     },
+    ...mapGetters(['backgroundImage']),
     ...mapState(['currentSection']),
   },
 

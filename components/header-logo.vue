@@ -1,6 +1,6 @@
 <template>
   <header :class="$style.header" v-scroll-to="'body'" @mouseenter="hover = true" @mouseleave="hover = false">
-    <MarkIcon :class="{[$style.mark]: true, [$style.dark]: lightBackground}" ref="icon" />
+    <MarkIcon :class="{[$style.mark]: true, [$style.dark]: isLightBackground}" ref="icon" />
   </header>
 </template>
 
@@ -45,7 +45,7 @@ export default {
   components: {MarkIcon},
 
   computed: {
-    ...mapGetters(['lightBackground']),
+    ...mapGetters(['isLightBackground']),
   },
 
   data() {
