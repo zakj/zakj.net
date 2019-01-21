@@ -1,10 +1,12 @@
 <template>
   <nav :class="$style.nav">
-    <div :class="$style.marker" ref="marker"></div>
-    <a href="#bio" v-scroll-to="'#bio'" ref="bio">Bio</a>
-    <a href="#history" v-scroll-to="'#history'" ref="history">History</a>
-    <a href="#code" v-scroll-to="'#code'" ref="code">Code</a>
-    <a href="#qa" v-scroll-to="'#qa'" ref="qa">Q/A</a>
+    <div :class="$style.container">
+      <div :class="$style.marker" ref="marker"></div>
+      <a href="#bio" v-scroll-to="'#bio'" ref="bio">Bio</a>
+      <a href="#history" v-scroll-to="'#history'" ref="history">History</a>
+      <a href="#code" v-scroll-to="'#code'" ref="code">Code</a>
+      <a href="#qa" v-scroll-to="'#qa'" ref="qa">Q/A</a>
+    </div>
   </nav>
 </template>
 
@@ -16,6 +18,14 @@
     +breakpoint($desktop)
       left 0
       right auto
+
+  // This is here only to work around a Chrome+retina bug: the nav would shift
+  // during fast scrolls. Removing position: relative on the contained A
+  // elements also worked around it, but that is needed for the hover underline
+  // positioning.
+  .container
+    display flex
+    justify-content center
 
   .marker
     background-color $light-text-color
