@@ -1,5 +1,3 @@
-const SPLASH_BACKGROUND = require('~/assets/splash-bg.jpg');
-
 export const state = () => ({
   currentSection: 'splash',
   historyBackgroundImage: null,
@@ -9,10 +7,6 @@ export const state = () => ({
 });
 
 export const getters = {
-  backgroundImage: state => {
-    return state.currentSection === 'history' ? state.historyBackgroundImage : SPLASH_BACKGROUND;
-  },
-
   isLightBackground: state => {
     return !state.socialMenuOpen && ['code'].includes(state.currentSection);
   },
