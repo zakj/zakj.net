@@ -13,13 +13,16 @@
       :style="{backgroundImage: `url(${historyBackgroundImage})`}"
       ></div>
     <div ref="color" :class="$style.color"></div>
-    <div :class="{[$style.splash]: true, [$style.up]: hideSplash}"></div>
+    <div :class="{[$style.splash]: true, [$style.up]: hideSplash}">
+      <div ref="splashLQ" v-if="!splashLoaded" :class="$style.lq"></div>
+      <div ref="splashHQ" :class="$style.hq"></div>
+    </div>
   </div>
 </template>
 
 
 <style lang="stylus" module>
-  .bg, .splash, .history, .color
+  .bg, .splash, .splash .lq, .splash .hq, .history, .color
     top 0
     left 0
     right 0
@@ -29,20 +32,26 @@
     position fixed
     z-index -1
 
-  .splash, .history, .color
+  .splash, .splash .lq, .splash .hq, .history, .color
     position absolute
 
-  .splash, .history
+  .splash .lq, .splash .hq, .history
     background-size cover
 
   .splash
-    background-image url('~/assets/splash-bg.jpg');
-    background-position bottom right 20%
     transition all 300ms ease-out
-    +breakpoint($desktop)
-      background-position bottom right
     &.up
       transform scale(1.2)
+      opacity 0
+
+    .lq, .hq
+      background-position bottom right 20%
+      +breakpoint($desktop)
+        background-position bottom right
+    .lq
+      background-image url('~/assets/splash-bg.svg?data');
+    .hq
+      background-image url('~/assets/splash-bg.jpg');
       opacity 0
 
   .history
@@ -60,6 +69,8 @@
 import anime from 'animejs';
 import throttle from 'lodash/throttle';
 import {mapGetters, mapState} from 'vuex';
+
+const SPLASH_BG = require('~/assets/splash-bg.jpg');
 
 const SECTION_COLORS = {
   splash: '#ccba97',
@@ -97,10 +108,25 @@ export default {
       prevHistoryBackgroundImage: null,
       scrollDelta: 0,
       scrollY: 0,
+      splashLoaded: false,
     };
   },
 
   methods: {
+    loadBgImage() {
+      const i = document.createElement('img');
+      i.addEventListener('load', () => {
+        anime({
+          complete: () => this.splashLoaded,
+          duration: 350,
+          easing: 'easeOutQuad',
+          opacity: [0, 1],
+          targets: this.$refs.splashHQ,
+        });
+      });
+      i.setAttribute('src', SPLASH_BG);
+    },
+
     updateScroll: throttle(function () {
       this.scrollDelta = window.scrollY - this.scrollY;
       this.scrollY = window.scrollY;
@@ -141,7 +167,7 @@ export default {
   },
 
   mounted() {
-    // TODO fade in from low-quality splash background on load
+    this.loadBgImage();
     this.updateColor();
     this.updateScroll();
     this.updateHistoryVisibility(this.currentSection);

@@ -39,7 +39,7 @@
 import anime from 'animejs';
 import {mapGetters} from 'vuex';
 
-import MarkIcon from '~/assets/mark.svg';
+import MarkIcon from '~/assets/mark.svg?inline';
 
 export default {
   components: {MarkIcon},

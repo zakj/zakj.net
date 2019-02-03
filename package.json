@@ -3,7 +3,8 @@
   "scripts": {
     "start": "HOST=0.0.0.0 nuxt",
     "dist": "nuxt generate",
-    "analyze": "nuxt build --analyze"
+    "analyze": "nuxt build --analyze",
+    "sqip": "f() { sqip -n 100 -o \"${1%%.*}.svg\" \"$1\"; } && f"
   },
   "config": {
     "nuxt": {
@@ -17,6 +18,7 @@
     "lodash": "^4.17.11",
     "normalize.css": "8.0.1",
     "nuxt": "2.3.4",
+    "nuxt-svg": "^0.1.4",
     "raven-js": "3.27.0",
     "vue-config": "1.0.0",
     "vue-focus": "2.1.0",
@@ -27,6 +29,7 @@
     "@nuxtjs/style-resources": "^0.1.1",
     "css-mqpacker": "7.0.0",
     "eslint-plugin-html": "5.0.0",
+    "sqip": "^0.3.3",
     "stylus": "0.54.5",
     "stylus-loader": "3.0.2",
     "vue-svg-loader": "^0.11.0"

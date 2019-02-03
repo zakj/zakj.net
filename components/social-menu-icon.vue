@@ -30,8 +30,8 @@
 <script>
 import {mapMutations, mapState} from 'vuex';
 
-import MenuIcon from '~/assets/menu.svg';
-import XIcon from '~/assets/x.svg';
+import MenuIcon from '~/assets/menu.svg?inline';
+import XIcon from '~/assets/x.svg?inline';
 
 export default {
   components: {MenuIcon, XIcon},
