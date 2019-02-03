@@ -1,6 +1,12 @@
 <template>
   <div :class="$style.bg">
     <div
+      v-if="prevHistoryBackgroundImage"
+      ref="prevHistory"
+      :class="$style.history"
+      :style="{backgroundImage: `url(${prevHistoryBackgroundImage})`}"
+      ></div>
+    <div
       v-if="historyBackgroundImage"
       ref="history"
       :class="$style.history"
@@ -8,11 +14,6 @@
       ></div>
     <div ref="color" :class="$style.color"></div>
     <div :class="{[$style.splash]: true, [$style.up]: hideSplash}"></div>
-<!--
-  TODO
-  fade-through history background changes --- save previous background, add new element, fade through
-  fade in from low-quality splash background on load
--->
   </div>
 </template>
 
@@ -47,7 +48,7 @@
   .history
     background-position bottom center
     filter grayscale(100%) blur(3px)
-    opacity 0
+    transform scale(1.01)  // avoid the weird edges due to blur filter
 
   .color
     background-color hsl(209, 18%, 34%)
@@ -93,6 +94,7 @@ export default {
       colorAnimationDuration: 600,
       imageAnimation: null,
       imageAnimationDuration: 2000,
+      prevHistoryBackgroundImage: null,
       scrollDelta: 0,
       scrollY: 0,
     };
@@ -139,6 +141,7 @@ export default {
   },
 
   mounted() {
+    // TODO fade in from low-quality splash background on load
     this.updateColor();
     this.updateScroll();
     this.updateHistoryVisibility(this.currentSection);
@@ -153,6 +156,18 @@ export default {
     currentSection(newSection, oldSection) {
       this.updateColor();
       this.updateHistoryVisibility(newSection, oldSection);
+    },
+
+    historyBackgroundImage(newImage, prevImage) {
+      this.imageAnimation && this.imageAnimation.seek(this.imageAnimationDuration);
+      this.prevHistoryBackgroundImage = prevImage;
+      this.imageAnimation = anime({
+        complete: () => this.prevHistoryBackgroundImage = null,
+        duration: this.imageAnimationDuration,
+        easing: 'easeOutQuad',
+        targets: this.$refs.history,
+        opacity: [0, 1],
+      });
     },
   },
 };
