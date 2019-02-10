@@ -1,5 +1,5 @@
 <template>
-  <nav :class="$style.nav">
+  <nav :class="$style.nav" @click="closeSocialMenu">
     <div :class="$style.container">
       <div :class="$style.marker" ref="marker"></div>
       <a href="#bio" v-scroll-to="'#bio'" ref="bio">Bio</a>
@@ -42,7 +42,7 @@
 
 <script>
 import anime from 'animejs';
-import {mapState} from 'vuex';
+import {mapMutations, mapState} from 'vuex';
 
 const itemPadding = 12;
 
@@ -58,6 +58,10 @@ export default {
   },
 
   methods: {
+    closeSocialMenu() {
+      this.toggleSocialMenu(false);
+    },
+
     moveMarker(section, {animate=true}={}) {
       if (this.markerAnimation) this.markerAnimation.pause();
       const marker = this.$refs.marker;
@@ -90,6 +94,8 @@ export default {
         return;
       }
     },
+
+    ...mapMutations(['toggleSocialMenu']),
   },
 
   mounted() {
