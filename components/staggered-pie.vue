@@ -8,8 +8,8 @@
         :style="{opacity: arcOpacity(i)}"
         @click="$emit('select', i)" @mouseenter="$emit('select', i)"
       />
-      <text :class="$style.label" text-anchor="middle" dominant-baseline="text-after-edge" x="-1" y="45">{{selectedLabel}}</text>
-      <text :class="$style.sub" text-anchor="middle" dominant-baseline="text-before-edge" x="-1" y="32">{{selectedSub}}</text>
+      <text :class="$style.label" text-anchor="middle" x="-1" y="25">{{selectedLabel}}</text>
+      <text :class="$style.sub" text-anchor="middle" x="-1" y="43">{{selectedSub}}</text>
     </g>
   </svg>
 </template>
