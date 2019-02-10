@@ -10,7 +10,7 @@
     </ul>
     <div :class="$style.date">{{dateRange(selectedItem)}}</div>
     <p :class="$style.description">{{selectedItem.description}}</p>
-    <StaggeredPie :class="$style.graph" @hover="hoverPie" :data="historyPie" :selected="selectedIndex" :height="pieSize" :width="pieSize" />
+    <StaggeredPie :class="$style.graph" @select="selectSlice" :data="historyPie" :selected="selectedIndex" :height="pieSize" :width="pieSize" />
   </div>
 </template>
 
@@ -19,11 +19,19 @@
   .history
     display grid
     grid-template-areas:
-      "title       graph" \
-      "list        graph" \
-      "date        graph" \
-      "description description"
-    grid-template-rows auto 1fr auto auto
+      "title" \
+      "list" \
+      "graph" \
+      "date" \
+      "description"
+    +breakpoint($desktop)
+      grid-template-areas:
+        "title       graph" \
+        "list        graph" \
+        "date        graph" \
+        "description graph"
+      grid-template-rows auto auto auto 1fr
+      grid-template-columns 1fr auto
     
   .title
     grid-area title
@@ -41,10 +49,17 @@
     grid-area list
     line-height 1.3
     list-style none
-    margin 0
     padding 0
-    .selected
-      color $copper-color
+    +breakpoint($mobile)
+      margin 0
+      > li
+        display none
+      .selected
+        display block
+    +breakpoint($desktop)
+      margin 1em 0 2em
+      .selected
+        color $copper-color
 
   .date
     grid-area date
@@ -53,6 +68,8 @@
     grid-area description
     margin .3em 0
     min-height 3em
+    +breakpoint($mobile)
+      margin-right 2em
 
   .graph
     grid-area graph
@@ -130,6 +147,10 @@ export default {
     },
 
     pieSize() {
+      if (!this.windowWidth) return 0;
+      if (this.windowWidth < 750) {
+        return this.windowWidth - 24 * 3;
+      }
       // TODO: figure out the right numbers here
       return Math.max(this.windowWidth, this.windowHeight) / 2;
     },
@@ -155,7 +176,8 @@ export default {
       return startYear === endYear ? startYear : `${startYear}–${endYear}`
     },
 
-    hoverPie(index) {
+    selectSlice(index) {
+      clearInterval(this.selectionInterval);
       this.selectedIndex = index;
     },
 
@@ -169,6 +191,10 @@ export default {
     images.forEach(img => {
       document.createElement('img').setAttribute('src', img);
     });
+    this.selectionInterval = setInterval(() => {
+      this.selectedIndex++;
+      if (this.selectedIndex >= this.history.length) this.selectedIndex = 0;
+    }, 3000);
   },
 
   watch: {

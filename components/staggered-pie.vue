@@ -6,7 +6,7 @@
         :key="`path-${i}`" :d="arc(arcData)"
         :class="{[$style.selected]: selected == i}"
         :style="{opacity: arcOpacity(i)}"
-        @mouseenter="$emit('hover', i)"
+        @click="$emit('select', i)" @mouseenter="$emit('select', i)"
       />
       <text :class="$style.label" text-anchor="middle" dominant-baseline="text-after-edge" x="-1" y="45">{{selectedLabel}}</text>
       <text :class="$style.sub" text-anchor="middle" dominant-baseline="text-before-edge" x="-1" y="32">{{selectedSub}}</text>
