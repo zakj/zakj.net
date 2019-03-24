@@ -36,8 +36,8 @@
 </style>
 
 <script>
-import anime from 'animejs';
 import {mapGetters} from 'vuex';
+import {easing, styler, timeline} from 'popmotion';
 
 import MarkIcon from '~/assets/mark.svg?inline';
 
@@ -59,23 +59,26 @@ export default {
     hover(isHovered) {
       // TODO: don't use hover state on touch devices (or just on small screens?)
       // TODO: factor out this animation to use when the mobile menu is open
-      if (this.timeline) this.timeline.pause();
       const mark = this.$el.querySelector(`.${this.$style.mark}`);
-      const topClip = mark.querySelector('#mark-top-clip rect');
-      const botClip = mark.querySelector('#mark-bottom-clip rect');
-      this.timeline = anime.timeline({
-        duration: 200,
-        easing: 'easeOutQuad',
-      })
-        .add({
-          targets: topClip,
-          x: isHovered ? 0 : 150,
-        })
-        .add({
-          targets: botClip,
-          width: isHovered ? 150 : 0,
-          offset: 100,
+      const top = styler(mark.querySelector('#mark-top-clip rect'));
+      const bottom = styler(mark.querySelector('#mark-bottom-clip rect'));
+
+      if (isHovered) {
+        const duration = 200;
+        const offset = -135;
+        this.timeline = timeline([
+          {track: 'top', from: 0, to: offset, duration},
+          duration / 2,
+          {track: 'bottom', from: offset, to: 0, duration},
+        ], {easing: easing.easeOut}).start(v => {
+          top.set({x: v.top});
+          bottom.set({x: v.bottom});
         });
+      }
+      else {
+        this.timeline.reverse();
+        this.timeline.resume();
+      }
     },
   },
 };
