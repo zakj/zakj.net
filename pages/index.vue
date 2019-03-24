@@ -1,5 +1,6 @@
 <template>
   <div :class="{container: true, 'light-bg': isLightBackground}">
+    <BackgroundView />
     <main>
       <section :class="$style.splash" id="splash" v-viewport-overlap="overlapHandler">
         <h1>Whiskey ginger&nbsp;&amp; a&nbsp;dash&nbsp;of bitters.</h1>
@@ -37,7 +38,6 @@
       </section>
     </main>
 
-    <BackgroundView />
     <HeaderLogo />
     <SocialMenu />
     <NavMenu />
