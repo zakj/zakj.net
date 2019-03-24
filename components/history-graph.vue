@@ -5,7 +5,7 @@
       <li
         v-for="(item, i) in history" :key="i"
         :class="{[$style.selected]: selectedIndex === i}"
-        @mouseenter="selectedIndex = i"
+        @mouseenter="selectSlice(i)"
       >{{item.place}}</li>
     </ul>
     <div :class="$style.date">{{dateRange(selectedItem)}}</div>
