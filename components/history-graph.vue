@@ -159,13 +159,14 @@ export default {
       return this.history[this.selectedIndex];
     },
 
-    ...mapState(['windowHeight', 'windowWidth']),
+    ...mapState(['currentSection', 'windowHeight', 'windowWidth']),
   },
 
   data() {
     return {
       history,
       selectedIndex: 0,
+      selectionInterval: null,
     };
   },
 
@@ -191,13 +192,18 @@ export default {
     images.forEach(img => {
       document.createElement('img').setAttribute('src', img);
     });
-    this.selectionInterval = setInterval(() => {
-      this.selectedIndex++;
-      if (this.selectedIndex >= this.history.length) this.selectedIndex = 0;
-    }, 3000);
   },
 
   watch: {
+    currentSection(section) {
+      if (section === 'history' && !this.selectionInterval) {
+        this.selectionInterval = setInterval(() => {
+          this.selectedIndex++;
+          if (this.selectedIndex >= this.history.length) this.selectedIndex = 0;
+        }, 3000);
+      }
+    },
+
     selectedItem: debounce(function (item) {
       this.setHistoryBackgroundImage(item.img);
     }, 400),
