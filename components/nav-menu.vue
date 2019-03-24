@@ -79,7 +79,7 @@ export default {
       }
       if (animate) {
         this.markerAnimation = anime.timeline({
-          duration: 200,
+          duration: 300,
           easing: 'easeOutQuad',
           targets: marker,
         }).add(to);
