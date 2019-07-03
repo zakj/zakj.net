@@ -1,11 +1,11 @@
 <template>
-  <nav :class="{[$style.social]: true, [$style.open]: socialMenuOpen}">
-    <div :class="$style.menu">
+  <nav :class="$style.social">
+    <Menu :class="$style.menu" :pose="backgroundPose">
       <a href="https://twitter.com/zakj"><span :class="$style.at">@</span>zakj</a>
       <a href="https://github.com/zakj">GitHub</a>
       <a href="https://www.linkedin.com/in/zakjohnson">LinkedIn</a>
       <a href="mailto:me@zakj.net">Email</a>
-    </div>
+    </Menu>
   </nav>
 </template>
 
@@ -14,13 +14,10 @@
   +breakpoint($mobile)
     .social
       bottom 0
-      display none
       left 0
       position fixed
       right 0
       top 0
-      &.open
-        display block
 
     .menu
       background-color #1d7c87
@@ -58,10 +55,34 @@
 
 
 <script>
-import {mapState} from 'vuex';
+import {mapGetters, mapState} from 'vuex';
+import posed from 'vue-pose';
 
 export default {
+  components: {
+    Menu: posed.div({
+      open: {
+        clipPath: 'polygon(0% 0%, 200% 0%, 0% 200%)',
+        transition: {duration: 400, ease: 'easeOut'},
+      },
+      closed: {
+        clipPath: 'polygon(0% 0%, 0% 0%, 0% 0%)',
+        transition: {duration: 400, ease: 'easeIn'},
+      },
+      visible: {
+        clipPath: 'none',
+      },
+    }),
+  },
+
   computed: {
+    backgroundPose() {
+      if (this.isMobile) {
+        return this.socialMenuOpen ? 'open' : 'closed';
+      }
+      return 'visible';
+    },
+    ...mapGetters(['isMobile']),
     ...mapState(['socialMenuOpen']),
   },
 };
