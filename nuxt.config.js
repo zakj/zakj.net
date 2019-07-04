@@ -25,7 +25,7 @@ module.exports = {
     },
     postcss: [
       cssMqPacker(),
-      autoprefixer({browsers: ['last 3 versions']}),
+      autoprefixer(),
     ],
   },
   css: [

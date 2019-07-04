@@ -1,11 +1,16 @@
 {
   "private": true,
   "scripts": {
-    "start": "HOST=0.0.0.0 nuxt",
+    "dev": "HOST=0.0.0.0 nuxt dev",
     "dist": "nuxt generate",
     "analyze": "nuxt build --analyze",
     "sqip": "f() { sqip -n 100 -o \"${1%%.*}.svg\" \"$1\"; } && f"
   },
+  "browserslist": [
+    "last 1 version",
+    "> 1%",
+    "not dead"
+  ],
   "config": {
     "nuxt": {
       "port": 4000
@@ -17,7 +22,7 @@
     "date-fns": "^1.30.1",
     "lodash": "^4.17.11",
     "normalize.css": "8.0.1",
-    "nuxt": "2.3.4",
+    "nuxt": "2.8.1",
     "nuxt-svg": "^0.1.4",
     "raven-js": "3.27.0",
     "vue-config": "1.0.0",
