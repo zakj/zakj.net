@@ -62,15 +62,18 @@ export default {
   components: {
     Menu: posed.div({
       open: {
-        clipPath: 'polygon(0% 0%, 200% 0%, 0% 200%)',
+        // clipPath: 'polygon(0% 0%, 200% 0%, 0% 200%)',
+        opacity: 1,
         transition: {duration: 400, ease: 'easeOut'},
       },
       closed: {
-        clipPath: 'polygon(0% 0%, 0% 0%, 0% 0%)',
+        // clipPath: 'polygon(0% 0%, 0% 0%, 0% 0%)',
+        opacity: 0,
         transition: {duration: 400, ease: 'easeIn'},
       },
-      visible: {
-        clipPath: 'none',
+      desktop: {
+        // clipPath: 'none',
+        opacity: 1,
       },
     }),
   },
@@ -80,7 +83,7 @@ export default {
       if (this.isMobile) {
         return this.socialMenuOpen ? 'open' : 'closed';
       }
-      return 'visible';
+      return 'desktop';
     },
     ...mapGetters(['isMobile']),
     ...mapState(['socialMenuOpen']),

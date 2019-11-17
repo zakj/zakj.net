@@ -29,13 +29,13 @@
         <HistoryGraph />
       </section>
 
-      <section :class="$style.code" id="code" v-viewport-overlap="overlapHandler">
+      <!-- <section :class="$style.code" id="code" v-viewport-overlap="overlapHandler">
         <h2>Code</h2>
       </section>
 
       <section :class="$style.qa" id="qa" v-viewport-overlap="overlapHandler">
         <h2>Q/A</h2>
-      </section>
+      </section> -->
     </main>
 
     <HeaderLogo />
@@ -47,25 +47,10 @@
 
 <style lang="stylus" module>
   .splash
-    align-items center
+    align-items top
     display flex
-    // background-image url('~/assets/splash-bg.jpg')
-    // background-size cover
-    // background-position bottom right
-
-  .bio
-    // background-color #dbc69e
-    // transition background-color 200ms ease-in
-
-  .history
-    // background-color #1d7c87
-
-  .code
-    // background-color #fff
-    // color $dark-text-color
-
-  .qa
-    // background-color #4a4a4a
+    +breakpoint($desktop)
+      align-items center
 </style>
 
 <script>
@@ -94,11 +79,18 @@
 
     computed: {
       greatestOverlapElement() {
-        return this.elementOverlaps
+        const x = this.elementOverlaps
           .map(([el, overlap]) => ({el, overlap}))
           .filter(({overlap}) => overlap > 0)
           .sort((a, b) => b.overlap - a.overlap)
-          .map(({el}) => el)[0] || null;
+          .map(({el}) => el) || null;
+          // .map(({el}) => el)[0] || null;
+        // const y = (window.scrollY > 0 && x === 'splash') ? 'bio' : x;
+        if (x.length === 2 && x[1].id === 'bio') return x[1];
+        return x[0] || null;
+        // console.log(x)
+        // // return y;
+        // return null;
       },
 
       ...mapGetters(['isLightBackground']),

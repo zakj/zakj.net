@@ -8,7 +8,8 @@ export const state = () => ({
 
 export const getters = {
   isLightBackground: state => {
-    return !state.socialMenuOpen && ['code'].includes(state.currentSection);
+    return state.socialMenuOpen;
+    // return !state.socialMenuOpen && !['splash', 'bio'].includes(state.currentSection);
   },
 
   isLandscape: state => state.windowWidth > state.windowHeight,

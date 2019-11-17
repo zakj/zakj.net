@@ -1,13 +1,14 @@
 <template>
   <div :class="$style.bg">
-    <PoseTransition mode="in-out">
+    <!-- <PoseTransition mode="in-out">
+      todo: only two at a time, when switching fast you can have multiples now
       <HistoryBackgroundImage
         v-if="currentSection === 'history'"
         :class="$style.history"
         :style="{backgroundImage: `url(${historyBackgroundImage})`}"
         :key="historyBackgroundImage"
         ></HistoryBackgroundImage>
-    </PoseTransition>
+    </PoseTransition> -->
     <Color :pose="currentSection" />
     <PoseTransition mode="in-out">
       <Splash v-if="!splashLoaded" :class="[$style.splash, $style.lqip]" key="lq" :pose="hideSplash ? 'hidden' : 'visible'" />
@@ -33,10 +34,10 @@
     position absolute
 
   .splash
-    background-image url('~/assets/splash-bg.jpg');
+    background-image url('~assets/splash-bg.jpg');
     background-position bottom right 20%
     &.lqip
-      background-image url('~/assets/splash-bg.svg?data');
+      background-image url('~assets/splash-bg.svg?data');
     +breakpoint($desktop)
       background-position bottom right
 
@@ -63,18 +64,23 @@ export default {
     PoseTransition,
 
     Color: posed.div({
-      splash: {backgroundColor: '#ccba97', opacity: 1, transition},
-      bio: {backgroundColor: '#ccba97', opacity: 1, transition},
-      history: {backgroundColor: '#1d7c87', opacity: 0.7, transition},
-      code: {backgroundColor: '#fff', opacity: 1, transition},
-      qa: {backgroundColor: '#4a4a4a', opacity: 1, transition},
+      // splash: {backgroundColor: '#ccba97', opacity: 1, transition},
+      // bio: {backgroundColor: '#ccba97', opacity: 1, transition},
+      // history: {backgroundColor: '#1d7c87', opacity: 0.7, transition},
+      // code: {backgroundColor: '#fff', opacity: 1, transition},
+      // qa: {backgroundColor: '#4a4a4a', opacity: 1, transition},
+      splash: {backgroundColor: '#4a4a4a', opacity: 1, transition},
+      bio: {backgroundColor: '#4a4a4a', opacity: 1, transition},
+      history: {backgroundColor: '#4a4a4a', opacity: 1, transition},
+      code: {backgroundColor: '#ffffff', opacity: 1, transition},
+      qa: {backgroundColor: '#ffffff', opacity: 1, transition},
     }),
 
     HistoryBackgroundImage: posed.div({
       enter: {
         applyAtStart: {opacity: 0},
         opacity: 1,
-        transition: {duration: 1500, easing: 'linear'},
+        transition: {duration: 1000, ease: 'linear'},
       },
     }),
 
@@ -93,7 +99,7 @@ export default {
       enter: {
         applyAtStart: {opacity: 0},
         opacity: 1,
-        transition: {duration: 600, easing: 'easeIn'},
+        transition: {duration: 600, ease: 'easeIn'},
       },
     }),
   },
@@ -128,6 +134,7 @@ export default {
     }, 20, {leading: false}),
   },
 
+  // delay before switching in new history background image?
   mounted() {
     this.loadBgImage();
     window.addEventListener('scroll', this.updateScroll);

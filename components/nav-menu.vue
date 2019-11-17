@@ -4,8 +4,8 @@
       <div :class="$style.marker" ref="marker"></div>
       <a href="#bio" v-scroll-to="'#bio'" ref="bio">Bio</a>
       <a href="#history" v-scroll-to="'#history'" ref="history">History</a>
-      <a href="#code" v-scroll-to="'#code'" ref="code">Code</a>
-      <a href="#qa" v-scroll-to="'#qa'" ref="qa">Q/A</a>
+      <!-- <a href="#code" v-scroll-to="'#code'" ref="code">Code</a>
+      <a href="#qa" v-scroll-to="'#qa'" ref="qa">Q/A</a> -->
     </div>
   </nav>
 </template>
@@ -31,6 +31,7 @@
     background-color $light-text-color
     left -3px
     position absolute
+    top 0
     transition background-color $light-dark-transition-ms ease-in
     width 2px
     :global(.light-bg) &
@@ -41,7 +42,7 @@
 
 
 <script>
-import anime from 'animejs';
+import {styler, timeline} from 'popmotion';
 import {mapMutations, mapState} from 'vuex';
 
 const itemPadding = 12;
@@ -53,7 +54,8 @@ export default {
 
   data() {
     return {
-      markerAnimation: null,
+      styler: null,
+      timeline: null,
     };
   },
 
@@ -63,35 +65,32 @@ export default {
     },
 
     moveMarker(section, {animate=true}={}) {
-      if (this.markerAnimation) this.markerAnimation.pause();
-      const marker = this.$refs.marker;
-      const navItem = this.$refs[this.currentSection];
+      this.styler = this.styler || styler(this.$refs.marker);
+      this.timeline && this.timeline.pause();
+
+      const navItem = this.$refs[section];
       const to = {};
-      if (!navItem) {
-        const bio = this.$refs.bio;
-        const rect = bio.getBoundingClientRect();
-        to.top = `${rect.top + itemPadding}px`;
-      }
-      else {
+      if (navItem) {
         const rect = navItem.getBoundingClientRect();
-        to.top = `${rect.top + itemPadding}px`;
-        to.height = `${rect.height - itemPadding * 2}px`;
-      }
-      if (animate) {
-        this.markerAnimation = anime.timeline({
-          duration: 300,
-          easing: 'easeOutQuad',
-          targets: marker,
-        }).add(to);
-        // Prevent the marker disappearing before it reaches the top of the first item.
-        if (!navItem) {
-          this.markerAnimation.add({height: 0, offset: 50});
-        }
+        to.height = rect.height - itemPadding * 2;
+        to.y = rect.top + itemPadding;
+        to.stagger = 0;
       }
       else {
-        marker.style.top = to.top;
-        marker.style.height = to.height;
-        return;
+        to.height = 0;
+        to.y = this.$refs.bio.getBoundingClientRect().top + itemPadding;
+        to.stagger = 50;  // prevent the marker disappearing before it reaches the top
+      }
+
+      if (animate) {
+        this.timeline = timeline([
+          {track: 'y', from: this.styler.get('y'), to: to.y},
+          to.stagger,
+          {track: 'height', from: this.styler.get('height'), to: to.height},
+        ], {duration: 300}).start(v => this.styler.set(v))
+      }
+      else {
+        this.styler.set(to);
       }
     },
 

@@ -18,6 +18,7 @@
 <style lang="stylus" module>
   .pie path
     transition transform 200ms ease-out
+    -webkit-tap-highlight-color transparent
 
   .selected
     fill $copper-color

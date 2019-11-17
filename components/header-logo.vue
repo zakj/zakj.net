@@ -1,5 +1,5 @@
 <template>
-  <header :class="$style.header" v-scroll-to="'body'" @mouseenter="hover = true" @mouseleave="hover = false">
+  <header :class="$style.header" v-scroll-to="'body'" @mouseenter="reveal = true" @mouseleave="reveal = false">
     <MarkIcon :class="{[$style.mark]: true, [$style.dark]: isLightBackground}" ref="icon" />
   </header>
 </template>
@@ -50,20 +50,19 @@ export default {
 
   data() {
     return {
-      hover: false,
+      reveal: false,
       timeline: null,
     };
   },
 
   watch: {
-    hover(isHovered) {
-      // TODO: don't use hover state on touch devices (or just on small screens?)
+    reveal(isRevealed) {
       // TODO: factor out this animation to use when the mobile menu is open
       const mark = this.$el.querySelector(`.${this.$style.mark}`);
       const top = styler(mark.querySelector('#mark-top-clip rect'));
       const bottom = styler(mark.querySelector('#mark-bottom-clip rect'));
 
-      if (isHovered) {
+      if (isRevealed) {
         const duration = 200;
         const offset = -135;
         this.timeline = timeline([

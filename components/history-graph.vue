@@ -187,7 +187,7 @@ export default {
 
   mounted() {
     const images = this.history.map(({img}) => img).filter(img => img);
-    this.setHistoryBackgroundImage(images[0]);
+    // this.setHistoryBackgroundImage(images[0]);
     // Preload.
     images.forEach(img => {
       document.createElement('img').setAttribute('src', img);
@@ -205,7 +205,7 @@ export default {
     },
 
     selectedItem: debounce(function (item) {
-      this.setHistoryBackgroundImage(item.img);
+      // this.setHistoryBackgroundImage(item.img);
     }, 400),
   },
 };
