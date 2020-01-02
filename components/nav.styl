@@ -1,0 +1,54 @@
+@import '../util'
+
+$item-padding = 16px
+$marker-size = 3px
+$marker-offset = 1px
+$marker-left = 4px
+
+.nav
+  bottom 0
+  font-family $font-header
+  position fixed
+  right 20px
+  text-transform uppercase
+  top 0
+  writing-mode vertical-rl
+
+.nav ul
+  display flex
+  list-style none
+  margin 0
+  padding 0
+  justify-content center
+
+.nav a
+  color $color-text
+  cursor pointer
+  padding $item-padding
+  text-decoration none
+
+  position relative
+
+.nav a::after
+  background-color $color-text
+  content ""
+  height "calc(100% - %s * 2 - %s)" % ($item-padding $marker-offset)
+  left $item-padding - $marker-left
+  opacity .4
+  position absolute
+  top ($item-padding + $marker-offset)
+  transform scaleY(0)
+  transform-origin top center
+  transition transform 150ms ease-in
+  width $marker-size
+
+.nav a:hover::after
+  transform scaleY(1)
+
+.marker
+  background $color-text
+  height 1px
+  position fixed
+  top 0
+  transform-origin top
+  width $marker-size
