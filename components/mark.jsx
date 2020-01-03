@@ -50,7 +50,6 @@ const Mark = ({ onClick, expanded }) => {
       animate={expanded || hovered || recentlyClicked ? 'expanded' : 'collapsed'}
       variants={variantsContainer}
     >
-      <text>{JSON.stringify(recentlyClicked)}</text>
       <clipPath id="mark-top-clip" variants={variantsContainer}>
         <motion.rect
           width="200"
