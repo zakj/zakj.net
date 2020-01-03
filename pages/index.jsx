@@ -1,49 +1,23 @@
 import Head from 'next/head';
 import Markdown from 'react-markdown';
-import React, { useRef, useEffect, useState } from 'react';
-import { useThrottle, useWindowScroll, useWindowSize } from 'react-use';
+import React, { useRef } from 'react';
 
+import useMostVisibleElement from '../src/use-most-visible-element';
 import Mark from '../components/mark';
 import Nav from '../components/nav';
 
 import '../base.styl';
 import css from './index.styl';
 
-function computeOverlap(r1, r2) {
-  const top = Math.max(r1.top, r2.top);
-  const bottom = Math.min(r1.bottom, r2.bottom);
-  return Math.max(0, bottom - top);
-}
-
-function maxBy(fn, arr) {
-  // TODO: memoize fn results
-  return arr.reduce((best, cur) => {
-    if (!best) return cur;
-    return fn(best) > fn(cur) ? best : cur;
-  });
-}
-
 const Index = () => {
-  const [sectionName, setSectionName] = useState();
   const sections = {
     splash: useRef(),
     bio: useRef(),
     history: useRef(),
   };
-
-  // Maintain sectionName based on scroll position.
-  const { width: viewportWidth, height: viewportHeight } = useWindowSize();
-  const { y: scrollY } = useWindowScroll();
-  const throttledScrollY = useThrottle(scrollY, 100);
-  useEffect(() => {
-    const viewportRect = { top: 0, bottom: viewportHeight };
-    const section = maxBy(
-      ({ ref }) =>
-        computeOverlap(viewportRect, ref.current.getBoundingClientRect()),
-      Object.entries(sections).map(([name, ref]) => ({ name, ref }))
-    );
-    setSectionName(section.name);
-  }, [throttledScrollY, viewportWidth, viewportHeight]);
+  const currentSection = useMostVisibleElement(Object.values(sections));
+  const sectionName =
+    currentSection && currentSection.current && currentSection.current.id;
 
   function scrollIntoView(section) {
     if (!(section in sections && sections[section].current)) return;
