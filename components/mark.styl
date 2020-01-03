@@ -1,13 +1,14 @@
+@import '../util'
+
 $mark-size-small = 38px
 $mark-size-large = 64px
 
-$padding = 20px // XXX
-
 .mark
   cursor pointer
-  height $mark-size-small + ($padding * 2)
+  height $mark-size-small + ($padding-small * 2)
   left 50%
   margin-left -($mark-size-small / 2)
-  padding $padding
+  padding $padding-small
   position fixed
-  width $mark-size-small + ($padding * 2)
+  width $mark-size-small + ($padding-small * 2)
+  top 0

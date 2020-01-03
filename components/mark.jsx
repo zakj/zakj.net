@@ -24,7 +24,7 @@ const variantsBottom = {
   expanded: { x: 0 },
 };
 
-const Mark = ({ onClick }) => {
+const Mark = ({ onClick, expanded }) => {
   const [recentlyClicked, setRecentlyClicked] = useToggle(false);
   const [hovered, setHovered] = useToggle(false);
   let recentlyClickedTimeout = null;
@@ -47,7 +47,7 @@ const Mark = ({ onClick }) => {
       onMouseOver={() => setHovered(true)}
       onMouseOut={() => setHovered(false)}
       initial="collapsed"
-      animate={hovered || recentlyClicked ? 'expanded' : 'collapsed'}
+      animate={expanded || hovered || recentlyClicked ? 'expanded' : 'collapsed'}
       variants={variantsContainer}
     >
       <text>{JSON.stringify(recentlyClicked)}</text>
@@ -86,6 +86,7 @@ const Mark = ({ onClick }) => {
 };
 
 Mark.propTypes = {
+  expanded: PropTypes.bool.isRequired,
   onClick: PropTypes.func.isRequired,
 };
 
