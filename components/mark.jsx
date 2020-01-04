@@ -44,8 +44,8 @@ const Mark = ({ onClick, expanded }) => {
       viewBox="0 0 200 217"
       onClick={clickHandler}
       // whileHover doesn't respect transition properties, see framer/motion#306
-      onMouseOver={() => setHovered(true)}
-      onMouseOut={() => setHovered(false)}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
       initial="collapsed"
       animate={expanded || hovered || recentlyClicked ? 'expanded' : 'collapsed'}
       variants={variantsContainer}
