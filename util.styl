@@ -7,3 +7,19 @@ $color-green = #1d7c87
 
 $padding-small = 24px
 $padding-large = 64px
+
+$large = 750px
+$small = -750px
+
+// Shortcut for min-width media queries. Negative values use max-width.
+breakpoint(w)
+  if (w > 0)
+    @media screen and (min-width: w)
+      {block}
+  else
+    @media screen and (max-width: w * -1 -1)
+      {block}
+
+hover()
+  @media screen and (hover: hover)
+    {block}
