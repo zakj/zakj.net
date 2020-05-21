@@ -1,11 +1,9 @@
 import React from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useLockBodyScroll } from 'react-use';
-import PropTypes from 'prop-types';
+import styled from 'styled-components';
 
-import css from './social.styl';
-
-const BG_TRANSITION = { duration: 0.5, ease: 'easeOut' };
+const BG_TRANSITION = { duration: 0.3, ease: 'easeOut' };
 
 const variantsBg = {
   closed: {
@@ -42,31 +40,37 @@ const LINKS = [
   ['Email', 'mailto:me@zakj.net'],
 ];
 
-const Social = ({ onClick, open }) => {
+interface Props {
+  onClick: () => void,
+  open: boolean,
+}
+
+export default ({ onClick, open }: Props) => {
   useLockBodyScroll(open);
 
   return (
     <>
       <AnimatePresence>
         {open && (
-          <motion.ul
-            className={css.menu}
-            variants={variantsBg}
-            initial="closed"
-            animate="open"
-            exit="closed"
-            key="menu"
-          >
-            {LINKS.map(([text, url], i) => (
-              <li key={i}>
-                <a href={url}>{text}</a>
-              </li>
-            ))}
-          </motion.ul>
+          <>
+            <Background exit="closed" animate="open" />
+            <Menu
+              variants={variantsBg}
+              initial="closed"
+              animate="open"
+              exit="closed"
+              key="menu"
+            >
+              {LINKS.map(([text, url], i) => (
+                <li key={i}>
+                  <a href={url}>{text}</a>
+                </li>
+              ))}
+            </Menu>
+          </>
         )}
       </AnimatePresence>
-      <svg
-        className={css.socialButton}
+      <SocialButton
         width="32px"
         height="32px"
         viewBox="0 0 32 32"
@@ -98,14 +102,52 @@ const Social = ({ onClick, open }) => {
             variants={variantsButtonR3}
           />
         </motion.g>
-      </svg>
+      </SocialButton>
     </>
   );
 };
 
-Social.propTypes = {
-  onClick: PropTypes.func.isRequired,
-  open: PropTypes.bool.isRequired,
-};
+const Background = styled(motion.svg)`
+  bottom: 0;
+  height: 100%;
+  left: 0;
+  position: fixed;
+  right: 0;
+  top: 0;
+  width: 100%;
+`;
 
-export default Social;
+const Menu = styled(motion.ul)`
+  background-color: var(--color-green);
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  font-family: var(--font-header);
+  font-size: 56px;
+  font-weight: bold;
+  justify-content: center;
+  left: 0;
+  list-style: none;
+  margin: 0;
+  padding: var(--padding);
+  position: fixed;
+  right: 0;
+  text-transform: uppercase;
+  top: 0;
+
+  a {
+    color: var(--color-text);
+    text-decoration: none;
+  }
+`;
+
+const SocialButton = styled.svg`
+  box-sizing: content-box;
+  cursor: pointer;
+  height: 16px;
+  padding: calc(var(--padding) / 2);
+  position: fixed;
+  right: calc(var(--padding) / 2);
+  top: calc(var(--padding) / 2);
+  width: 16px;
+`;

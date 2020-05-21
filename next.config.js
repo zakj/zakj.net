@@ -1,8 +1,7 @@
-const withStylus = require("@zeit/next-stylus");
-
-module.exports = withStylus({
-  cssModules: true,
-  cssLoaderOptions: {
-    localIdentName: "[local]-[hash:base64:5]",
+module.exports = {
+  webpack: config => {
+    config.devServer = config.devServer || {};
+    config.devServer.host = '0.0.0.0';
+    return config;
   },
-});
+};

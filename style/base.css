@@ -1,0 +1,59 @@
+@font-face {
+  font-family: GT Walsheim;
+  font-style: normal;
+  font-weight: normal;
+  src:
+    url(/fonts/GT-Walsheim-Bold.woff2) format('woff2'),
+    url(/fonts/GT-Walsheim-Bold.woff) format('woff');
+}
+
+@font-face {
+  font-family: GT Walsheim;
+  font-style: normal;
+  font-weight: bold;
+  src:
+    url(/fonts/GT-Walsheim-Black.woff2) format('woff2'),
+    url(/fonts/GT-Walsheim-Black.woff) format('woff');
+}
+
+@font-face {
+  font-family: GT Sectra;
+  font-style: normal;
+  font-weight: normal;
+  src:
+    url(/fonts/GT-Sectra-Regular.woff2) format('woff2'),
+    url(/fonts/GT-Sectra-Regular.woff) format('woff');
+}
+
+* {
+  box-sizing: border-box;
+}
+
+:root {
+  --color-bg: #fff;
+  --color-green: #1d7c87;
+  --color-text: #222;
+  --font-header: GT Walsheim, sans-serif;
+  --font-body: GT Sectra, serif;
+  --padding: 24px;
+
+  -webkit-font-smoothing: antialiased;  /* thinner rendering  TODO evaluate for FF */
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-body);
+}
+
+@media screen and (min-width: 750px) {
+  :root {
+    --padding: 64px
+  }
+}
+
+body {
+  margin: 0;
+}
+
+h1, h2, h3 {
+  font-family: var(--font-header);
+  margin: 0;
+}

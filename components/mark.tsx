@@ -1,9 +1,9 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { motion } from 'framer-motion';
 import { useToggle } from 'react-use';
+import styled from 'styled-components';
 
-import css from './mark.styl';
+import media from 'style/media';
 
 const EXPAND_DURATION = 0.2;
 
@@ -24,10 +24,15 @@ const variantsBottom = {
   expanded: { x: 0 },
 };
 
-const Mark = ({ onClick, expanded }) => {
+interface Props {
+  onClick: () => void,
+  expanded: boolean,
+};
+
+export default ({ onClick, expanded }: Props) => {
   const [recentlyClicked, setRecentlyClicked] = useToggle(false);
   const [hovered, setHovered] = useToggle(false);
-  let recentlyClickedTimeout = null;
+  let recentlyClickedTimeout: number;
 
   function clickHandler() {
     onClick();
@@ -37,8 +42,7 @@ const Mark = ({ onClick, expanded }) => {
   }
 
   return (
-    <motion.svg
-      className={css.mark}
+    <Mark
       width="200px"
       height="217px"
       viewBox="0 0 200 217"
@@ -50,7 +54,7 @@ const Mark = ({ onClick, expanded }) => {
       animate={expanded || hovered || recentlyClicked ? 'expanded' : 'collapsed'}
       variants={variantsContainer}
     >
-      <clipPath id="mark-top-clip" variants={variantsContainer}>
+      <clipPath id="mark-top-clip">
         <motion.rect
           width="200"
           height="100"
@@ -80,13 +84,28 @@ const Mark = ({ onClick, expanded }) => {
           points="111.419456 164 191.1 164 191.1 216.5 80 216.5"
         ></polygon>
       </g>
-    </motion.svg>
+    </Mark>
   );
 };
 
-Mark.propTypes = {
-  expanded: PropTypes.bool.isRequired,
-  onClick: PropTypes.func.isRequired,
-};
+const small = '38px';
+const large = '64px';
+const Mark = styled(motion.svg)`
+  box-sizing: content-box;
+  cursor: pointer;
+  fill: var(--color-text);
+  height: ${small};
+  left: 50%;
+  padding: ${(p) => p.theme.padding.small};
+  position: fixed;
+  top: 0;
+  transform: translateX(${(p) => -(parseInt(small) + parseInt(p.theme.padding.small) * 2) / 2}px);
+  width: ${small};
 
-export default Mark;
+  ${media.large} {
+    height: ${large};
+    padding: ${(p) => p.theme.padding.large};
+    transform: translateX(${(p) => -(parseInt(large) + parseInt(p.theme.padding.large) * 2) / 2}px);
+    width: ${large};
+  }
+`;
