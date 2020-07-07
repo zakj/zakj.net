@@ -24,14 +24,20 @@ const EXERCISES: Exercise[] = [
   new Exercise('Basic plank', 30),
   new Exercise('Forearm plank', 60),
 ].map((e) => new Exercise(e.name, e.duration, e.description));
-// ].map((e) => new Exercise(e.name, e.duration / 10, e.description)); // XXX
 
 const BREAK_TIME = 2000;
+
+// TODO: Use proper types once nosleep.js updates.
+interface NoSleep {
+  enable: () => void;
+  disable: () => void;
+}
 
 interface PlankContext {
   elapsed: number;
   exerciseIndex: number;
   finalExerciseIndex: number;
+  noSleep: NoSleep | null;
 }
 
 interface PlankStateSchema {
@@ -66,12 +72,14 @@ const plankMachine = Machine<PlankContext, PlankStateSchema, PlankEvent>(
       elapsed: 0,
       exerciseIndex: 0,
       finalExerciseIndex: EXERCISES.length - 1,
+      noSleep: null,
     },
     states: {
       idle: {
         on: {
           START: 'break',
         },
+        exit: 'preventSleep',
       },
       exercise: {
         invoke: {
@@ -100,6 +108,7 @@ const plankMachine = Machine<PlankContext, PlankStateSchema, PlankEvent>(
       },
       done: {
         type: 'final',
+        entry: 'allowSleep',
       },
     },
   },
@@ -112,6 +121,18 @@ const plankMachine = Machine<PlankContext, PlankStateSchema, PlankEvent>(
         elapsed: (context, event) =>
           event.type === 'TICK' ? event.elapsed : context.elapsed,
       }),
+      preventSleep: assign({
+        noSleep: (context) => {
+          // TODO: import this properly once nosleep.js supports SSR properly.
+          const NoSleep = require('nosleep.js');
+          const noSleep: NoSleep = new NoSleep();
+          noSleep.enable();
+          return noSleep;
+        },
+      }),
+      allowSleep: (context) => {
+        context.noSleep?.disable?.();
+      },
     },
     delays: {
       BREAK_TIME,
@@ -128,7 +149,6 @@ const plankMachine = Machine<PlankContext, PlankStateSchema, PlankEvent>(
 export default () => {
   const [machine, send] = useMachine(plankMachine);
   const exercise = EXERCISES[machine.context.exerciseIndex];
-  // TODO prevent sleep on iOS
   // TODO PWA/offline mode
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -203,6 +223,7 @@ export default () => {
 const Main = styled(Div100vh)`
   display: flex;
   flex-direction: column;
+  height: 100vh;
 
   /* Account for viewport-fit=cover. */
   padding-top: env(safe-area-inset-top);
