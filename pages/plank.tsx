@@ -1,6 +1,6 @@
 import { useMachine } from '@xstate/react';
 import Head from 'next/head';
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useMemo } from 'react';
 import Div100vh from 'react-div-100vh';
 import media from 'style/media';
 import styled from 'styled-components';
@@ -34,10 +34,10 @@ interface NoSleep {
 }
 
 interface PlankContext {
-  elapsed: number;
+  elapsed_ms: number;
   exerciseIndex: number;
   finalExerciseIndex: number;
-  noSleep: NoSleep | null;
+  noSleep?: NoSleep;
 }
 
 interface PlankStateSchema {
@@ -51,13 +51,13 @@ interface PlankStateSchema {
 
 type PlankEvent =
   | { type: 'START' }
-  | { type: 'TICK'; elapsed: number };
+  | { type: 'TICK'; elapsed_ms: number };
 
 function timer(send: (event: PlankEvent) => void) {
   let running = true;
   const startTime = Date.now();
   function tick() {
-    send({ type: 'TICK', elapsed: Date.now() - startTime });
+    send({ type: 'TICK', elapsed_ms: Date.now() - startTime });
     if (running) requestAnimationFrame(tick);
   }
   requestAnimationFrame(tick);
@@ -69,10 +69,9 @@ const plankMachine = Machine<PlankContext, PlankStateSchema, PlankEvent>(
     id: 'plank',
     initial: 'idle',
     context: {
-      elapsed: 0,
+      elapsed_ms: 0,
       exerciseIndex: 0,
       finalExerciseIndex: EXERCISES.length - 1,
-      noSleep: null,
     },
     states: {
       idle: {
@@ -118,8 +117,8 @@ const plankMachine = Machine<PlankContext, PlankStateSchema, PlankEvent>(
         exerciseIndex: (context) => context.exerciseIndex + 1,
       }),
       updateElapsed: assign({
-        elapsed: (context, event) =>
-          event.type === 'TICK' ? event.elapsed : context.elapsed,
+        elapsed_ms: (context, event) =>
+          event.type === 'TICK' ? event.elapsed_ms : context.elapsed_ms,
       }),
       preventSleep: assign({
         noSleep: (context) => {
@@ -149,6 +148,7 @@ const plankMachine = Machine<PlankContext, PlankStateSchema, PlankEvent>(
 export default () => {
   const [machine, send] = useMachine(plankMachine);
   const exercise = EXERCISES[machine.context.exerciseIndex];
+  const elapsed = useMemo(() => machine.context.elapsed_ms / 1000, [machine.context.elapsed_ms]);
   // TODO PWA/offline mode
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -160,7 +160,7 @@ export default () => {
     const c = canvas.width / 2;
     const r = canvas.width;
     const startAngle = 1.5;
-    const percentComplete = (machine.context.elapsed / 1000 / exercise.duration);
+    const percentComplete = (elapsed / exercise.duration);
     const endAngle = (percentComplete * 2 + startAngle) % 2;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.beginPath();
@@ -169,7 +169,7 @@ export default () => {
     ctx.lineTo(c, c);
     ctx.fillStyle = '#ffffff33';
     ctx.fill();
-  }, [machine.context.elapsed, exercise.duration])
+  }, [elapsed, exercise.duration])
 
   return (
     <>
@@ -196,7 +196,7 @@ export default () => {
             </Circle>
           ) : machine.matches('exercise') ? (
             <Circle>
-              {Math.ceil(exercise.duration - machine.context.elapsed / 1000)}
+              {Math.ceil(exercise.duration - elapsed)}
             </Circle>
           ) : machine.matches('break') ? (
             <Circle>{exercise.duration}</Circle>
