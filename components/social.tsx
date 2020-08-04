@@ -45,7 +45,7 @@ interface Props {
   open: boolean,
 }
 
-export default ({ onClick, open }: Props) => {
+function Social({ onClick, open }: Props) {
   useLockBodyScroll(open);
 
   return (
@@ -105,7 +105,7 @@ export default ({ onClick, open }: Props) => {
       </SocialButton>
     </>
   );
-};
+}
 
 const Background = styled(motion.svg)`
   bottom: 0;
@@ -151,3 +151,5 @@ const SocialButton = styled.svg`
   top: calc(var(--padding) / 2);
   width: 16px;
 `;
+
+export default Social;

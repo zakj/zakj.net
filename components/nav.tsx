@@ -24,7 +24,7 @@ interface Props {
 
 type NavSectionRefs = Omit<SectionRefs, SectionName.Splash>;
 
-export default ({ sectionName, onClick }: Props) => {
+function Wrapper({ sectionName, onClick }: Props) {
   const [markerPosition, setMarkerPosition] = useState<Position>();
   const { width, height } = useWindowSize();
   const sections: NavSectionRefs = {
@@ -68,7 +68,7 @@ export default ({ sectionName, onClick }: Props) => {
       </ul>
     </Nav>
   );
-};
+}
 
 
 const itemPadding = 16;
@@ -131,3 +131,5 @@ const Marker = styled(motion.div)`
   width: ${markerSize}px;
 `;
 
+
+export default Wrapper;

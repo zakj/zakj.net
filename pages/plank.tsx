@@ -145,7 +145,7 @@ const plankMachine = Machine<PlankContext, PlankStateSchema, PlankEvent>(
   }
 );
 
-export default () => {
+function Plank() {
   const [machine, send] = useMachine(plankMachine);
   const exercise = EXERCISES[machine.context.exerciseIndex];
   const elapsed = useMemo(() => machine.context.elapsed_ms / 1000, [machine.context.elapsed_ms]);
@@ -218,7 +218,7 @@ export default () => {
       </Main>
     </>
   );
-};
+}
 
 const Main = styled(Div100vh)`
   display: flex;
@@ -310,3 +310,5 @@ const ExerciseName = styled.div`
     font-size: 30px;
   }
 `;
+
+export default Plank;
