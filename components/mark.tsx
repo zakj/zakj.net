@@ -29,7 +29,7 @@ interface Props {
   expanded: boolean,
 };
 
-export default ({ onClick, expanded }: Props) => {
+const Container = ({ onClick, expanded }: Props) => {
   const [recentlyClicked, setRecentlyClicked] = useToggle(false);
   const [hovered, setHovered] = useToggle(false);
   let recentlyClickedTimeout: number;
@@ -109,3 +109,5 @@ const Mark = styled(motion.svg)`
     width: ${large};
   }
 `;
+
+export default Container;

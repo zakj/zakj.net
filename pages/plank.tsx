@@ -1,4 +1,5 @@
 import { useMachine } from '@xstate/react';
+import NoSleep from 'nosleep.js';
 import Head from 'next/head';
 import React, { useRef, useEffect, useMemo } from 'react';
 import Div100vh from 'react-div-100vh';
@@ -26,12 +27,6 @@ const EXERCISES: Exercise[] = [
 ].map((e) => new Exercise(e.name, e.duration, e.description));
 
 const BREAK_TIME = 2000;
-
-// TODO: Use proper types once nosleep.js updates.
-interface NoSleep {
-  enable: () => void;
-  disable: () => void;
-}
 
 interface PlankContext {
   elapsed_ms: number;
@@ -122,9 +117,7 @@ const plankMachine = Machine<PlankContext, PlankStateSchema, PlankEvent>(
       }),
       preventSleep: assign({
         noSleep: (context) => {
-          // TODO: import this properly once nosleep.js supports SSR properly.
-          const NoSleep = require('nosleep.js');
-          const noSleep: NoSleep = new NoSleep();
+          const noSleep = new NoSleep();
           noSleep.enable();
           return noSleep;
         },

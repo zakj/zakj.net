@@ -11,7 +11,7 @@ import Social from 'components/social';
 import { SectionName, SectionRefs } from 'src/sections';
 import media from 'style/media';
 
-export default () => {
+const Index = () => {
   const sections: SectionRefs = {
     [SectionName.Splash]: useRef<HTMLElement>(null),
     [SectionName.Bio]: useRef<HTMLElement>(null),
@@ -107,3 +107,5 @@ const Splash = styled(Section)`
     }
   }
 `;
+
+export default Index;
