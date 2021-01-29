@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "predist": "test \"$NETLIFY\" = true && npx pnpm install --store=node_modules/.pnpm-store || echo skipping pnpm install",
     "dist": "next build && next export",
     "start": "next start"
   },

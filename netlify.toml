@@ -1,7 +1,7 @@
 [build]
-  command = "yarn dist"
+  command = "npm run dist"
   publish = "out/"
 
 [build.environment]
-  NODE_VERSION = "12.12.0"
-  YARN_VERSION = "1.13.0"
+  NODE_VERSION = "15.7.0"
+  NPM_FLAGS = "--prefix=/tmp"
