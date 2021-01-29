@@ -1,7 +1,7 @@
 import { useMachine } from '@xstate/react';
-import NoSleep from 'nosleep.js';
 import Head from 'next/head';
-import React, { useRef, useEffect, useMemo } from 'react';
+import NoSleep from 'nosleep.js';
+import React, { useEffect, useMemo, useRef } from 'react';
 import Div100vh from 'react-div-100vh';
 import media from 'style/media';
 import styled from 'styled-components';
@@ -44,9 +44,7 @@ interface PlankStateSchema {
   };
 }
 
-type PlankEvent =
-  | { type: 'START' }
-  | { type: 'TICK'; elapsed_ms: number };
+type PlankEvent = { type: 'START' } | { type: 'TICK'; elapsed_ms: number };
 
 function timer(send: (event: PlankEvent) => void) {
   let running = true;
@@ -138,10 +136,15 @@ const plankMachine = Machine<PlankContext, PlankStateSchema, PlankEvent>(
   }
 );
 
+const choice = <T extends unknown>(xs: T[]) =>
+  xs[Math.floor(Math.random() * xs.length)];
+const successEmoji = () => choice(['🙌', '🎉']);
 function Plank() {
   const [machine, send] = useMachine(plankMachine);
   const exercise = EXERCISES[machine.context.exerciseIndex];
-  const elapsed = useMemo(() => machine.context.elapsed_ms / 1000, [machine.context.elapsed_ms]);
+  const elapsed = useMemo(() => machine.context.elapsed_ms / 1000, [
+    machine.context.elapsed_ms,
+  ]);
   // TODO PWA/offline mode
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -153,26 +156,32 @@ function Plank() {
     const c = canvas.width / 2;
     const r = canvas.width;
     const startAngle = 1.5;
-    const percentComplete = (elapsed / exercise.duration);
+    const percentComplete = elapsed / exercise.duration;
     const endAngle = (percentComplete * 2 + startAngle) % 2;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.beginPath();
-    ctx.moveTo(c, c)
+    ctx.moveTo(c, c);
     ctx.arc(c, c, r, Math.PI * startAngle, Math.PI * endAngle);
     ctx.lineTo(c, c);
     ctx.fillStyle = '#ffffff33';
     ctx.fill();
-  }, [elapsed, exercise.duration])
+  }, [elapsed, exercise.duration]);
 
   return (
     <>
       <Head>
         <title>Plank! &middot; zakj.net</title>
         <meta name="apple-mobile-web-app-capable" content="yes"></meta>
-        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"></meta>
+        <meta
+          name="apple-mobile-web-app-status-bar-style"
+          content="black-translucent"
+        ></meta>
         <meta name="apple-mobile-web-app-title" content="Plank!"></meta>
         <link rel="apple-touch-icon" href="/plank-touch-icon.png"></link>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"></meta>
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+        ></meta>
       </Head>
       <Main>
         <Center>
@@ -188,13 +197,11 @@ function Plank() {
               </svg>
             </Circle>
           ) : machine.matches('exercise') ? (
-            <Circle>
-              {Math.ceil(exercise.duration - elapsed)}
-            </Circle>
+            <Circle>{Math.ceil(exercise.duration - elapsed)}</Circle>
           ) : machine.matches('break') ? (
             <Circle>{exercise.duration}</Circle>
           ) : machine.matches('done') ? (
-            <Circle>👍</Circle>
+            <Circle>{successEmoji()}</Circle>
           ) : null}
         </Center>
         <Footer>
