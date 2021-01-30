@@ -1,9 +1,8 @@
-import React from 'react';
 import { motion } from 'framer-motion';
+import React from 'react';
 import { useToggle } from 'react-use';
-import styled from 'styled-components';
-
 import media from 'style/media';
+import styled from 'styled-components';
 
 const EXPAND_DURATION = 0.2;
 
@@ -25,9 +24,9 @@ const variantsBottom = {
 };
 
 interface Props {
-  onClick: () => void,
-  expanded: boolean,
-};
+  onClick: () => void;
+  expanded: boolean;
+}
 
 const Container = ({ onClick, expanded }: Props) => {
   const [recentlyClicked, setRecentlyClicked] = useToggle(false);
@@ -38,7 +37,10 @@ const Container = ({ onClick, expanded }: Props) => {
     onClick();
     setRecentlyClicked(true);
     clearTimeout(recentlyClickedTimeout);
-    recentlyClickedTimeout = setTimeout(() => setRecentlyClicked(false), 2000);
+    recentlyClickedTimeout = window.setTimeout(
+      () => setRecentlyClicked(false),
+      2000
+    );
   }
 
   return (
@@ -51,7 +53,9 @@ const Container = ({ onClick, expanded }: Props) => {
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       initial="collapsed"
-      animate={expanded || hovered || recentlyClicked ? 'expanded' : 'collapsed'}
+      animate={
+        expanded || hovered || recentlyClicked ? 'expanded' : 'collapsed'
+      }
       variants={variantsContainer}
     >
       <clipPath id="mark-top-clip">
@@ -99,13 +103,17 @@ const Mark = styled(motion.svg)`
   padding: ${(p) => p.theme.padding.small};
   position: fixed;
   top: 0;
-  transform: translateX(${(p) => -(parseInt(small) + parseInt(p.theme.padding.small) * 2) / 2}px);
+  transform: translateX(
+    ${(p) => -(parseInt(small) + parseInt(p.theme.padding.small) * 2) / 2}px
+  );
   width: ${small};
 
   ${media.large} {
     height: ${large};
     padding: ${(p) => p.theme.padding.large};
-    transform: translateX(${(p) => -(parseInt(large) + parseInt(p.theme.padding.large) * 2) / 2}px);
+    transform: translateX(
+      ${(p) => -(parseInt(large) + parseInt(p.theme.padding.large) * 2) / 2}px
+    );
     width: ${large};
   }
 `;
