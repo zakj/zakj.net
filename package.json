@@ -11,30 +11,30 @@
   },
   "prettier": "@zakj/prettier-config",
   "dependencies": {
-    "@xstate/react": "^1.2.0",
+    "@xstate/react": "^1.2.2",
     "framer-motion": "1.10.3",
-    "next": "10.0.3",
-    "next-images": "1.6.2",
+    "next": "10.0.6",
+    "next-images": "1.7.0",
     "nosleep.js": "^0.12.0",
     "react": "17.0.1",
     "react-div-100vh": "^0.5.6",
     "react-dom": "17.0.1",
     "react-markdown": "^5.0.3",
-    "react-use": "15.3.4",
+    "react-use": "17.0.1",
     "recoil": "0.1.2",
     "styled-components": "5.2.1",
-    "xstate": "4.15.1"
+    "xstate": "4.16.0"
   },
   "devDependencies": {
-    "@types/node": "^14.0.1",
+    "@types/node": "^14.14.22",
     "@types/react": "^17.0.0",
     "@types/react-div-100vh": "^0.3.0",
     "@types/styled-components": "^5.1.0",
     "@zakj/eslint-config": "^1.0.0",
     "@zakj/prettier-config": "^1.0.0",
     "babel-plugin-styled-components": "1.12.0",
-    "eslint": "7.16.0",
-    "eslint-plugin-react": "^7.17.0",
+    "eslint": "7.19.0",
+    "eslint-plugin-react": "^7.22.0",
     "prettier": "2.2.1",
     "typescript": "4.1.3"
   }
