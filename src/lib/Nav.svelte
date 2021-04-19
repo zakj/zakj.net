@@ -9,40 +9,56 @@
     height: number;
   }
 
+  const itemPadding = 16;
   let container: HTMLElement;
   let firstLinkElement: HTMLElement;
   let linkElements: Record<string, HTMLElement> = {};
-  let previousRect: RectLike = { height: 0, top: 0 }; // XXX firstlinkelement top?
+  let previousRect: RectLike;
+  $: firstLinkElement = Object.values(linkElements).shift();
 
   function scrollToElement(el: HTMLElement): void {
     scrollTo(el.getBoundingClientRect().top + window.scrollY);
   }
 
-  function flipOut(node: HTMLElement, params: any): SvelteTransitionReturnType {
-    previousRect = node.getBoundingClientRect();
-    return { duration: 0 };
-  }
-
-  function flipIn(node: HTMLElement, params: any): SvelteTransitionReturnType {
-    const rect = node.getBoundingClientRect();
-    const delta = {
-      top: previousRect.top - rect.top,
-      height: previousRect.height / rect.height,
-    };
-    previousRect = rect;
+  function flip(
+    prevRect: RectLike,
+    rect: RectLike
+  ): SvelteTransitionReturnType {
+    const topDelta = prevRect.top - rect.top;
+    const heightRatio = rect.height > 0 ? prevRect.height / rect.height : 0;
     return {
       duration: 150,
       css(t: number, u: number): string {
         return `transform:
-          translateX(${delta.top * u}px)
-          scaleX(${1 + u * (delta.height - 1)})
+          translateX(${topDelta * u}px)
+          scaleX(${1 + u * (heightRatio - 1)})
         `;
       },
     };
   }
 
-  $: if (!(current in linkElements)) previousRect = { height: 0, top: 0 };
-  $: firstLinkElement = Object.values(linkElements).shift();
+  // NOTE: Setting previousRect relies on `out` transition happening before `in`.
+  function flipOut(node: HTMLElement, params: any): SvelteTransitionReturnType {
+    previousRect = node.getBoundingClientRect();
+    if (current in linkElements) {
+      return { duration: 0 };
+    } else {
+      const rv = flip(previousRect, { top: previousRect.top, height: 0 });
+      previousRect = null;
+      return rv;
+    }
+  }
+
+  function flipIn(node: HTMLElement, params: any): SvelteTransitionReturnType {
+    const rect = node.getBoundingClientRect();
+    if (!previousRect) {
+      previousRect = {
+        height: 0,
+        top: (firstLinkElement?.getBoundingClientRect().top || 0) + itemPadding,
+      };
+    }
+    return flip(previousRect, rect);
+  }
 </script>
 
 <nav bind:this={container}>
