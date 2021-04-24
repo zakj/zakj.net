@@ -1,5 +1,6 @@
 devDependencies:
   '@sveltejs/adapter-node': 1.0.0-next.16
+  '@sveltejs/adapter-static': 1.0.0-next.6
   '@sveltejs/kit': 1.0.0-next.88_svelte@3.36.0+vite@2.1.4
   '@typescript-eslint/eslint-plugin': 4.20.0_7448dc1756632cc6400f187319207d38
   '@typescript-eslint/parser': 4.20.0_eslint@7.23.0+typescript@4.2.3
@@ -90,6 +91,10 @@ packages:
     dev: true
     resolution:
       integrity: sha512-XXZtiyX8dT1shmiKF2DwB2mCrMrUzFVRItYAV0B3BFF+U5775hpNS5krgtZnJdbA1AoW0Ay2OT+u6MKeQ5/KUQ==
+  /@sveltejs/adapter-static/1.0.0-next.6:
+    dev: true
+    resolution:
+      integrity: sha512-6TF2X/ARSo0bjoV3bh0kctcW9JYkLSb1cNdGSF0Mx26A9lSYyzftKUzLOFa/2hbLFseqf+FJYLeJtN9WOnII7A==
   /@sveltejs/kit/1.0.0-next.88_svelte@3.36.0+vite@2.1.4:
     dependencies:
       '@sveltejs/vite-plugin-svelte': 1.0.0-next.7_svelte@3.36.0+vite@2.1.4
@@ -1504,6 +1509,7 @@ packages:
       integrity: sha512-3wdGidZyq5PB084XLES5TpOSRA3wjXAlIWMhum2kRcv/41Sn2emQ0dycQW4uZXLejwKvg6EsvbdlVL+FYEct7A==
 specifiers:
   '@sveltejs/adapter-node': next
+  '@sveltejs/adapter-static': 1.0.0-next.6
   '@sveltejs/kit': next
   '@typescript-eslint/eslint-plugin': ^4.19.0
   '@typescript-eslint/parser': ^4.19.0
