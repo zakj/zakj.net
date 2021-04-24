@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { springEasing } from '$lib/spring-easing';
   import { sections } from '$lib/store';
   import { scrollTo } from '$lib/util';
 
@@ -10,6 +11,7 @@
   }
 
   const itemPadding = 16;
+  const easing = springEasing();
   let container: HTMLElement;
   let firstLinkElement: HTMLElement;
   let linkElements: Record<string, HTMLElement> = {};
@@ -27,8 +29,9 @@
     const topDelta = prevRect.top - rect.top;
     const heightRatio = rect.height > 0 ? prevRect.height / rect.height : 0;
     return {
-      duration: 150,
+      duration: 400,
       css(t: number, u: number): string {
+        u = 1 - easing(t);
         return `transform:
           translateX(${topDelta * u}px)
           scaleX(${1 + u * (heightRatio - 1)})
@@ -66,9 +69,9 @@
     {#each Object.entries($sections) as [name, element]}
       <li>
         <a
-          href="#{name}"
           bind:this={linkElements[name]}
-          on:click={() => scrollToElement(element)}
+          href="#{name.toLowerCase()}"
+          on:click|preventDefault={() => scrollToElement(element)}
         >
           {name}
           {#if name === current}
@@ -85,7 +88,7 @@
     --item-padding: 16px;
     --marker-size: 3px;
     font-family: var(--font-header);
-    left: 100%;
+    left: calc(100% - var(--padding) + var(--item-padding) + 2px);
     position: fixed;
     text-transform: uppercase;
     transform-origin: left top;
