@@ -5,6 +5,7 @@
     "dev": "svelte-kit dev",
     "build": "svelte-kit build",
     "start": "svelte-kit start",
+    "prebuild": "test \"$NETLIFY\" = true && npx pnpm install --store=node_modules/.pnpm-store || echo skipping pnpm install",
     "lint": "prettier --check . && eslint --ignore-path .gitignore .",
     "format": "prettier --write ."
   },
