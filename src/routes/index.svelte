@@ -6,8 +6,8 @@
   import { currentSection, sections } from '$lib/store';
   import { scrollTo } from '$lib/util';
 
-  function updateSection(event: CustomEvent): void {
-    $currentSection = event.detail.dataset['name'];
+  function updateSection(node: HTMLElement): void {
+    $currentSection = node.dataset['name'];
   }
 </script>
 
@@ -18,16 +18,16 @@
 <div class="background" />
 
 <Mark on:click={() => scrollTo(0)} />
-<Menu />
 <Nav current={$currentSection} />
+<Menu />
 
-<main use:mostVisibleChild on:changemostvisiblechild={updateSection}>
+<main use:mostVisibleChild={updateSection}>
   <section class="splash" data-name="splash">
     <h1>Whiskey ginger&nbsp;&amp; a&nbsp;dash&nbsp;of bitters.</h1>
   </section>
 
-  <section data-name="bio" bind:this={$sections.bio}>TODO bio section</section>
-  <section data-name="history" bind:this={$sections.history}>
+  <section data-name="Bio" bind:this={$sections.Bio}>TODO bio section</section>
+  <section data-name="History" bind:this={$sections.History}>
     TODO history section
   </section>
 </main>
