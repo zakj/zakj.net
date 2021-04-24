@@ -10,16 +10,14 @@
   }
 
   const EXERCISES: Exercise[] = [
-    new Exercise('Basic plank', 2),
-    new Exercise('Forearm plank', 1),
-    // new Exercise("Basic plank", 60),
-    // new Exercise("Forearm plank", 30),
-    // new Exercise("Forearm plank (right leg lifted)", 30),
-    // new Exercise("Forearm plank (left leg lifted)", 30),
-    // new Exercise("Side plank (left hand base)", 30),
-    // new Exercise("Side plank (right hand base)", 30),
-    // new Exercise("Basic plank", 30),
-    // new Exercise("Forearm plank", 60),
+    new Exercise('Basic plank', 60),
+    new Exercise('Forearm plank', 30),
+    new Exercise('Forearm plank (right leg lifted)', 30),
+    new Exercise('Forearm plank (left leg lifted)', 30),
+    new Exercise('Side plank (left hand base)', 30),
+    new Exercise('Side plank (right hand base)', 30),
+    new Exercise('Basic plank', 30),
+    new Exercise('Forearm plank', 60),
   ];
   const BREAK_TIME = 2000;
 
@@ -30,6 +28,7 @@
     Break,
   }
 
+  let innerHeight: number;
   let noSleep: NoSleep;
   let state = State.Idle;
   let elapsedMs = 0;
@@ -99,13 +98,19 @@
   }
 
   $: drawCanvas(canvas, elapsedMs, exercise.duration);
+
+  function getPageHeight(fallback: number): number {
+    if (typeof document === 'undefined') return fallback;
+    return document.documentElement?.clientHeight || fallback;
+  }
+  $: pageHeight = getPageHeight(innerHeight);
 </script>
 
 <svelte:head>
   <title>Plank! &middot; zakj.net</title>
   <meta
     name="viewport"
-    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    content="width=device-width, initial-scale=1, viewport-fit=cover"
   />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta
@@ -116,7 +121,8 @@
   <link rel="apple-touch-icon" href="/img/plank-touch-icon.png" />
 </svelte:head>
 
-<div class="page">
+<svelte:window bind:innerHeight />
+<div class="page" style="height: {pageHeight}px">
   <main>
     {#if state === State.Exercise}
       <canvas width="1000" height="1000" bind:this={canvas} />
@@ -156,6 +162,7 @@
 
 <style>
   .page {
+    background-color: var(--color-green);
     display: flex;
     flex-direction: column;
     height: 100vh;
@@ -167,18 +174,18 @@
 
   main {
     align-items: center;
-    background-color: var(--color-green);
     display: flex;
     flex: 1;
     justify-content: center;
+    margin-top: calc(-1 * env(safe-area-inset-top));
     position: relative;
     width: 100%;
   }
 
   canvas {
     height: 100%;
-    width: 100%;
     position: absolute;
+    width: 100%;
   }
 
   .circle {
@@ -206,10 +213,12 @@
   }
 
   footer {
+    background: var(--color-bg);
     line-height: 24px;
     padding: var(--padding);
     text-align: center;
     width: 100%;
+
     /* Account for viewport-fit=cover. */
     padding-bottom: max(var(--padding), env(safe-area-inset-bottom));
   }
