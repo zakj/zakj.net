@@ -1,4 +1,5 @@
 <script lang="ts">
+  import mobile100vh from '$lib/mobile-100vh';
   import NoSleep from 'nosleep.js';
 
   class Exercise {
@@ -28,7 +29,6 @@
     Break,
   }
 
-  let innerHeight: number;
   let noSleep: NoSleep;
   let state = State.Idle;
   let elapsedMs = 0;
@@ -98,12 +98,6 @@
   }
 
   $: drawCanvas(canvas, elapsedMs, exercise.duration);
-
-  function getPageHeight(fallback: number): number {
-    if (typeof document === 'undefined') return fallback;
-    return document.documentElement?.clientHeight || fallback;
-  }
-  $: pageHeight = getPageHeight(innerHeight);
 </script>
 
 <svelte:head>
@@ -121,8 +115,7 @@
   <link rel="apple-touch-icon" href="/img/plank-touch-icon.png" />
 </svelte:head>
 
-<svelte:window bind:innerHeight />
-<div class="page" style="height: {pageHeight}px">
+<div class="page" use:mobile100vh>
   <main>
     {#if state === State.Exercise}
       <canvas width="1000" height="1000" bind:this={canvas} />
