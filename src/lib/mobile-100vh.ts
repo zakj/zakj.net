@@ -8,8 +8,10 @@ function pageHeight(): number {
 
 export default function mobile100vh(node: HTMLElement): ActionReturn {
   const onResize = () => (node.style.height = `${pageHeight()}px`);
-  onResize();
-  window.addEventListener('resize', onResize);
+  if (pageHeight() != node.getBoundingClientRect().height) {
+    onResize();
+    window.addEventListener('resize', onResize);
+  }
   return {
     destroy() {
       window.removeEventListener('resize', onResize);
