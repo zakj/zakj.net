@@ -27,7 +27,11 @@
     <h1>Whiskey ginger&nbsp;&amp; a&nbsp;dash&nbsp;of bitters.</h1>
   </section>
 
-  <section data-name="Bio" bind:this={$sections.Bio}>TODO bio section</section>
+  <section data-name="Bio" bind:this={$sections.Bio}>
+    <h2>Bio</h2>
+    TODO bio section
+  </section>
+
   <section data-name="History" bind:this={$sections.History}>
     TODO history section
   </section>
@@ -47,34 +51,24 @@
   }
 
   section {
+    min-height: 100vh;
     padding: var(--padding);
     padding-top: calc(var(--padding) * 2 + var(--mark-size));
   }
 
-  section:not(.splash) {
-    min-height: 100vh;
-  }
   .splash {
     display: flex;
     flex-direction: column;
     height: 100vh;
     justify-content: center;
+    min-height: auto;
   }
 
   h1 {
-    font-size: 14vw;
-    line-height: 0.9;
     max-width: calc(100vw - var(--padding) * 4);
-    text-transform: uppercase;
 
     /* color: white;
     mix-blend-mode: difference; */
     text-shadow: 0px 0px 100px #ffffff99;
-  }
-
-  @media screen and (min-width: 750px) {
-    h1 {
-      font-size: 10vw;
-    }
   }
 </style>

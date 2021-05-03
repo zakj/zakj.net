@@ -13,13 +13,6 @@
   font-family: var(--font-body);
 }
 
-@media screen and (min-width: 750px) {
-  :root {
-    --mark-size: 64px;
-    --padding: 64px;
-  }
-}
-
 * {
   box-sizing: border-box;
 }
@@ -33,6 +26,30 @@ h2,
 h3 {
   font-family: var(--font-header);
   margin: 0;
+  text-transform: uppercase;
+}
+
+h1 {
+  font-size: 14vw;
+  line-height: 0.9;
+}
+
+h2 {
+  font-size: 52px;
+  text-transform: uppercase;
+}
+
+@media screen and (min-width: 750px) {
+  :root {
+    --mark-size: 64px;
+    --padding: 64px;
+  }
+  h1 {
+    font-size: 10vw;
+  }
+  h2 {
+    font-size: 72px;
+  }
 }
 
 @font-face {

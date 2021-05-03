@@ -220,10 +220,12 @@
     text-transform: uppercase;
   }
 
+  h1,
   .exercise {
     font-family: var(--font-header);
     font-size: 18px;
     font-weight: bold;
+    line-height: 0.9;
   }
   .exercise.break {
     opacity: 0.6;
@@ -239,6 +241,7 @@
       text-align: left;
     }
 
+    h1,
     .exercise {
       font-size: 30px;
     }
