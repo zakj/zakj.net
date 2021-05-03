@@ -1,4 +1,5 @@
 {
+  "name": "zakj.net",
   "private": true,
   "prettier": "@zakj/prettier-config",
   "scripts": {
