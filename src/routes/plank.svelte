@@ -98,6 +98,7 @@
   }
 
   $: drawCanvas(canvas, elapsedMs, exercise.duration);
+
 </script>
 
 <svelte:head>
@@ -246,4 +247,5 @@
       font-size: 30px;
     }
   }
+
 </style>
