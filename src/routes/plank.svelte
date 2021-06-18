@@ -142,6 +142,13 @@
     </div>
   </main>
   <footer>
+    {#if [State.Break, State.Exercise].includes(state)}
+      <div class="progress">
+        {#each EXERCISES as x, i}
+          <div class="progress-item" class:done={i <= index} />
+        {/each}
+      </div>
+    {/if}
     {#if state === State.Idle}
       <h1>Plank!</h1>
     {:else if state === State.Break}
@@ -210,11 +217,33 @@
     background: var(--color-bg);
     line-height: 24px;
     padding: var(--padding);
+    position: relative;
     text-align: center;
     width: 100%;
 
     /* Account for viewport-fit=cover. */
     padding-bottom: max(var(--padding), env(safe-area-inset-bottom));
+  }
+
+  .progress {
+    --progress-margin: 1px;
+    display: flex;
+    justify-content: space-between;
+    left: 0;
+    position: absolute;
+    right: var(--progress-margin);
+    top: var(--progress-margin);
+  }
+  .progress-item {
+    background: var(--color-green);
+    flex: 1;
+    height: 3px;
+    margin-left: var(--progress-margin);
+    opacity: 0.2;
+    transition: opacity 150ms;
+  }
+  .progress-item.done {
+    opacity: 1;
   }
 
   h1 {
@@ -240,6 +269,13 @@
 
     footer {
       text-align: left;
+    }
+
+    .progress {
+      --progress-margin: 2px;
+    }
+    .progress-item {
+      height: 6px;
     }
 
     h1,
