@@ -1,4 +1,5 @@
 <script lang="ts">
+  import History from '$lib/History.svelte';
   import Mark from '$lib/Mark.svelte';
   import Menu from '$lib/Menu.svelte';
   import mobile100vh from '$lib/mobile-100vh';
@@ -10,6 +11,7 @@
   function updateSection(node: HTMLElement): void {
     $currentSection = node.dataset['name'];
   }
+
 </script>
 
 <svelte:head>
@@ -29,11 +31,22 @@
 
   <section data-name="Bio" bind:this={$sections.Bio}>
     <h2>Bio</h2>
-    TODO bio section
+
+    <p>
+      Hello! I’m Zak Johnson, a design-minded full-stack developer with a
+      background in information security. I’ve been building and breaking things
+      on the web since the nineties at companies like Etsy, GOOD, and Cabin. I
+      currently lead a team of product engineers at Mixpanel.
+    </p>
+
+    <p>
+      I’m passionate about simplicity, text editors, significant whitespace, and
+      grammar.
+    </p>
   </section>
 
   <section data-name="History" bind:this={$sections.History}>
-    TODO history section
+    <History />
   </section>
 </main>
 
@@ -54,6 +67,10 @@
     min-height: 100vh;
     padding: var(--padding);
     padding-top: calc(var(--padding) * 2 + var(--mark-size));
+    padding-right: calc(var(--padding) * 2.5);
+  }
+  section p {
+    max-width: 35em;
   }
 
   .splash {
@@ -71,4 +88,11 @@
     mix-blend-mode: difference; */
     text-shadow: 0px 0px 100px #ffffff99;
   }
+
+  @media screen and (min-width: 750px) {
+    section {
+      padding-right: calc(var(--padding) * 2);
+    }
+  }
+
 </style>
