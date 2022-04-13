@@ -2,10 +2,10 @@
 /// <reference lib="webworker" />
 declare const self: ServiceWorkerGlobalScope;
 
-import { build, files, timestamp } from '$service-worker';
+import { build, files, version } from '$service-worker';
 
-const CACHE_NAME = `zakj.net-${timestamp}`;
-const ROUTES = ['/', '/plank', '/plank/']; // TODO trailing slashes
+const CACHE_NAME = `zakj.net-${version}`;
+const ROUTES = ['/', '/plank']; // TODO add other routes
 const URLS = build.concat(files, ROUTES);
 
 self.addEventListener('install', (e) => {
@@ -35,7 +35,8 @@ self.addEventListener('activate', (e) => {
 });
 
 self.addEventListener('fetch', (e) => {
+  if (e.request.method !== 'GET') return;
   e.respondWith(
-    caches.match(e.request).then((response) => response || fetch(e.request))
+    caches.match(e.request).then((response) => response ?? fetch(e.request))
   );
 });
