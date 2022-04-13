@@ -72,10 +72,4 @@
   path {
     stroke: var(--color-text);
   }
-
-  @media screen and (min-width: 750px) {
-    div {
-      --mark-size: 64px;
-    }
-  }
 </style>

@@ -1,14 +1,14 @@
 <script lang="ts">
-  import historyEntries from '$lib/history';
+  import { entries, History } from '$lib/history';
   import StaggeredPie from '$lib/StaggeredPie.svelte';
 
-  const historyPieData = historyEntries.map((e) => {
+  const historyPieData = entries.map((e) => {
     const [label, sub] = e.durationInWords.split(' ');
     return { size: e.duration, label, sub };
   });
 
   let historyIndex = 0;
-  let historyItem;
+  let historyItem: History;
   let innerWidth: number;
   let innerHeight: number;
   let pieSize = 600;
@@ -24,7 +24,7 @@
         ? innerWidth - 24 * 3
         : Math.max(innerWidth, innerHeight) / 2;
   }
-  $: historyItem = historyEntries[historyIndex];
+  $: historyItem = entries[historyIndex];
 </script>
 
 <svelte:window bind:innerHeight bind:innerWidth />
@@ -33,7 +33,7 @@
   <h2>History</h2>
 
   <ul>
-    {#each historyEntries as item, i (i)}
+    {#each entries as item, i (i)}
       <li class:selected={historyIndex === i} on:mouseenter={select(i)}>
         {item.city}
       </li>
@@ -42,7 +42,7 @@
 
   <div class="date">{historyItem.yearRange}</div>
 
-  <p class="description">{historyItem.description}</p>
+  <p class="description">{@html historyItem.description}</p>
 
   <div class="graph">
     <StaggeredPie
@@ -78,32 +78,31 @@
     grid-area: date;
   }
 
+  ul,
+  .date {
+    font-family: var(--font-header);
+    text-transform: uppercase;
+  }
+
   ul {
     font-size: 20px;
     grid-area: list;
     list-style: none;
     margin: 0;
     padding: 0;
+    max-width: 15em;
   }
 
   li {
     cursor: default;
-    margin: 3px 0;
-    transform-origin: left center;
-    transform: scale(1);
-    transition: transform 150ms ease-out;
     display: none;
+    line-height: 1.2;
+    opacity: 0.4;
   }
   li.selected {
     color: var(--color-green);
+    opacity: 1;
     display: block;
-    transform: scale(1.1);
-  }
-
-  ul,
-  .date {
-    font-family: var(--font-header);
-    text-transform: uppercase;
   }
 
   .description {
@@ -111,6 +110,11 @@
   }
 
   @media screen and (min-width: 750px) {
+    ul {
+      border-bottom: 1px solid var(--color-text);
+      margin: 1em 0;
+      padding-bottom: 1em;
+    }
     li {
       display: block;
     }

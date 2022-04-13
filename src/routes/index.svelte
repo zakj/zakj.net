@@ -1,98 +1,78 @@
 <script lang="ts">
-  import History from '$lib/History.svelte';
   import Mark from '$lib/Mark.svelte';
-  import Menu from '$lib/Menu.svelte';
-  import mobile100vh from '$lib/mobile-100vh';
-  import mostVisibleChild from '$lib/most-visible-child';
-  import Nav from '$lib/Nav.svelte';
-  import { currentSection, sections } from '$lib/store';
-  import { scrollTo } from '$lib/util';
-
-  function updateSection(node: HTMLElement): void {
-    $currentSection = node.dataset['name'];
-  }
-
 </script>
 
 <svelte:head>
   <title>Zak Johnson &middot; zakj.net</title>
 </svelte:head>
 
-<div class="background" use:mobile100vh />
+<Mark />
 
-<Mark on:click={() => scrollTo(0)} />
-<Nav current={$currentSection} />
-<Menu />
-
-<main use:mostVisibleChild={updateSection}>
-  <section class="splash" data-name="splash" use:mobile100vh>
-    <h1>Whiskey ginger&nbsp;&amp; a&nbsp;dash&nbsp;of bitters.</h1>
-  </section>
-
-  <section data-name="Bio" bind:this={$sections.Bio}>
-    <h2>Bio</h2>
-
+<main>
+  <div>
     <p>
-      Hello! I’m Zak Johnson, a design-minded full-stack developer with a
-      background in information security. I’ve been building and breaking things
-      on the web since the nineties at companies like Etsy, GOOD, and Cabin. I
-      currently lead a team of product engineers at Mixpanel.
+      Hello! I&rsquo;m Zak, a design-minded engineer in Oakland, CA. I currently
+      lead a team responsible for building UX across all our client platforms at
+      <a href="https://www.grammarly.com">Grammarly</a>. I have been
+      building/breaking things on the web since the mid-nineties, previously
+      with companies like <a href="https://mixpanel.com">Mixpanel</a> and
+      <a href="https://www.etsy.com">Etsy</a>.
     </p>
 
     <p>
-      I’m passionate about simplicity, text editors, significant whitespace, and
-      grammar.
+      I have various interests, including but not limited to: motorcycling,
+      yoga, <a href="https://www.instagram.com/p/BkwS992lCsW/"
+        >hammock camping</a
+      >, text editors, significant whitespace, making lists,
+      <a href="https://brians.wsu.edu/common-errors-in-english-usage/"
+        >grammar</a
+      >, and sitting quietly.
     </p>
-  </section>
 
-  <section data-name="History" bind:this={$sections.History}>
-    <History />
-  </section>
+    <p>
+      Find me on
+      <a href="https://github.com/zakj">GitHub</a>,
+      <a href="https://twitter.com/zakj">Twitter</a>,
+      <a href="https://www.instagram.com/zakj/">Instagram</a>,
+      <a href="https://www.linkedin.com/in/zakjohnson">LinkedIn</a>, or
+      <a href="mailto:me@zakj.net">via email</a>.
+    </p>
+
+    <p>New designs coming… sometime.</p>
+
+    <img class="headshot" src="/img/headshot.jpg" alt="Zak Johnson" />
+  </div>
 </main>
 
 <style>
-  .background {
-    background-image: url(/img/bg.jpg);
-    background-position: center center;
-    background-repeat: no-repeat;
-    background-size: cover;
-    height: 100vh;
-    position: absolute;
-    top: 0;
-    width: 100%;
-    z-index: -1;
+  main {
+    display: grid;
+    margin: var(--padding);
+    margin-top: calc(var(--padding) * 2 + var(--mark-size));
+    place-content: center;
+  }
+  main > div {
+    max-width: 30em;
+  }
+  p:first-child {
+    margin-top: 0;
   }
 
-  section {
-    min-height: 100vh;
-    padding: var(--padding);
-    padding-top: calc(var(--padding) * 2 + var(--mark-size));
-    padding-right: calc(var(--padding) * 2.5);
+  a {
+    color: var(--color-text);
+    text-decoration-color: rgba(34, 34, 34, 0.2);
+    text-underline-position: from-font;
+    text-decoration-thickness: 0.07em;
+    transition: text-decoration-color 150ms;
   }
-  section p {
-    max-width: 35em;
-  }
-
-  .splash {
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-    justify-content: center;
-    min-height: auto;
+  a:hover {
+    text-decoration-color: var(--color-text);
   }
 
-  h1 {
-    max-width: calc(100vw - var(--padding) * 4);
-
-    /* color: white;
-    mix-blend-mode: difference; */
-    text-shadow: 0px 0px 100px #ffffff99;
+  .headshot {
+    border-radius: 50%;
+    display: block;
+    margin: var(--padding) auto;
+    max-width: calc(var(--mark-size) * 2);
   }
-
-  @media screen and (min-width: 750px) {
-    section {
-      padding-right: calc(var(--padding) * 2);
-    }
-  }
-
 </style>
