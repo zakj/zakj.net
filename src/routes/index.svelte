@@ -13,28 +13,33 @@
     <p>
       Hello! I&rsquo;m Zak, a design-minded engineer in Oakland, CA. I currently
       lead a team responsible for building UX across all our client platforms at
-      <a href="https://www.grammarly.com">Grammarly</a>. I have been
-      building/breaking things on the web since the mid-nineties, previously
-      with companies like <a href="https://mixpanel.com">Mixpanel</a> and
-      <a href="https://www.etsy.com">Etsy</a>.
+      <a rel="external" href="https://www.grammarly.com">Grammarly</a>. I have
+      been building/breaking things on the web since the mid-nineties,
+      previously with companies like
+      <a rel="external" href="https://mixpanel.com">Mixpanel</a>
+      and
+      <a rel="external" href="https://www.etsy.com">Etsy</a>.
     </p>
 
     <p>
       I have various interests, including but not limited to: motorcycling,
-      yoga, <a href="https://www.instagram.com/p/BkwS992lCsW/"
+      yoga, <a rel="external" href="https://www.instagram.com/p/BkwS992lCsW/"
         >hammock camping</a
       >, text editors, significant whitespace, making lists,
-      <a href="https://brians.wsu.edu/common-errors-in-english-usage/"
-        >grammar</a
+      <a
+        rel="external"
+        href="https://brians.wsu.edu/common-errors-in-english-usage/">grammar</a
       >, and sitting quietly.
     </p>
 
     <p>
       Find me on
-      <a href="https://github.com/zakj">GitHub</a>,
-      <a href="https://twitter.com/zakj">Twitter</a>,
-      <a href="https://www.instagram.com/zakj/">Instagram</a>,
-      <a href="https://www.linkedin.com/in/zakjohnson">LinkedIn</a>, or
+      <a rel="external" href="https://github.com/zakj">GitHub</a>,
+      <a rel="external" href="https://twitter.com/zakj">Twitter</a>,
+      <a rel="external" href="https://www.instagram.com/zakj/">Instagram</a>,
+      <a rel="external" href="https://www.linkedin.com/in/zakjohnson"
+        >LinkedIn</a
+      >, or
       <a href="mailto:me@zakj.net">via email</a>.
     </p>
 
