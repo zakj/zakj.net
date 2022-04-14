@@ -1,6 +1,6 @@
 <script lang="ts">
   import mobile100vh from '$lib/mobile-100vh';
-  import NoSleep from 'nosleep.js';
+  import NoSleep from '@uriopass/nosleep.js';
 
   class Exercise {
     constructor(
@@ -98,7 +98,6 @@
   }
 
   $: drawCanvas(canvas, elapsedMs, exercise.duration);
-
 </script>
 
 <svelte:head>
@@ -167,6 +166,7 @@
     display: flex;
     flex-direction: column;
     height: 100vh;
+    height: 100svh;
 
     /* Account for viewport-fit=cover. */
     box-sizing: content-box;
@@ -283,5 +283,4 @@
       font-size: 30px;
     }
   }
-
 </style>
