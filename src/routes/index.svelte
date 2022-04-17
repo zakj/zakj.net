@@ -45,7 +45,10 @@
 
     <p>New designs coming… sometime.</p>
 
-    <Triptych />
+    <Triptych
+      bg="/img/bg.jpg"
+      images={['/img/snow.jpg', '/img/sitting.jpg', '/img/scarf.jpg']}
+    />
   </div>
 </main>
 
