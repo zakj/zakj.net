@@ -46,6 +46,7 @@
 
 <div class="container" style="--bg-img: url({bg})">
   {#each images as image, index}
+    <!-- TODO handle mobile drag -->
     <div
       class="img"
       on:mouseenter={handleMouseenter(index)}
@@ -69,15 +70,21 @@
     background-size: cover;
     display: flex;
     margin-top: var(--padding);
+    height: 175px;
   }
   .img {
     background-size: 140%;
     clip-path: polygon(0 100%, 39% 0, 100% 0%, 61% 100%);
-    height: 300px;
     margin-left: calc((100% - var(--image-width) * 3) / 2);
     width: var(--image-width);
   }
   .img:first-child {
     margin-left: 0;
+  }
+
+  @media screen and (min-width: 750px) {
+    .container {
+      height: 350px;
+    }
   }
 </style>
