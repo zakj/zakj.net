@@ -1,20 +1,9 @@
 <script lang="ts">
+  import HeadMeta from '$lib/HeadMeta.svelte';
   import Mark from '$lib/Mark.svelte';
 </script>
 
-<svelte:head>
-  <title>Zak Johnson &middot; zakj.net</title>
-  <meta
-    name="theme-color"
-    content="#fff"
-    media="(prefers-color-scheme: light)"
-  />
-  <meta
-    name="theme-color"
-    content="#222"
-    media="(prefers-color-scheme: dark)"
-  />
-</svelte:head>
+<HeadMeta />
 
 <Mark />
 

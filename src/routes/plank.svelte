@@ -1,4 +1,5 @@
 <script lang="ts">
+  import HeadMeta from '$lib/HeadMeta.svelte';
   import mobile100vh from '$lib/mobile-100vh';
   import NoSleep from '@uriopass/nosleep.js';
 
@@ -100,8 +101,7 @@
   $: drawCanvas(canvas, elapsedMs, exercise.duration);
 </script>
 
-<svelte:head>
-  <title>Plank! &middot; zakj.net</title>
+<HeadMeta title="Plank!" description="A simple timer for five-minute planks.">
   <meta
     name="viewport"
     content="width=device-width, initial-scale=1, viewport-fit=cover"
@@ -113,7 +113,7 @@
   />
   <meta name="apple-mobile-web-app-title" content="Plank!" />
   <link rel="apple-touch-icon" href="/img/plank-touch-icon.png" />
-</svelte:head>
+</HeadMeta>
 
 <div class="page" use:mobile100vh>
   <main>
@@ -126,7 +126,7 @@
       on:click={() => (state === State.Idle ? handlePlay() : null)}
     >
       {#if state === State.Idle}
-        <svg fill="#000000" viewBox="0 0 100 100">
+        <svg viewBox="0 0 100 100">
           <path
             d="M78.627,47.203L24.873,16.167c-1.082-0.625-2.227-0.625-3.311,0C20.478,16.793,20,17.948,20,19.199V81.27 c0,1.25,0.478,2.406,1.561,3.031c0.542,0.313,1.051,0.469,1.656,0.469c0.604,0,1.161-0.156,1.703-0.469l53.731-31.035 c1.083-0.625,1.738-1.781,1.738-3.031C80.389,48.984,79.71,47.829,78.627,47.203z"
           />
@@ -163,6 +163,7 @@
 <style>
   .page {
     background-color: var(--color-green);
+    color: var(--color-black);
     display: flex;
     flex-direction: column;
     height: 100vh;
@@ -192,7 +193,7 @@
   .circle {
     --size: 200px;
     align-items: center;
-    background-color: var(--color-bg);
+    background-color: var(--color-white);
     border-radius: calc(var(--size) / 2);
     display: flex;
     font-family: var(--font-header);
@@ -211,10 +212,11 @@
     height: calc(var(--size) / 2);
     width: calc(var(--size) / 2);
     margin-left: 5%;
+    fill: var(--color-black);
   }
 
   footer {
-    background: var(--color-bg);
+    background: var(--color-white);
     line-height: 24px;
     padding: var(--padding);
     position: relative;

@@ -1,8 +1,10 @@
 :root {
-  --color-bg: #fff;
+  --color-black: #222;
   --color-green: #1d7c87;
-  --color-text: #222;
-  --color-underline: rgba(34, 34, 34, 0.2)
+  --color-white: #fff;
+  --color-bg: var(--color-white);
+  --color-text: var(--color-black);
+  --color-underline: rgba(34, 34, 34, 0.2);
   --font-header: GT Walsheim, sans-serif;
   --font-body: GT Sectra, serif;
   --mark-size: 38px;
@@ -16,9 +18,9 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --color-bg: #222;
-    --color-text: #fff;
-    --color-underline: rgba(255, 255, 255, 0.2)
+    --color-bg: var(--color-black);
+    --color-text: var(--color-white);
+    --color-underline: rgba(255, 255, 255, 0.2);
   }
 }
 
