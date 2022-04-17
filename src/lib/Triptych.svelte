@@ -10,21 +10,38 @@
     { x: 0.5, y: 0.5 },
   ]);
 
-  const startEvents: MouseEvent[] = [];
+  let startPos: { x: number; y: number } = { x: 0, y: 0 };
 
-  function handleMouseenter(index: number): (event: MouseEvent) => void {
-    return (event) => (startEvents[index] = event);
+  const isTouchEvent = (event: MouseEvent | TouchEvent): event is TouchEvent =>
+    'touches' in event;
+
+  function getClientCoords(event: MouseEvent | TouchEvent): {
+    x: number;
+    y: number;
+  } {
+    return isTouchEvent(event)
+      ? {
+          x: event.touches.item(0).clientX,
+          y: event.touches.item(0).clientY,
+        }
+      : { x: event.clientX, y: event.clientY };
   }
 
-  function handleImgMousemove(index: number): (event: MouseEvent) => void {
-    return function (event: MouseEvent) {
+  function handleEnter(
+    index: number
+  ): (event: MouseEvent | TouchEvent) => void {
+    return (event) => (startPos = getClientCoords(event));
+  }
+
+  function handleMove(index: number): (event: MouseEvent | TouchEvent) => void {
+    return function (event: MouseEvent | TouchEvent) {
+      event.preventDefault(); // prevent scrolling on mobile touchmove
       const el = event.target as HTMLElement;
       const box = el.getBoundingClientRect();
+      const current = getClientCoords(event);
 
-      const moveX =
-        (event.clientX - startEvents[index].clientX) / (box.right - box.left);
-      const moveY =
-        (event.clientY - startEvents[index].clientY) / (box.bottom - box.top);
+      const moveX = (current.x - startPos.x) / (box.right - box.left);
+      const moveY = (current.y - startPos.y) / (box.bottom - box.top);
       const x = 0.5 - moveX / 2;
       const y = 0.5 - moveY / 2;
 
@@ -35,7 +52,7 @@
     };
   }
 
-  function handleImgMouseout(index: number) {
+  function handleLeave(index: number) {
     return () =>
       imgBgPos.update((v) => {
         v[index] = { x: 0.5, y: 0.5 };
@@ -46,13 +63,15 @@
 
 <div class="container" style="--bg-img: url({bg})">
   {#each images as image, index}
-    <!-- TODO handle mobile drag -->
     <div
       class="img"
-      on:mouseenter={handleMouseenter(index)}
-      on:mousemove={handleImgMousemove(index)}
-      on:mouseout={handleImgMouseout(index)}
-      on:blur={handleImgMouseout(index)}
+      on:mouseenter={handleEnter(index)}
+      on:mousemove={handleMove(index)}
+      on:mouseleave={handleLeave(index)}
+      on:blur={handleLeave(index)}
+      on:touchstart={handleEnter(index)}
+      on:touchmove={handleMove(index)}
+      on:touchend={handleLeave(index)}
       style:background-image={`url(${images[index]})`}
       style:background-position={`${$imgBgPos[index].x * 100}% ${
         $imgBgPos[index].y * 100
@@ -66,7 +85,7 @@
     --image-width: 44%;
     /* background-image: linear-gradient(to bottom, #22222266, #222222ff); */
     background-image: var(--bg-img);
-    background-position: bottom center;
+    background-position: center 99%; /* TODO */
     background-size: cover;
     display: flex;
     margin-top: var(--padding);
