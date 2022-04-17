@@ -4,6 +4,16 @@
 
 <svelte:head>
   <title>Zak Johnson &middot; zakj.net</title>
+  <meta
+    name="theme-color"
+    content="#fff"
+    media="(prefers-color-scheme: light)"
+  />
+  <meta
+    name="theme-color"
+    content="#222"
+    media="(prefers-color-scheme: dark)"
+  />
 </svelte:head>
 
 <Mark />
@@ -52,8 +62,8 @@
 <style>
   main {
     display: grid;
-    margin: var(--padding);
-    margin-top: calc(var(--padding) * 2 + var(--mark-size));
+    padding: var(--padding);
+    padding-top: calc(var(--padding) * 2 + var(--mark-size));
     place-content: center;
   }
   main > div {
@@ -65,7 +75,7 @@
 
   a {
     color: var(--color-text);
-    text-decoration-color: rgba(34, 34, 34, 0.2);
+    text-decoration-color: var(--color-underline);
     text-underline-position: from-font;
     text-decoration-thickness: 0.07em;
     transition: text-decoration-color 150ms;

@@ -2,6 +2,7 @@
   --color-bg: #fff;
   --color-green: #1d7c87;
   --color-text: #222;
+  --color-underline: rgba(34, 34, 34, 0.2)
   --font-header: GT Walsheim, sans-serif;
   --font-body: GT Sectra, serif;
   --mark-size: 38px;
@@ -11,6 +12,14 @@
   background: var(--color-bg);
   color: var(--color-text);
   font: 17px/20px var(--font-body);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-bg: #222;
+    --color-text: #fff;
+    --color-underline: rgba(255, 255, 255, 0.2)
+  }
 }
 
 * {

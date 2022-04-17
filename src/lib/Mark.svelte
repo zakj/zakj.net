@@ -26,8 +26,8 @@
   <svg width="200px" height="217px" viewBox="0 0 200 217">
     <defs>
       <mask id="mark-slash-mask" maskUnits="userSpaceOnUse">
-        <rect x="0" y="0" width="100%" height="100%" fill="white" />
-        <path d="M35,217 165,0" stroke-width="76" stroke-linecap="square" />
+        <polygon points="0,0 120.5,0 0,202" fill="white" />
+        <polygon points="200,217 79.5,217 200,15" fill="white" />
       </mask>
     </defs>
 
