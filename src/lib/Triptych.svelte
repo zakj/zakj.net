@@ -13,6 +13,7 @@
   ]);
 
   let startPosition: { x: number; y: number } = { x: 0, y: 0 };
+  let sliceRect: DOMRect;
 
   const isTouchEvent = (event: MouseEvent | TouchEvent): event is TouchEvent =>
     'touches' in event;
@@ -32,20 +33,23 @@
   function handleEnter(
     index: number
   ): (event: MouseEvent | TouchEvent) => void {
-    return (event) => (startPosition = getClientCoords(event));
+    return (event) => {
+      sliceRect = (event.currentTarget as HTMLElement).getBoundingClientRect();
+      startPosition = getClientCoords(event);
+    };
   }
 
   function handleMove(index: number): (event: MouseEvent | TouchEvent) => void {
     return function (event: MouseEvent | TouchEvent) {
       event.preventDefault(); // prevent scrolling on mobile touchmove
-      const slice = event.currentTarget as HTMLElement;
-      const box = slice.getBoundingClientRect();
       const current = getClientCoords(event);
 
-      const deltaX = (current.x - startPosition.x) / (box.right - box.left);
-      const deltaY = (current.y - startPosition.y) / (box.bottom - box.top);
-      const x = deltaX * box.width * (IMAGE_OVERSIZE / 2);
-      const y = deltaY * box.height * (IMAGE_OVERSIZE / 2);
+      const deltaX =
+        (current.x - startPosition.x) / (sliceRect.right - sliceRect.left);
+      const deltaY =
+        (current.y - startPosition.y) / (sliceRect.bottom - sliceRect.top);
+      const x = deltaX * sliceRect.width * (IMAGE_OVERSIZE / 2);
+      const y = deltaY * sliceRect.height * (IMAGE_OVERSIZE / 2);
 
       imgPosition.update((v) => {
         v[index] = { x, y };
@@ -101,6 +105,7 @@
     display: grid;
     grid: var(--image-scale) / var(--image-scale);
     margin-left: calc((100% - var(--slice-width) * 3) / 2);
+    overflow: hidden;
     place-content: center;
     width: var(--slice-width);
   }
