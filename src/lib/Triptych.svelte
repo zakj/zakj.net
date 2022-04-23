@@ -92,14 +92,25 @@
   .container {
     --image-scale: 140%;
     --slice-width: 44%;
-    /* background-image: linear-gradient(to bottom, #22222266, #222222ff); */
-    background-image: var(--bg-img);
-    background-position: center 99%; /* TODO */
-    background-size: cover;
+    background: linear-gradient(to bottom, #00000000, #222);
     display: flex;
     height: 175px;
     margin-top: var(--padding);
+    position: relative;
   }
+  .container::before {
+    background-image: var(--bg-img);
+    background-position: center 99%; /* TODO */
+    background-size: cover;
+    content: '';
+    height: 100%;
+    left: 0;
+    opacity: 0.5;
+    position: absolute;
+    top: 0;
+    width: 100%;
+  }
+
   .slice {
     clip-path: polygon(0 100%, 39% 0, 100% 0%, 61% 100%);
     display: grid;
