@@ -6,22 +6,28 @@
 
   const IMAGE_OVERSIZE = 0.4;
 
-  const imgPosition = spring([
+  interface Coords {
+    x: number;
+    y: number;
+  }
+
+  interface MouseHandler {
+    (event: MouseEvent | TouchEvent): void;
+  }
+
+  const imgPosition = spring<Coords[]>([
     { x: 0, y: 0 },
     { x: 0, y: 0 },
     { x: 0, y: 0 },
   ]);
 
-  let startPosition: { x: number; y: number } = { x: 0, y: 0 };
+  let startPosition: Coords = { x: 0, y: 0 };
   let sliceRect: DOMRect;
 
   const isTouchEvent = (event: MouseEvent | TouchEvent): event is TouchEvent =>
     'touches' in event;
 
-  function getClientCoords(event: MouseEvent | TouchEvent): {
-    x: number;
-    y: number;
-  } {
+  function getClientCoords(event: MouseEvent | TouchEvent): Coords {
     return isTouchEvent(event)
       ? {
           x: event.touches.item(0).clientX,
@@ -30,17 +36,15 @@
       : { x: event.clientX, y: event.clientY };
   }
 
-  function handleEnter(
-    index: number
-  ): (event: MouseEvent | TouchEvent) => void {
+  function handleEnter(index: number): MouseHandler {
     return (event) => {
       sliceRect = (event.currentTarget as HTMLElement).getBoundingClientRect();
       startPosition = getClientCoords(event);
     };
   }
 
-  function handleMove(index: number): (event: MouseEvent | TouchEvent) => void {
-    return function (event: MouseEvent | TouchEvent) {
+  function handleMove(index: number): MouseHandler {
+    return (event) => {
       event.preventDefault(); // prevent scrolling on mobile touchmove
       const current = getClientCoords(event);
 
@@ -58,7 +62,7 @@
     };
   }
 
-  function handleLeave(index: number) {
+  function handleLeave(index: number): MouseHandler {
     return () =>
       imgPosition.update((v) => {
         v[index] = { x: 0, y: 0 };
