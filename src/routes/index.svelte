@@ -51,12 +51,10 @@
 <style>
   main {
     display: grid;
+    grid-template-columns: minmax(auto, 30em);
+    margin-top: calc(var(--padding) + var(--mark-size));
     padding: var(--padding);
-    padding-top: calc(var(--padding) * 2 + var(--mark-size));
     place-content: center;
-  }
-  main > div {
-    max-width: 30em;
   }
   p:first-child {
     margin-top: 0;
