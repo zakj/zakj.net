@@ -3,16 +3,16 @@
   "private": true,
   "prettier": "@zakj/prettier-config",
   "scripts": {
-    "dev": "svelte-kit dev",
-    "build": "svelte-kit build",
-    "preview": "svelte-kit preview",
+    "dev": "vite dev --host zakj.test --port 3000",
+    "build": "vite build",
+    "preview": "vite preview",
     "prebuild": "test \"$NETLIFY\" = true && npx pnpm install --store=node_modules/.pnpm-store || echo skipping pnpm install",
     "lint": "prettier --check . && eslint --ignore-path .gitignore .",
     "format": "prettier --write ."
   },
   "devDependencies": {
-    "@sveltejs/adapter-static": "^1.0.0-next.29",
-    "@sveltejs/kit": "^1.0.0-next.314",
+    "@sveltejs/adapter-static": "^1.0.0-next.39",
+    "@sveltejs/kit": "1.0.0-next.405",
     "@types/d3-shape": "^2.1.3",
     "@typescript-eslint/eslint-plugin": "^5.19.0",
     "@typescript-eslint/parser": "^5.19.0",
@@ -25,11 +25,11 @@
     "eslint-plugin-svelte3": "^3.4.1",
     "prettier": "2.4.1",
     "prettier-plugin-svelte": "2.4.0",
-    "svelte": "^3.47.0",
-    "svelte-preprocess": "^4.10.6",
+    "svelte": "^3.49.0",
+    "svelte-preprocess": "^4.10.7",
     "tslib": "^2.3.1",
     "typescript": "^4.6.3",
-    "vite": "^2.9.5"
+    "vite": "^3.0.9"
   },
   "type": "module"
 }

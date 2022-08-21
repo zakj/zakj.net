@@ -3,23 +3,29 @@
   import mobile100vh from '$lib/mobile-100vh';
   import NoSleep from '@uriopass/nosleep.js';
 
-  class Exercise {
-    constructor(
-      public name: string,
-      public duration: number,
-      public description?: string
-    ) {}
+  type Exercise = {
+    name: string;
+    duration: number;
+    description?: string;
+  };
+
+  function Exercise(
+    name: string,
+    duration: number,
+    description?: string
+  ): Exercise {
+    return { name, duration, description };
   }
 
   const EXERCISES: Exercise[] = [
-    new Exercise('Basic plank', 60),
-    new Exercise('Forearm plank', 30),
-    new Exercise('Forearm plank (right leg lifted)', 30),
-    new Exercise('Forearm plank (left leg lifted)', 30),
-    new Exercise('Side plank (left hand base)', 30),
-    new Exercise('Side plank (right hand base)', 30),
-    new Exercise('Basic plank', 30),
-    new Exercise('Forearm plank', 60),
+    Exercise('Basic plank', 60),
+    Exercise('Forearm plank', 30),
+    Exercise('Forearm plank (right leg lifted)', 30),
+    Exercise('Forearm plank (left leg lifted)', 30),
+    Exercise('Side plank (left hand base)', 30),
+    Exercise('Side plank (right hand base)', 30),
+    Exercise('Basic plank', 30),
+    Exercise('Forearm plank', 60),
   ];
   const BREAK_TIME = 2000;
 
