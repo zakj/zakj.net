@@ -45,10 +45,14 @@
 
     <p>New designs coming… sometime.</p>
 
-    <Triptych
-      bg="/img/bg.jpg"
-      images={['/img/snow.jpg', '/img/sitting.jpg', '/img/scarf.jpg']}
-    />
+    {#if true}
+      <img class="headshot" src="/img/headshot.jpg" alt="Zak Johnson" />
+    {:else}
+      <Triptych
+        bg="/img/bg.jpg"
+        images={['/img/snow.jpg', '/img/sitting.jpg', '/img/scarf.jpg']}
+      />
+    {/if}
   </div>
 </main>
 
@@ -73,5 +77,13 @@
   }
   a:hover {
     text-decoration-color: var(--color-text);
+  }
+
+  /* XXX remove me when we have final triptych images */
+  .headshot {
+    border-radius: 50%;
+    display: block;
+    margin: var(--padding) auto;
+    max-width: calc(var(--mark-size) * 2);
   }
 </style>
