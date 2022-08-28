@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { browser } from '$app/env';
   import HeadMeta from '$lib/HeadMeta.svelte';
   import mobile100vh from '$lib/mobile-100vh';
   import NoSleep from '@uriopass/nosleep.js';
@@ -72,6 +73,7 @@
       state = State.Exercise;
       startTimer(exercise.duration * 1000).then(handleTimerComplete);
     } else if (state === State.Exercise) {
+      if (browser) new Audio('/audio/boop.m4a').play();
       if (index + 1 < EXERCISES.length) {
         index++;
         state = State.Break;
