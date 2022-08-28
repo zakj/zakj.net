@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { browser } from '$app/env';
+  import { browser } from '$app/environment';
   import HeadMeta from '$lib/HeadMeta.svelte';
   import mobile100vh from '$lib/mobile-100vh';
   import NoSleep from '@uriopass/nosleep.js';
