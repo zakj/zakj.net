@@ -37,6 +37,7 @@
     Break,
   }
 
+  let boop: HTMLAudioElement;
   let noSleep: NoSleep;
   let state = State.Idle;
   let elapsedMs = 0;
@@ -44,6 +45,11 @@
   let canvas: HTMLCanvasElement;
   $: exercise = EXERCISES[index];
   $: elapsed = elapsedMs / 1000;
+
+  if (browser) {
+    boop = new Audio('/audio/boop.m4a');
+    noSleep = new NoSleep();
+  }
 
   const choice = <T extends unknown>(xs: T[]) =>
     xs[Math.floor(Math.random() * xs.length)];
@@ -62,10 +68,17 @@
   }
 
   function handlePlay() {
-    noSleep = new NoSleep(); // Can't initialize earlier due to no SSR support.
     noSleep.enable();
     state = State.Break;
     startTimer(500).then(handleTimerComplete);
+    // Playing this sound muted here in a user-interaction handler allows us to
+    // play it later without a user interaction on mobile Safari.
+    boop.muted = true;
+    setTimeout(() => (boop.muted = false), 500);
+    boop.play();
+    // HACK: On mobile Safari, replaying without a load cuts off the beginning
+    // of the audio. Even setting boop.currentTime = 0 doesn't work.
+    boop.addEventListener('ended', () => boop.load());
   }
 
   function handleTimerComplete() {
@@ -73,7 +86,7 @@
       state = State.Exercise;
       startTimer(exercise.duration * 1000).then(handleTimerComplete);
     } else if (state === State.Exercise) {
-      if (browser) new Audio('/audio/boop.m4a').play();
+      boop.play();
       if (index + 1 < EXERCISES.length) {
         index++;
         state = State.Break;
