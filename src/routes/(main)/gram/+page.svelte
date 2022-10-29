@@ -1,7 +1,6 @@
 <script lang="ts">
-  // TODO: figure out how to store all these big images
-  import images from '$lib/gram-data';
   import ImageGrid from './ImageGrid.svelte';
+  import { images } from './images.json';
 </script>
 
 <div>

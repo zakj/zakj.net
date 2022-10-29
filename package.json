@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "vite dev --host zakj.test --port 3000",
     "build": "vite build",
+    "build-images": "node ./build-images.js",
     "preview": "vite preview",
     "prebuild": "test \"$NETLIFY\" = true && npx pnpm install --store=node_modules/.pnpm-store || echo skipping pnpm install",
     "lint": "prettier --check . && eslint --ignore-path .gitignore .",
@@ -24,6 +25,7 @@
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-svelte3": "^4.0.0",
     "exif-reader": "^1.0.3",
+    "listr": "^0.14.3",
     "prettier": "2.7.1",
     "prettier-plugin-svelte": "2.7.0",
     "sharp": "^0.31.1",

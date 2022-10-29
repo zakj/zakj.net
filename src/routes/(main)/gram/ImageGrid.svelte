@@ -2,13 +2,15 @@
   import { cubicOut } from 'svelte/easing';
   import type { TransitionConfig } from 'svelte/transition';
 
+  type Size = { width: number; height: number };
   type Image = {
     src: string;
+    size: Size;
     thumb: string;
+    thumbSize: Size;
     placeholder: string;
-    // TODO
-    alt?: string;
-    description?: string;
+    description: string;
+    alt: string;
   };
   export let images: Image[];
 
@@ -56,17 +58,29 @@
       <img
         class="placeholder"
         src={img.placeholder}
+        height="100%"
         aria-hidden="true"
         alt=""
       />
-      <img class="thumb" src={img.thumb} alt={img.alt} />
+      <img
+        class="thumb"
+        src={img.thumb}
+        width={img.thumbSize.width}
+        height={img.thumbSize.height}
+        alt={img.alt}
+      />
     </div>
   {/each}
 </div>
 {#if zoom}
   <div class="zoom" on:click={zoomOut}>
     <figure transition:zoomFromElement={zoom.from}>
-      <img src={zoom.src} alt={zoom.alt} />
+      <img
+        src={zoom.src}
+        width={zoom.size.width}
+        height={zoom.size.height}
+        alt={zoom.alt}
+      />
       <!-- {zoom.description || ''} -->
     </figure>
   </div>
@@ -93,7 +107,7 @@
   }
 
   /* TODO: select the right number of last children based on vw */
-  .grid .img-container:nth-last-child(-n + 3) {
+  .grid .img-container:nth-last-child(-n + 2) {
     max-width: 450px;
   }
 
