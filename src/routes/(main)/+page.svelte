@@ -1,10 +1,5 @@
 <script lang="ts">
-  import { page } from '$lib/store';
   import Triptych from '$lib/Triptych.svelte';
-
-  $page.isRoot = true;
-  $page.maxWidth = '30em';
-  $page.title = 'Zak Johnson';
 </script>
 
 <p>

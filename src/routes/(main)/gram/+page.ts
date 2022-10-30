@@ -1,7 +1,5 @@
 import type { PageLoad } from './$types';
 
-export const load: PageLoad = () => {
-  return {
-    title: 'Test title',
-  };
-};
+export const load: PageLoad = () => ({
+  title: 'Gram',
+});
