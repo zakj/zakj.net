@@ -1,30 +1,32 @@
 <script lang="ts">
+  import { page } from '$app/stores';
   import HeadMeta from '$lib/HeadMeta.svelte';
   import Mark from '$lib/Mark.svelte';
-  import { page } from '$lib/store';
+
+  const { title, description, isRoot, maxWidth, image } = $page.data;
 
   // TODO: try social/nav menu in top right
   // TODO: sticky Mark in desktop mode, move to to wider margin on scroll
   // TODO: page title vertically in right gutter on scroll, click to scroll to top
 </script>
 
-<HeadMeta title={$page.title} />
+<HeadMeta {title} {description} {image} />
 
 <div
   class="layout"
-  class:no-title={$page.isRoot}
-  style:--max-width={$page.maxWidth ?? '100%'}
+  class:no-title={isRoot}
+  style:--max-width={maxWidth ?? '100%'}
 >
   <div class="mark">
-    {#if $page.isRoot}
+    {#if isRoot}
       <Mark />
     {:else}
       <!-- TODO: remove click handler from Mark -->
       <a href="/"><Mark /></a>
     {/if}
   </div>
-  {#if !$page.isRoot}
-    <h1>{$page.title}</h1>
+  {#if !isRoot}
+    <h1>{title}</h1>
   {/if}
   <main>
     <slot />

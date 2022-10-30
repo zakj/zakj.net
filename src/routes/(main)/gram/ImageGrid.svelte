@@ -14,6 +14,7 @@
   };
   export let images: Image[];
 
+  // TODO: preload doesn't always work. pre-fill zoom element on hover?
   let zoom: Image & { from: Element };
   function zoomIn(image: Image, el: HTMLDivElement) {
     zoom = { ...image, from: el };

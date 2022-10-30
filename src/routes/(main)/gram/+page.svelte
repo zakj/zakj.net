@@ -1,13 +1,12 @@
 <script lang="ts">
-  import { page } from '$lib/store';
   import ImageGrid from './ImageGrid.svelte';
   import { images } from './images.json';
-  $page.title = 'Gram';
 </script>
 
 <!-- <h1 class:rotated on:click={() => (rotated = !rotated)}>Gram</h1> -->
 <!-- TODO: on mobile, single column, don't compress, don't open on click, don't preload -->
 <!-- TODO: only load full page on desktop when close to the viewport -->
+<!-- TODO: date-based sections, or tag-based. header with underline? -->
 <ImageGrid {images} />
 
 <style>

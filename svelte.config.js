@@ -5,6 +5,7 @@ import preprocess from 'svelte-preprocess';
 const config = {
   // Consult https://github.com/sveltejs/svelte-preprocess
   // for more information about preprocessors
+  // TODO: add https://github.com/csstools/postcss-plugins/tree/main/plugins/postcss-custom-media
   preprocess: preprocess(),
   kit: {
     adapter: adapter(),
