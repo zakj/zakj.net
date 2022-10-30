@@ -69,9 +69,10 @@
     box-sizing: content-box;
     cursor: pointer;
     height: var(--mark-size);
+    margin: calc(-1 * var(--tap-padding));
     padding: var(--tap-padding);
+    stroke: var(--color-text);
     vertical-align: bottom;
     width: var(--mark-size);
-    stroke: var(--color-text);
   }
 </style>
