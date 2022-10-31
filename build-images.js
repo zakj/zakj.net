@@ -80,6 +80,6 @@ async function processImageDir(dir) {
 }
 
 fs.writeFileSync(
-  path.resolve(__dirname, 'src/routes/gram/images.json'),
+  path.resolve(__dirname, 'src/routes/(main)/gram/images.json'),
   JSON.stringify({ images: await processImageDir(process.argv[2]) })
 );
