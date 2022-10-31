@@ -14,14 +14,29 @@
   };
   export let images: Image[];
 
-  // TODO: preload doesn't always work. pre-fill zoom element on hover?
-  let zoom: Image & { from: Element };
+  let zoom: Image & {
+    from: Element;
+    url: string;
+    fullImageLoaded: Promise<string>;
+  };
   function zoomIn(image: Image, el: HTMLDivElement) {
-    zoom = { ...image, from: el };
+    const loaded = new Promise<string>((resolve) => {
+      const img = new Image();
+      img.src = image.src;
+      img.addEventListener('load', () => resolve(image.src));
+    });
+    zoom = {
+      ...image,
+      from: el,
+      url: image.thumb,
+      fullImageLoaded: loaded,
+    };
     document.body.classList.add('no-scroll');
   }
-  function zoomOut() {
+  function zoomOut(e) {
     zoom = null;
+    // HACK: why doesn't unsetting zoom work here?
+    e.currentTarget.classList.remove('show');
     document.body.classList.remove('no-scroll');
   }
 
@@ -40,7 +55,7 @@
     const opacity = +style.opacity;
 
     return {
-      duration: 250,
+      duration: 350,
       easing: cubicOut,
       css: (t, u) => `
         opacity: ${t * opacity};
@@ -51,11 +66,24 @@
       `,
     };
   }
+
+  async function swapFullImageWhenLoaded() {
+    const src = await zoom.fullImageLoaded;
+    // HACK: requestAnimationFrame doesn't always work; Safari makes a choppy transition.
+    setTimeout(() => (zoom.url = src), 20);
+    // requestAnimationFrame(() => (zoom.url = src));
+  }
 </script>
 
 <div class="grid">
   {#each images as img}
-    <div class="img-container" on:click={(e) => zoomIn(img, e.currentTarget)}>
+    <div
+      class="img-container"
+      tabindex="0"
+      role="button"
+      on:click={(e) => zoomIn(img, e.currentTarget)}
+      on:keydown={(e) => e.key === 'Enter' && zoomIn(img, e.currentTarget)}
+    >
       <img
         class="placeholder"
         src={img.placeholder}
@@ -74,22 +102,17 @@
   {/each}
 </div>
 {#if zoom}
-  <div class="zoom" on:click={zoomOut}>
-    <figure transition:zoomFromElement={zoom.from}>
-      <img
-        src={zoom.src}
-        width={zoom.size.width}
-        height={zoom.size.height}
-        alt={zoom.alt}
-      />
-      <!-- {zoom.description || ''} -->
+  <div class="zoom" class:show={zoom} on:click={zoomOut} on:keydown={zoomOut}>
+    <figure
+      transition:zoomFromElement={zoom.from}
+      on:introend={swapFullImageWhenLoaded}
+      style:aspect-ratio={zoom.size.width / zoom.size.height}
+      style:background-image={`url(${zoom.url})`}
+    >
+      <!-- TODO {zoom.description || ''} -->
     </figure>
   </div>
 {/if}
-
-{#each images as img}
-  <link rel="preload" as="image" href={img.src} />
-{/each}
 
 <style>
   .grid {
@@ -132,29 +155,36 @@
     display: block;
     height: 100vh;
     left: 0;
+    padding: var(--padding);
     position: fixed;
     top: 0;
     width: 100vw;
 
-    display: grid;
-    place-content: center;
-    padding: var(--padding);
+    -webkit-backdrop-filter: blur(0px);
+    backdrop-filter: blur(0px);
+    transition: all 250ms ease-in;
+  }
+  .zoom.show {
+    -webkit-backdrop-filter: blur(7px);
+    backdrop-filter: blur(7px);
   }
 
   .zoom figure {
-    display: flex;
-    flex-direction: column;
-    user-select: none; /* because I keep double-clicking these things */
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.07),
       0 4px 8px rgba(0, 0, 0, 0.07), 0 8px 16px rgba(0, 0, 0, 0.07),
       0 16px 32px rgba(0, 0, 0, 0.07), 0 32px 64px rgba(0, 0, 0, 0.07);
-  }
-
-  .zoom img {
     max-height: calc(100vh - var(--padding) * 2);
     max-width: calc(100vw - var(--padding) * 2);
-    height: auto;
-    width: auto;
+    user-select: none; /* because I keep double-clicking these things */
+
+    /* HACK: flex/grid on parent doesn't work with auto-sizing. */
+    margin: 0 auto;
+    position: relative;
+    top: 50%;
+    translate: 0 -50%;
   }
 
   :global(body.no-scroll) {
