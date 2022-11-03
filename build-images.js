@@ -13,8 +13,9 @@ const md5 = (s) => crypto.createHash('md5').update(s).digest('hex');
 
 async function processImage(filename) {
   const md5sum = md5(filename);
-  const filenameFull = `${md5sum}.webp`;
-  const filenameThumb = `${md5sum}-t.webp`;
+  const fullFilename = `${md5sum}.webp`;
+  const mobileFilename = `${md5sum}-m.webp`;
+  const thumbFilename = `${md5sum}-t.webp`;
   const img = sharp(filename)
     .withMetadata({
       exif: { IFD0: { Copyright: 'Zak Johnson <me@zakj.net>' } },
@@ -32,11 +33,15 @@ async function processImage(filename) {
   const full = await img
     .clone()
     .resize({ width: 5000, height: 3000, fit: 'inside' })
-    .toFile(path.resolve(OUTPUT_DIR, filenameFull));
+    .toFile(path.resolve(OUTPUT_DIR, fullFilename));
+  const mobile = await img
+    .clone()
+    .resize({ width: 1400 })
+    .toFile(path.resolve(OUTPUT_DIR, mobileFilename));
   const thumb = await img
     .clone()
     .resize({ height: 500 })
-    .toFile(path.resolve(OUTPUT_DIR, filenameThumb));
+    .toFile(path.resolve(OUTPUT_DIR, thumbFilename));
 
   const placeholderData = (
     await sharp(filename)
@@ -49,12 +54,17 @@ async function processImage(filename) {
   ).toString('base64');
   const placeholder = `data:image/webp;base64,${placeholderData}`;
 
+  const imgData = (fn, { width, height }) => ({
+    src: `${PREFIX}/${fn}`,
+    width,
+    height,
+  });
+
   return {
     date,
-    src: `${PREFIX}/${filenameFull}`,
-    size: { width: full.width, height: full.height },
-    thumb: `${PREFIX}/${filenameThumb}`,
-    thumbSize: { width: thumb.width, height: thumb.height },
+    full: imgData(fullFilename, full),
+    mobile: imgData(mobileFilename, mobile),
+    thumb: imgData(thumbFilename, thumb),
     placeholder,
     description,
     alt,

@@ -2,12 +2,12 @@
   import { cubicOut } from 'svelte/easing';
   import type { TransitionConfig } from 'svelte/transition';
 
-  type Size = { width: number; height: number };
+  // TODO fade thumb/mobile over placeholder when loaded?
+  type Src = { src: string; width: number; height: number };
   type Image = {
-    src: string;
-    size: Size;
-    thumb: string;
-    thumbSize: Size;
+    full: Src;
+    mobile: Src;
+    thumb: Src;
     placeholder: string;
     description: string;
     alt: string;
@@ -22,13 +22,13 @@
   function zoomIn(image: Image, el: HTMLDivElement) {
     const loaded = new Promise<string>((resolve) => {
       const img = new Image();
-      img.src = image.src;
-      img.addEventListener('load', () => resolve(image.src));
+      img.src = image.full.src;
+      img.addEventListener('load', () => resolve(image.full.src));
     });
     zoom = {
       ...image,
       from: el,
-      url: image.thumb,
+      url: image.thumb.src,
       fullImageLoaded: loaded,
     };
     document.body.classList.add('no-scroll');
@@ -77,25 +77,32 @@
 
 <div class="grid">
   {#each images as img}
+    <!-- TODO: properly avoid zoom on mobile -->
     <div
       class="img-container"
       tabindex="0"
       role="button"
       on:click={(e) => zoomIn(img, e.currentTarget)}
+      on:touchend|preventDefault
       on:keydown={(e) => e.key === 'Enter' && zoomIn(img, e.currentTarget)}
+      style:aspect-ratio={img.full.width / img.full.height}
     >
-      <img
+      <div
         class="placeholder"
-        src={img.placeholder}
-        height="100%"
-        aria-hidden="true"
-        alt=""
+        style:background-image={`url(${img.placeholder})`}
+      />
+      <img
+        class="mobile"
+        src={img.mobile.src}
+        width={img.mobile.width}
+        height={img.mobile.height}
+        alt={img.alt}
       />
       <img
         class="thumb"
-        src={img.thumb}
-        width={img.thumbSize.width}
-        height={img.thumbSize.height}
+        src={img.thumb.src}
+        width={img.thumb.width}
+        height={img.thumb.height}
         alt={img.alt}
       />
     </div>
@@ -106,7 +113,7 @@
     <figure
       transition:zoomFromElement={zoom.from}
       on:introend={swapFullImageWhenLoaded}
-      style:aspect-ratio={zoom.size.width / zoom.size.height}
+      style:aspect-ratio={zoom.full.width / zoom.full.height}
       style:background-image={`url(${zoom.url})`}
     >
       <!-- TODO {zoom.description || ''} -->
@@ -117,77 +124,102 @@
 <style>
   .grid {
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: column;
+    gap: 6px;
   }
 
-  .grid .img-container {
-    display: flex;
-    flex: auto;
-    height: 250px;
-    margin: 2px;
+  .img-container {
+    display: grid;
     overflow: hidden;
-    place-items: center;
+    place-content: center;
     position: relative;
-  }
-
-  /* TODO: select the right number of last children based on vw */
-  .grid .img-container:nth-last-child(-n + 2) {
-    max-width: 450px;
-  }
-
-  .grid img {
-    flex: auto;
-    height: 100%;
-    object-fit: cover;
-  }
-
-  .grid img.placeholder {
-    filter: blur(10px);
-  }
-
-  .grid img.thumb {
-    position: absolute;
     width: 100%;
   }
 
-  .zoom {
-    cursor: zoom-out;
-    display: block;
-    height: 100vh;
-    left: 0;
-    padding: var(--padding);
-    position: fixed;
-    top: 0;
-    width: 100vw;
-
-    -webkit-backdrop-filter: blur(0px);
-    backdrop-filter: blur(0px);
-    transition: all 250ms ease-in;
-  }
-  .zoom.show {
-    -webkit-backdrop-filter: blur(7px);
-    backdrop-filter: blur(7px);
-  }
-
-  .zoom figure {
+  .placeholder {
     background-position: center;
     background-repeat: no-repeat;
-    background-size: contain;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.07),
-      0 4px 8px rgba(0, 0, 0, 0.07), 0 8px 16px rgba(0, 0, 0, 0.07),
-      0 16px 32px rgba(0, 0, 0, 0.07), 0 32px 64px rgba(0, 0, 0, 0.07);
-    max-height: calc(100vh - var(--padding) * 2);
-    max-width: calc(100vw - var(--padding) * 2);
-    user-select: none; /* because I keep double-clicking these things */
-
-    /* HACK: flex/grid on parent doesn't work with auto-sizing. */
-    margin: 0 auto;
-    position: relative;
-    top: 50%;
-    translate: 0 -50%;
+    background-size: cover;
+    filter: blur(10px);
+    height: 100%;
+    position: absolute;
+    scale: 1.03; /* hide bad blur at edges */
+    width: 100%;
+    z-index: -1;
   }
 
-  :global(body.no-scroll) {
-    overflow: hidden;
+  .grid img {
+    width: 100%;
+    height: auto;
+  }
+
+  img.thumb {
+    display: none;
+  }
+
+  @media screen and (min-width: 750px) {
+    .grid {
+      flex-direction: row;
+      flex-wrap: wrap;
+    }
+
+    .img-container {
+      height: 250px;
+      width: auto;
+      flex: auto;
+    }
+    /* TODO: select the right number of last children based on vw */
+    .grid .img-container:nth-last-child(-n + 2) {
+      max-width: 450px;
+    }
+
+    img.mobile {
+      display: none;
+    }
+    img.thumb {
+      display: block;
+    }
+
+    .zoom {
+      cursor: zoom-out;
+      display: block;
+      height: 100vh;
+      left: 0;
+      padding: var(--padding);
+      position: fixed;
+      top: 0;
+      width: 100vw;
+
+      -webkit-backdrop-filter: blur(0px);
+      backdrop-filter: blur(0px);
+      transition: all 250ms ease-in;
+    }
+    .zoom.show {
+      -webkit-backdrop-filter: blur(7px);
+      backdrop-filter: blur(7px);
+    }
+
+    .zoom figure {
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: contain;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.07),
+        0 4px 8px rgba(0, 0, 0, 0.07), 0 8px 16px rgba(0, 0, 0, 0.07),
+        0 16px 32px rgba(0, 0, 0, 0.07), 0 32px 64px rgba(0, 0, 0, 0.07);
+      max-height: calc(100vh - var(--padding) * 2);
+      max-width: calc(100vw - var(--padding) * 2);
+      user-select: none; /* because I keep double-clicking these things */
+
+      /* HACK: flex/grid on parent doesn't seem to work with auto-sizing. */
+      margin: 0 auto;
+      position: relative;
+      top: 50%;
+      translate: 0 -50%;
+    }
+
+    /* TODO: move to app.css? */
+    :global(body.no-scroll) {
+      overflow: hidden;
+    }
   }
 </style>
