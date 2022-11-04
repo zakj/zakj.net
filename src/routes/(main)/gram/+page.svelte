@@ -1,6 +1,9 @@
 <script lang="ts">
+  import { page } from '$lib/store';
   import ImageGrid from './ImageGrid.svelte';
   import { images } from './images.json';
+
+  page.set({ title: 'Gram' });
 </script>
 
 <!-- <h1 class:rotated on:click={() => (rotated = !rotated)}>Gram</h1> -->

@@ -67,7 +67,6 @@
 <style>
   svg {
     box-sizing: content-box;
-    cursor: pointer;
     height: var(--mark-size);
     margin: calc(-1 * var(--tap-padding));
     padding: var(--tap-padding);
