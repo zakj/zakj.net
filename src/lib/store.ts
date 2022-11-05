@@ -3,7 +3,7 @@ import { writable } from 'svelte/store';
 export const currentSection = writable<string>('splash');
 export const sections = writable<Record<string, HTMLElement>>({});
 
-export type PageMeta = {
+export type Layout = {
   isRoot: boolean;
   maxWidth: string;
   title: string;
@@ -11,7 +11,7 @@ export type PageMeta = {
   image: string;
 };
 
-const defaultPage: PageMeta = {
+const defaultLayout: Layout = {
   isRoot: false,
   maxWidth: null,
   title: 'Zak Johnson',
@@ -19,10 +19,10 @@ const defaultPage: PageMeta = {
   image: null,
 };
 
-export const page = (() => {
-  const { subscribe, set } = writable<PageMeta>(defaultPage);
+export const layout = (() => {
+  const { subscribe, set } = writable<Layout>(defaultLayout);
   return {
     subscribe,
-    set: (value: Partial<PageMeta>) => set({ ...defaultPage, ...value }),
+    set: (value: Partial<Layout>) => set({ ...defaultLayout, ...value }),
   };
 })();

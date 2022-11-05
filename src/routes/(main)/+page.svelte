@@ -1,8 +1,8 @@
 <script lang="ts">
-  import { page } from '$lib/store';
+  import { layout } from '$lib/store';
   import Triptych from '$lib/Triptych.svelte';
 
-  page.set({ maxWidth: '30em', isRoot: true });
+  layout.set({ maxWidth: '30em', isRoot: true });
 </script>
 
 <p>
