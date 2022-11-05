@@ -1,3 +1,5 @@
+import type { Action } from 'svelte/action';
+
 interface RectLike {
   top: number;
   bottom: number;
@@ -13,13 +15,10 @@ function computeOverlap(r1: RectLike, r2: RectLike): number {
   return Math.max(0, bottom - top);
 }
 
-// TODO: is this defined somewhere for me?
-type ActionReturn = { destroy?: () => void };
-
-export default function mostVisibleChild(
-  node: Element,
-  onChange: (child: Element) => void
-): ActionReturn {
+const mostVisibleChild: Action<HTMLElement, (child: Element) => void> = (
+  node,
+  onChange
+) => {
   let previous: Element = null;
 
   function update() {
@@ -44,4 +43,6 @@ export default function mostVisibleChild(
       window.removeEventListener('resize', update);
     },
   };
-}
+};
+
+export default mostVisibleChild;

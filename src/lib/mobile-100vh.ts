@@ -1,5 +1,4 @@
-// TODO: is this defined somewhere for me?
-type ActionReturn = { destroy?: () => void };
+import type { Action } from 'svelte/action';
 
 function pageHeight(): number {
   return Math.max(
@@ -16,7 +15,7 @@ function debounce(fn: CallableFunction, timeout = 300) {
   };
 }
 
-export default function mobile100vh(node: HTMLElement): ActionReturn {
+const mobile100vh: Action<HTMLElement, never> = (node: HTMLElement) => {
   // TODO: do I actually want this to resize in realtime? can I use svh/lvh instead now?
   const onResize = () => (node.style.height = `${pageHeight()}px`);
   const debouncedOnResize = debounce(onResize);
@@ -29,4 +28,6 @@ export default function mobile100vh(node: HTMLElement): ActionReturn {
       window.removeEventListener('resize', debouncedOnResize);
     },
   };
-}
+};
+
+export default mobile100vh;

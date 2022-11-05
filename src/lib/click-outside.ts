@@ -1,10 +1,9 @@
-// TODO: is this defined somewhere for me?
-type ActionReturn = { destroy?: () => void };
+import type { Action } from 'svelte/action';
 
-export default function clickOutside(
+const clickOutside: Action<HTMLElement, () => void> = (
   node: Element,
-  onClick: () => void
-): ActionReturn {
+  onClick
+) => {
   function handleClick({ target }) {
     if (!node.contains(target)) onClick();
   }
@@ -18,4 +17,6 @@ export default function clickOutside(
       document.removeEventListener('click', handleClick);
     },
   };
-}
+};
+
+export default clickOutside;
