@@ -4,9 +4,12 @@
   import { layout } from '$lib/store';
 
   // TODO: try social/nav menu in top right
-  // TODO: sticky Mark in desktop mode, move to to wider margin on scroll
   // TODO: page title vertically in right gutter on scroll, click to scroll to top
+
+  let scrollY: number;
 </script>
+
+<svelte:window bind:scrollY />
 
 <HeadMeta
   title={$layout.title}
@@ -19,7 +22,7 @@
   class:no-title={$layout.isRoot}
   style:--max-width={$layout.maxWidth ?? '100%'}
 >
-  <div class="mark">
+  <div class="mark" class:scrolled={scrollY > 0}>
     <!-- TODO: remove click handler from Mark -->
     <a href={$layout.isRoot ? null : '/'}><Mark /></a>
   </div>
@@ -86,6 +89,20 @@
       grid-template-areas:
         'mark title ....'
         '.... main  ....';
+    }
+
+    .mark {
+      position: sticky;
+      top: var(--padding);
+      transition: translate 300ms cubic-bezier(0.68, -0.6, 0.32, 1.6);
+    }
+    .mark.scrolled {
+      translate: calc(var(--padding) * -0.5);
+    }
+    .no-title .mark {
+      position: static;
+      translate: 0;
+      transition: none;
     }
   }
 </style>
