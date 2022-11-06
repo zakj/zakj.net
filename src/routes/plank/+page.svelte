@@ -1,7 +1,6 @@
 <script lang="ts">
   import { browser } from '$app/environment';
   import HeadMeta from '$lib/HeadMeta.svelte';
-  import mobile100vh from '$lib/mobile-100vh';
   import NoSleep from '@uriopass/nosleep.js';
 
   type Exercise = {
@@ -136,7 +135,7 @@
   <link rel="apple-touch-icon" href="/img/plank-touch-icon.png" />
 </HeadMeta>
 
-<div class="page" use:mobile100vh>
+<div class="page">
   <main>
     {#if state === State.Exercise}
       <canvas width="1000" height="1000" bind:this={canvas} />
