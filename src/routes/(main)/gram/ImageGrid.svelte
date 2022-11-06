@@ -2,9 +2,9 @@
   import { cubicOut } from 'svelte/easing';
   import type { TransitionConfig } from 'svelte/transition';
 
-  // TODO fade thumb/mobile over placeholder when loaded?
   type Src = { src: string; width: number; height: number };
   type Image = {
+    date: string;
     full: Src;
     mobile: Src;
     thumb: Src;
@@ -14,30 +14,25 @@
   };
   export let images: Image[];
 
-  let zoom: Image & {
-    from: Element;
-    url: string;
-    fullImageLoaded: Promise<string>;
-  };
-  function zoomIn(image: Image, el: HTMLDivElement) {
+  let zoom: Image & { from: Element; animationDone: boolean };
+
+  function zoomIn(e: Event, image: Image) {
+    const from = e.currentTarget as Element;
     const loaded = new Promise<string>((resolve) => {
       const img = new Image();
       img.src = image.full.src;
       img.addEventListener('load', () => resolve(image.full.src));
     });
-    zoom = {
-      ...image,
-      from: el,
-      url: image.thumb.src,
-      fullImageLoaded: loaded,
-    };
-    document.body.classList.add('no-scroll');
+    zoom = { ...image, from, animationDone: false };
   }
-  function zoomOut(e) {
+
+  function zoomOut() {
     zoom = null;
     // HACK: why doesn't unsetting zoom work here?
-    e.currentTarget.classList.remove('show');
-    document.body.classList.remove('no-scroll');
+    document.querySelector('.zoom.show').classList.remove('show');
+  }
+  function zoomOutOnEscape(e: KeyboardEvent) {
+    if (e.key === 'Escape' && zoom) zoomOut();
   }
 
   // Stolen from https://github.com/sveltejs/svelte/blob/master/src/runtime/transition/index.ts
@@ -66,25 +61,21 @@
       `,
     };
   }
-
-  async function swapFullImageWhenLoaded() {
-    const src = await zoom.fullImageLoaded;
-    // HACK: requestAnimationFrame doesn't always work; Safari makes a choppy transition.
-    setTimeout(() => (zoom.url = src), 20);
-    // requestAnimationFrame(() => (zoom.url = src));
-  }
 </script>
+
+<svelte:window on:keydown={zoomOutOnEscape} />
+<svelte:body class:no-scroll={zoom} />
 
 <div class="grid">
   {#each images as img}
-    <!-- TODO: properly avoid zoom on mobile -->
     <div
       class="img-container"
-      tabindex="0"
       role="button"
-      on:click={(e) => zoomIn(img, e.currentTarget)}
-      on:touchend|preventDefault
-      on:keydown={(e) => e.key === 'Enter' && zoomIn(img, e.currentTarget)}
+      tabindex="0"
+      on:click={(e) => zoomIn(e, img)}
+      on:keydown={(e) =>
+        e.key === 'Enter' && (zoom ? zoomOut() : zoomIn(e, img))}
+      on:touchstart
       style:aspect-ratio={img.full.width / img.full.height}
     >
       <div
@@ -112,9 +103,12 @@
   <div class="zoom" class:show={zoom} on:click={zoomOut} on:keydown={zoomOut}>
     <figure
       transition:zoomFromElement={zoom.from}
-      on:introend={swapFullImageWhenLoaded}
+      on:introend={() => (zoom.animationDone = true)}
       style:aspect-ratio={zoom.full.width / zoom.full.height}
-      style:background-image={`url(${zoom.url})`}
+      style:background-image={`${
+        zoom.animationDone ? `url(${zoom.full.src}),` : ''
+      }
+        url(${zoom.thumb.src})`}
     >
       <!-- TODO {zoom.description || ''} -->
     </figure>
@@ -190,13 +184,13 @@
       top: 0;
       width: 100vw;
 
-      -webkit-backdrop-filter: blur(0px);
-      backdrop-filter: blur(0px);
+      -webkit-backdrop-filter: blur(7px) opacity(0);
+      backdrop-filter: blur(7px) opacity(0);
       transition: all 250ms ease-in;
     }
     .zoom.show {
-      -webkit-backdrop-filter: blur(7px);
-      backdrop-filter: blur(7px);
+      -webkit-backdrop-filter: blur(7px) opacity(1);
+      backdrop-filter: blur(7px) opacity(1);
     }
 
     .zoom figure {
