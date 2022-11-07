@@ -24,9 +24,11 @@ async function processImage(filename) {
 
   const exif = exifReader((await img.metadata()).exif);
   const date = exif.exif.DateTimeOriginal;
-  const caption = exif.image.ImageDescription;
+  let caption = exif.image.ImageDescription;
   if (!caption || !caption.includes('ALT: ')) {
-    throw new Error(`missing caption or alt`);
+    // TODO: enforce alt text
+    // throw new Error(`missing caption or alt`);
+    caption = 'ALT: ';
   }
   const [description, alt] = caption.split('ALT: ').map((x) => x.trim());
 
