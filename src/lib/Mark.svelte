@@ -1,33 +1,35 @@
+<script context="module" lang="ts">
+  import { writable } from 'svelte/store';
+
+  const manuallyAnimated = writable<boolean>(false);
+  const hovered = writable<boolean>(false);
+  let clickTimeout: NodeJS.Timeout;
+
+  export function animateMark(duration = 2000) {
+    manuallyAnimated.set(true);
+    hovered.set(false); // why
+    clearTimeout(clickTimeout);
+    clickTimeout = setTimeout(() => manuallyAnimated.set(false), duration);
+  }
+</script>
+
 <script lang="ts">
   import { quartOut as easing } from 'svelte/easing';
   import { draw } from 'svelte/transition';
 
+  const transitionFirst = { duration: 200, easing };
+  const transitionSecond = { duration: 200, delay: 100, easing };
+
   let expanded = false;
-  let hovered = false;
-  let recentlyClicked = false;
-  let clickTimeout: NodeJS.Timeout;
-  let transitionFirst = { duration: 200, easing };
-  let transitionSecond = { duration: 200, delay: 100, easing };
-
-  $: expanded = hovered || recentlyClicked;
-
-  function handleClick() {
-    window.scrollTo({ top: 0 });
-    recentlyClicked = true;
-    clearTimeout(clickTimeout);
-    clickTimeout = setTimeout(() => (recentlyClicked = false), 2000);
-  }
+  $: expanded = $hovered || $manuallyAnimated;
 </script>
 
 <svg
   width="200px"
   height="217px"
   viewBox="0 0 200 217"
-  on:click={handleClick}
-  on:touchstart={handleClick}
-  on:touchend|preventDefault
-  on:mouseenter={() => (hovered = true)}
-  on:mouseleave={() => (hovered = false)}
+  on:mouseenter={() => ($hovered = true)}
+  on:mouseleave={() => ($hovered = false)}
 >
   <defs>
     <mask id="mark-slash-mask" maskUnits="userSpaceOnUse">
