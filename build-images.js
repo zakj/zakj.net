@@ -11,11 +11,21 @@ const PREFIX = '/img/gram';
 const OUTPUT_DIR = path.resolve(__dirname, `static${PREFIX}`);
 const md5 = (s) => crypto.createHash('md5').update(s).digest('hex');
 
+const seenIds = new Set();
+function uniqueId(s) {
+  const md5sum = md5(s);
+  let len = 8;
+  while (seenIds.has(md5sum.slice(0, len))) ++len;
+  const hash = md5sum.slice(0, len);
+  seenIds.add(hash);
+  return hash;
+}
+
 async function processImage(filename) {
-  const md5sum = md5(filename);
-  const fullFilename = `${md5sum}.webp`;
-  const mobileFilename = `${md5sum}-m.webp`;
-  const thumbFilename = `${md5sum}-t.webp`;
+  const hash = uniqueId(filename);
+  const fullFilename = `${hash}.webp`;
+  const mobileFilename = `${hash}-m.webp`;
+  const thumbFilename = `${hash}-t.webp`;
   const img = sharp(filename)
     .withMetadata({
       exif: { IFD0: { Copyright: 'Zak Johnson <me@zakj.net>' } },
