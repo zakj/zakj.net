@@ -1,5 +1,6 @@
 <script lang="ts">
-  import { cubicOut } from 'svelte/easing';
+  import { disableScroll } from '$lib/util';
+  import { cubicInOut as easing } from 'svelte/easing';
   import type { TransitionConfig } from 'svelte/transition';
 
   type Src = { src: string; width: number; height: number };
@@ -51,7 +52,7 @@
 
     return {
       duration: 350,
-      easing: cubicOut,
+      easing: easing,
       css: (t, u) => `
         opacity: ${t * opacity};
         transform-origin: top left;
@@ -64,7 +65,7 @@
 </script>
 
 <svelte:window on:keydown={zoomOutOnEscape} />
-<svelte:body class:no-scroll={zoom} />
+<svelte:body use:disableScroll={!!zoom} />
 
 <div class="grid">
   {#each images as img}

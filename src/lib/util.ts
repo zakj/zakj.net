@@ -1,5 +1,7 @@
+import type { Action } from 'svelte/action';
 import { quintInOut } from 'svelte/easing';
 
+// TODO: compare with native CSS scroll-behavior: smooth.
 export function scrollTo(targetY: number): void {
   const duration = 500;
   const startTime = performance.now();
@@ -17,3 +19,20 @@ export function scrollTo(targetY: number): void {
   }
   requestAnimationFrame(tick);
 }
+
+// Workaround for https://github.com/sveltejs/svelte/issues/3105
+export const disableScroll: Action<HTMLBodyElement, boolean> = (
+  node,
+  toggled: boolean
+) => {
+  const name = 'no-scroll';
+  node.classList.toggle(name, toggled);
+  return {
+    update(toggled: boolean) {
+      node.classList.toggle(name, toggled);
+    },
+    destroy() {
+      node.classList.remove(name);
+    },
+  };
+};
