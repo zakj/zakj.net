@@ -9,23 +9,40 @@ import { fileURLToPath } from 'url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PREFIX = '/img/gram';
 const OUTPUT_DIR = path.resolve(__dirname, `static${PREFIX}`);
-const md5 = (s) => crypto.createHash('md5').update(s).digest('hex');
+const JSON_FILE = './src/routes/(main)/gram/images.json';
+
+const imageMap = fs.existsSync(JSON_FILE)
+  ? new Map(
+      JSON.parse(fs.readFileSync(JSON_FILE)).images.map((x) => [x.md5, x])
+    )
+  : {};
+
+function md5File(path) {
+  return new Promise((resolve, reject) => {
+    const output = crypto.createHash('md5');
+    const input = fs.createReadStream(path);
+    output.once('readable', () => resolve(output.read().toString('hex')));
+    input.pipe(output);
+    input.on('error', reject);
+  });
+}
 
 const seenIds = new Set();
-function uniqueId(s) {
-  const md5sum = md5(s);
+function uniqueId(id) {
   let len = 8;
-  while (seenIds.has(md5sum.slice(0, len))) ++len;
-  const hash = md5sum.slice(0, len);
-  seenIds.add(hash);
-  return hash;
+  while (seenIds.has(id.slice(0, len))) ++len;
+  const uid = id.slice(0, len);
+  seenIds.add(uid);
+  return uid;
 }
 
 async function processImage(filename) {
-  const hash = uniqueId(filename);
-  const fullFilename = `${hash}.webp`;
-  const mobileFilename = `${hash}-m.webp`;
-  const thumbFilename = `${hash}-t.webp`;
+  const md5 = await md5File(filename);
+  if (imageMap.has(md5)) return imageMap.get(md5);
+  const id = uniqueId(md5);
+  const fullFilename = `${id}.webp`;
+  const mobileFilename = `${id}-m.webp`;
+  const thumbFilename = `${id}-t.webp`;
   const img = sharp(filename)
     .withMetadata({
       exif: { IFD0: { Copyright: 'Zak Johnson <me@zakj.net>' } },
@@ -73,6 +90,7 @@ async function processImage(filename) {
   });
 
   return {
+    md5,
     date,
     full: imgData(fullFilename, full),
     mobile: imgData(mobileFilename, mobile),
@@ -97,11 +115,31 @@ async function processImageDir(dir) {
     });
   }
   await tasks.run().catch((err) => console.error(err));
-  imageData.sort((a, b) => b.date - a.date);
-  return imageData;
+  return imageData.sort((a, b) => new Date(b.date) - new Date(a.date));
 }
 
-fs.writeFileSync(
-  path.resolve(__dirname, 'src/routes/(main)/gram/images.json'),
-  JSON.stringify({ images: await processImageDir(process.argv[2]) })
-);
+async function main() {
+  if (process.argv.length < 3) {
+    console.error(`usage: ${process.argv[1]} <path to image dir>`);
+    process.exit(1);
+  }
+
+  const images = await processImageDir(process.argv[2]);
+  const files = new Set(
+    images
+      .flatMap((x) => [x.full.src, x.mobile.src, x.thumb.src])
+      .map((f) => f.split('/').pop())
+  );
+
+  fs.writeFileSync(
+    path.resolve(__dirname, JSON_FILE),
+    JSON.stringify({ images })
+  );
+
+  for (const file of fs.readdirSync(OUTPUT_DIR)) {
+    if (/^\./.test(file) || files.has(file)) continue;
+    console.error(file); // TODO: auto delete?
+  }
+}
+
+await main();
