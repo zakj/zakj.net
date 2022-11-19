@@ -2,6 +2,8 @@
   import HeadMeta from '$lib/HeadMeta.svelte';
   import Mark, { animateMark } from '$lib/Mark.svelte';
   import { layout } from '$lib/store';
+  import { cssVar } from '$lib/util';
+  import { spring } from 'svelte/motion';
 
   // TODO: try social/nav menu in top right
   // TODO: page title vertically in right gutter on scroll, click to scroll to top
@@ -15,6 +17,18 @@
       e.preventDefault();
     }
   }
+
+  const desktop = matchMedia('(min-width: 750px)');
+  let padding: number;
+  const setPadding = () => (padding = parseInt(cssVar('--padding'), 10));
+  setPadding();
+  desktop.addEventListener('change', setPadding);
+
+  const slashX = spring(0, {
+    stiffness: 0.2,
+    damping: 0.35,
+  });
+  $: $slashX = scrollY > 0 && desktop.matches ? padding * -0.5 : 0;
 </script>
 
 <svelte:window bind:scrollY />
@@ -30,7 +44,7 @@
   class:no-title={$layout.isRoot}
   style:--max-width={$layout.maxWidth ?? '100%'}
 >
-  <div class="mark" class:scrolled={scrollY > 0}>
+  <div class="mark" style:translate={`${$slashX}px`}>
     <a href={$layout.isRoot ? null : '/'} on:click={handleMarkClick}>
       <Mark />
     </a>
@@ -92,7 +106,6 @@
 
   @media screen and (min-width: 750px) {
     .layout {
-      /* --gutter-width: calc(var(--mark-size) + 2 * var(--tap-padding)); */
       --gutter-width: var(--mark-size);
       grid-template-columns:
         var(--gutter-width)
@@ -106,10 +119,6 @@
     .mark {
       position: sticky;
       top: var(--padding);
-      transition: translate 300ms cubic-bezier(0.68, -0.6, 0.32, 1.6);
-    }
-    .mark.scrolled {
-      translate: calc(var(--padding) * -0.5);
     }
     .no-title .mark {
       position: static;
