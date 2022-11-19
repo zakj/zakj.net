@@ -5,3 +5,8 @@
 [build.environment]
   NODE_VERSION = "17.2.0"
   NPM_FLAGS = "--version"
+
+[[headers]]
+  for = '/gram/rss'
+  [headers.values]
+    Content-Type = "application/rss+xml"
