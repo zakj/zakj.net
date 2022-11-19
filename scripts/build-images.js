@@ -8,8 +8,11 @@ import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PREFIX = '/img/gram';
-const OUTPUT_DIR = path.resolve(__dirname, `static${PREFIX}`);
-const JSON_FILE = './src/routes/(main)/gram/images.json';
+const OUTPUT_DIR = path.resolve(__dirname, `../static${PREFIX}`);
+const JSON_FILE = path.resolve(
+  __dirname,
+  '../src/routes/(main)/gram/images.json'
+);
 
 const imageMap = fs.existsSync(JSON_FILE)
   ? new Map(
@@ -138,7 +141,8 @@ async function main() {
 
   for (const file of fs.readdirSync(OUTPUT_DIR)) {
     if (/^\./.test(file) || files.has(file)) continue;
-    console.error(file); // TODO: auto delete?
+    fs.rmSync(path.resolve(OUTPUT_DIR, file));
+    console.log('removed stale', file);
   }
 }
 
