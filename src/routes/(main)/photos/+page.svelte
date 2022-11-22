@@ -10,4 +10,13 @@
   // TODO: url hash routing to load the page focusing a particular image?
 </script>
 
+<svelte:head>
+  <link
+    rel="alternate"
+    type="application/rss+xml"
+    title="RSS"
+    href="/photos/rss"
+  />
+</svelte:head>
+
 <ImageGrid {images} />
