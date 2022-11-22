@@ -1,3 +1,4 @@
+import { prerendering } from '$app/environment';
 import RSS from 'rss';
 import { images } from '../images.json';
 import type { RequestHandler } from './$types';
@@ -6,14 +7,12 @@ export const prerender = true;
 
 // https://github.com/dylang/node-rss
 export const GET: RequestHandler = async ({ url }) => {
-  const parentUrl = url.href.split('/').slice(0, -1).join('/');
+  const origin = prerendering ? 'https://zakj.net' : url.origin;
   const feed = new RSS({
     title: 'zakj.net/photos',
-    feed_url: url.href,
-    site_url: parentUrl,
-    image_url: `${url.origin}/img/favicon.svg`,
-    managingEditor: 'Zak Johnson',
-    webMaster: 'Zak Johnson',
+    feed_url: origin + '/photos/rss',
+    site_url: origin + '/photos',
+    image_url: origin + '/img/favicon.svg', // TODO: spec requires gif/jpeg/png here
     pubDate: new Date(),
     ttl: 60 * 4,
   });
@@ -21,7 +20,7 @@ export const GET: RequestHandler = async ({ url }) => {
   images.forEach((img) =>
     feed.item({
       title: 'Photo', // TODO
-      description: render(url.origin, img),
+      description: render(origin, img),
       guid: img.md5,
       date: img.date,
     })
