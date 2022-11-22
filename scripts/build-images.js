@@ -7,11 +7,11 @@ import sharp from 'sharp';
 import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const PREFIX = '/img/gram';
+const PREFIX = '/img/photos';
 const OUTPUT_DIR = path.resolve(__dirname, `../static${PREFIX}`);
 const JSON_FILE = path.resolve(
   __dirname,
-  '../src/routes/(main)/gram/images.json'
+  '../src/routes/(main)/photos/images.json'
 );
 
 const imageMap = fs.existsSync(JSON_FILE)

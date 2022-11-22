@@ -7,6 +7,6 @@
   NPM_FLAGS = "--version"
 
 [[headers]]
-  for = '/gram/rss'
+  for = '/photos/rss'
   [headers.values]
     Content-Type = "application/rss+xml"
