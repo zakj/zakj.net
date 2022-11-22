@@ -99,6 +99,7 @@
 
   h1 {
     grid-area: title;
+    /* TODO: move to app.css */
     line-height: var(--mark-size);
     font-size: calc(var(--mark-size) * 1.4);
     translate: 0 3.5%; /* position caps exactly with their line-height */
@@ -126,6 +127,7 @@
     .mark {
       position: sticky;
       top: var(--padding);
+      z-index: 1; /* fix compositing bug on safari */
     }
     .no-title .mark {
       position: static;
