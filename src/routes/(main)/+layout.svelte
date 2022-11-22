@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { navigating } from '$app/stores';
   import HeadMeta from '$lib/HeadMeta.svelte';
   import Mark, { animateMark } from '$lib/Mark.svelte';
   import { layout } from '$lib/store';
@@ -24,11 +25,17 @@
   setPadding();
   desktop.addEventListener('change', setPadding);
 
+  let canAnimateMark = false;
+  $: canAnimateMark = !$layout.isRoot && !$navigating && desktop.matches;
+
   const slashX = spring(0, {
     stiffness: 0.2,
     damping: 0.35,
   });
-  $: $slashX = scrollY > 0 && desktop.matches ? padding * -0.5 : 0;
+  $: {
+    if (!canAnimateMark) slashX.set(0, { hard: true });
+    else $slashX = scrollY > 0 ? padding * -0.5 : 0;
+  }
 </script>
 
 <svelte:window bind:scrollY />
