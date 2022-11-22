@@ -97,6 +97,12 @@
         height={img.thumb.height}
         alt={img.alt}
       />
+      <p>
+        {new Date(img.date).toLocaleDateString('en-US', {
+          month: 'long',
+          year: 'numeric',
+        })}
+      </p>
     </div>
   {/each}
 </div>
@@ -143,13 +149,29 @@
     z-index: -1;
   }
 
-  .grid img {
+  .img-container img {
     width: 100%;
     height: auto;
   }
 
   img.thumb {
     display: none;
+  }
+
+  .img-container p {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 5px;
+    bottom: 0;
+    color: #fff;
+    font-feature-settings: 'lnum' 1;
+    font-size: 16px;
+    line-height: 1;
+    margin: 0.5em;
+    opacity: 0;
+    padding: 0.5em 0.75em;
+    position: absolute;
+    right: 0;
+    transition: opacity 150ms ease-in;
   }
 
   @media screen and (min-width: 750px) {
@@ -164,7 +186,7 @@
       flex: auto;
     }
     /* TODO: select the right number of last children based on vw */
-    .grid .img-container:nth-last-child(-n + 2) {
+    .img-container:nth-last-child(-n + 2) {
       max-width: 450px;
     }
 
@@ -173,6 +195,10 @@
     }
     img.thumb {
       display: block;
+    }
+
+    .img-container:hover p {
+      opacity: 1;
     }
 
     .zoom {
