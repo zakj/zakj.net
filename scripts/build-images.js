@@ -18,7 +18,7 @@ const imageMap = fs.existsSync(JSON_FILE)
   ? new Map(
       JSON.parse(fs.readFileSync(JSON_FILE)).images.map((x) => [x.md5, x])
     )
-  : {};
+  : new Map();
 
 function md5File(path) {
   return new Promise((resolve, reject) => {
