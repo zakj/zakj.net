@@ -210,6 +210,7 @@
       position: fixed;
       top: 0;
       width: 100vw;
+      z-index: 1;
 
       -webkit-backdrop-filter: blur(7px) opacity(0);
       backdrop-filter: blur(7px) opacity(0);
