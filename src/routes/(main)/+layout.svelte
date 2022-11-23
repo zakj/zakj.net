@@ -1,14 +1,32 @@
 <script lang="ts">
   import { browser } from '$app/environment';
-  import { navigating } from '$app/stores';
+  import { navigating, page } from '$app/stores';
   import HeadMeta from '$lib/HeadMeta.svelte';
   import Mark, { animateMark } from '$lib/Mark.svelte';
-  import { layout } from '$lib/store';
   import { cssVar } from '$lib/util';
   import { spring } from 'svelte/motion';
 
   // TODO: try social/nav menu in top right
   // TODO: page title vertically in right gutter on scroll, click to scroll to top
+
+  type Layout = {
+    isRoot: boolean;
+    maxWidth: string;
+    title: string;
+    description: string;
+    image: string;
+  };
+
+  const defaultLayout: Layout = {
+    isRoot: false,
+    maxWidth: null,
+    title: 'Zak Johnson',
+    description: 'Whiskey ginger & a dash of bitters.',
+    image: null,
+  };
+
+  let layout: Layout;
+  $: layout = { ...defaultLayout, ...$page.data?.layout };
 
   let scrollY: number;
 
@@ -31,7 +49,7 @@
 
   let canAnimateMark = false;
   // TODO: desktop.matches isn't responsive
-  $: canAnimateMark = !$layout.isRoot && !$navigating && desktop?.matches;
+  $: canAnimateMark = !layout.isRoot && !$navigating && desktop?.matches;
 
   const slashX = spring(0, {
     stiffness: 0.2,
@@ -46,23 +64,23 @@
 <svelte:window bind:scrollY />
 
 <HeadMeta
-  title={$layout.title}
-  description={$layout.description}
-  image={$layout.image}
+  title={layout.title}
+  description={layout.description}
+  image={layout.image}
 />
 
 <div
   class="layout"
-  class:no-title={$layout.isRoot}
-  style:--max-width={$layout.maxWidth ?? '100%'}
+  class:no-title={layout.isRoot}
+  style:--max-width={layout.maxWidth ?? '100%'}
 >
   <div class="mark" style:translate={`${$slashX}px`}>
-    <a href={$layout.isRoot ? null : '/'} on:click={handleMarkClick}>
+    <a href={layout.isRoot ? null : '/'} on:click={handleMarkClick}>
       <Mark />
     </a>
   </div>
-  {#if !$layout.isRoot}
-    <h1>{$layout.title}</h1>
+  {#if !layout.isRoot}
+    <h1>{layout.title}</h1>
   {/if}
   <main>
     <slot />

@@ -1,8 +1,6 @@
 <script lang="ts">
-  import { layout } from '$lib/store';
+  import { dev } from '$app/environment';
   import Triptych from '$lib/Triptych.svelte';
-
-  layout.set({ maxWidth: '30em', isRoot: true });
 </script>
 
 <p>
@@ -37,7 +35,7 @@
   <a href="mailto:me@zakj.net">via email</a>.
 </p>
 
-{#if true}
+{#if !dev}
   <img class="headshot" src="/img/headshot.jpg" alt="Zak Johnson" />
 {:else}
   <Triptych
