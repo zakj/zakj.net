@@ -50,10 +50,14 @@ async function processImage(filename) {
     .withMetadata({
       exif: { IFD0: { Copyright: 'Zak Johnson <me@zakj.net>' } },
     })
+    .rotate() // automatically reorient based on EXIF data
     .webp({ effort: 6 });
 
   const exif = exifReader((await img.metadata()).exif);
-  const date = exif.exif.DateTimeOriginal;
+
+  let date = exif.exif.DateTimeOriginal;
+  if (!date) throw new Error('exif missing date: ' + JSON.stringify(exif.exif));
+
   let caption = exif.image.ImageDescription;
   if (!caption || !caption.includes('ALT: ')) {
     // TODO: enforce alt text
