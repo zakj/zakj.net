@@ -69,6 +69,7 @@
 
 <div class="grid">
   {#each images as img}
+    {@const aspectRatio = img.full.width / img.full.height}
     <div
       class="img-container"
       role="button"
@@ -77,7 +78,8 @@
       on:keydown={(e) =>
         e.key === 'Enter' && (zoom ? zoomOut() : zoomIn(e, img))}
       on:touchstart
-      style:aspect-ratio={img.full.width / img.full.height}
+      style:aspect-ratio={aspectRatio}
+      style:max-width={`${Math.floor(img.thumb.height * aspectRatio * 0.8)}px`}
     >
       <div
         class="placeholder"
@@ -185,10 +187,6 @@
       width: auto;
       flex: auto;
     }
-    /* TODO: select the right number of last children based on vw */
-    .img-container:nth-last-child(-n + 2) {
-      max-width: 450px;
-    }
 
     img.mobile {
       display: none;
@@ -202,6 +200,8 @@
     }
 
     .zoom {
+      -webkit-backdrop-filter: blur(7px) opacity(0);
+      backdrop-filter: blur(7px) opacity(0);
       cursor: zoom-out;
       display: block;
       height: 100vh;
@@ -209,12 +209,9 @@
       padding: var(--padding);
       position: fixed;
       top: 0;
+      transition: all 250ms ease-in;
       width: 100vw;
       z-index: 1;
-
-      -webkit-backdrop-filter: blur(7px) opacity(0);
-      backdrop-filter: blur(7px) opacity(0);
-      transition: all 250ms ease-in;
     }
     .zoom.show {
       -webkit-backdrop-filter: blur(7px) opacity(1);
