@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { isDesktopMedia } from '$lib/store';
   import { disableScroll } from '$lib/util';
   import { cubicInOut as easing } from 'svelte/easing';
   import type { TransitionConfig } from 'svelte/transition';
@@ -79,26 +80,31 @@
         e.key === 'Enter' && (zoom ? zoomOut() : zoomIn(e, img))}
       on:touchstart
       style:aspect-ratio={aspectRatio}
-      style:max-width={`${Math.floor(img.thumb.height * aspectRatio * 0.8)}px`}
+      style:max-width={$isDesktopMedia
+        ? `${Math.floor(img.thumb.height * aspectRatio * 0.8)}px`
+        : null}
     >
       <div
         class="placeholder"
         style:background-image={`url(${img.placeholder})`}
       />
-      <img
-        class="mobile"
-        src={img.mobile.src}
-        width={img.mobile.width}
-        height={img.mobile.height}
-        alt={img.alt}
-      />
-      <img
-        class="thumb"
-        src={img.thumb.src}
-        width={img.thumb.width}
-        height={img.thumb.height}
-        alt={img.alt}
-      />
+      {#if $isDesktopMedia}
+        <img
+          class="thumb"
+          src={img.thumb.src}
+          width={img.thumb.width}
+          height={img.thumb.height}
+          alt={img.alt}
+        />
+      {:else}
+        <img
+          class="mobile"
+          src={img.mobile.src}
+          width={img.mobile.width}
+          height={img.mobile.height}
+          alt={img.alt}
+        />
+      {/if}
       <p>
         {new Date(img.date).toLocaleDateString('en-US', {
           month: 'long',

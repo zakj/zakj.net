@@ -1,8 +1,8 @@
 <script lang="ts">
-  import { browser } from '$app/environment';
   import { navigating, page } from '$app/stores';
   import HeadMeta from '$lib/HeadMeta.svelte';
   import Mark, { animateMark } from '$lib/Mark.svelte';
+  import { isDesktopMedia } from '$lib/store';
   import { cssVar } from '$lib/util';
   import { spring } from 'svelte/motion';
 
@@ -38,18 +38,13 @@
     }
   }
 
-  let desktop: MediaQueryList;
   let padding: number;
-  if (browser) {
-    desktop = matchMedia('(min-width: 750px)');
-    const setPadding = () => (padding = parseInt(cssVar('--padding'), 10));
-    setPadding();
-    desktop.addEventListener('change', setPadding);
-  }
+  isDesktopMedia.subscribe(
+    (val) => (padding = parseInt(cssVar('--padding'), 10))
+  );
 
   let canAnimateMark = false;
-  // TODO: desktop.matches isn't responsive
-  $: canAnimateMark = !layout.isRoot && !$navigating && desktop?.matches;
+  $: canAnimateMark = !layout.isRoot && !$navigating && $isDesktopMedia;
 
   const slashX = spring(0, {
     stiffness: 0.2,

@@ -1,3 +1,4 @@
+import { browser } from '$app/environment';
 import type { Action } from 'svelte/action';
 import { quintInOut } from 'svelte/easing';
 
@@ -38,5 +39,7 @@ export const disableScroll: Action<HTMLBodyElement, boolean> = (
 };
 
 export function cssVar(name: string): string {
-  return getComputedStyle(document.body).getPropertyValue(name);
+  return browser
+    ? getComputedStyle(document.body).getPropertyValue(name)
+    : null;
 }
