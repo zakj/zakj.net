@@ -2,6 +2,7 @@
   import { springEasing } from '$lib/spring-easing';
   import { sections } from '$lib/store';
   import { scrollTo } from '$lib/util';
+  import type { TransitionConfig } from 'svelte/transition';
 
   export let current: string;
 
@@ -22,10 +23,7 @@
     scrollTo(el.getBoundingClientRect().top + window.scrollY);
   }
 
-  function flip(
-    prevRect: RectLike,
-    rect: RectLike
-  ): SvelteTransitionReturnType {
+  function flip(prevRect: RectLike, rect: RectLike): TransitionConfig {
     const topDelta = prevRect.top - rect.top;
     const heightRatio = rect.height > 0 ? prevRect.height / rect.height : 0;
     return {
@@ -41,7 +39,7 @@
   }
 
   // NOTE: Setting previousRect relies on `out` transition happening before `in`.
-  function flipOut(node: HTMLElement, params: any): SvelteTransitionReturnType {
+  function flipOut(node: HTMLElement): TransitionConfig {
     previousRect = node.getBoundingClientRect();
     if (current in linkElements) {
       return { duration: 0 };
@@ -52,7 +50,7 @@
     }
   }
 
-  function flipIn(node: HTMLElement, params: any): SvelteTransitionReturnType {
+  function flipIn(node: HTMLElement): TransitionConfig {
     const rect = node.getBoundingClientRect();
     if (!previousRect) {
       previousRect = {
