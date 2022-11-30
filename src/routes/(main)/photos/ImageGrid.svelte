@@ -1,11 +1,12 @@
 <script lang="ts">
+  import { browser } from '$app/environment';
   import { isDesktopMedia } from '$lib/store';
-  import { disableScroll } from '$lib/util';
-  import { cubicInOut as easing } from 'svelte/easing';
-  import type { TransitionConfig } from 'svelte/transition';
+  import { DESKTOP_WIDTH, disableScroll, zoomFromElement } from '$lib/util';
+  import { createEventDispatcher } from 'svelte';
 
   type Src = { src: string; width: number; height: number };
   type Image = {
+    id: string;
     date: string;
     full: Src;
     mobile: Src;
@@ -13,59 +14,51 @@
     placeholder: string;
     description: string;
     alt: string;
+    ref?: Element;
   };
   export let images: Image[];
+  export let selected: string;
 
-  let zoom: Image & { from: Element; animationDone: boolean };
+  const dispatch = createEventDispatcher();
+  const select = (id: Image['id']) => $isDesktopMedia && dispatch('select', id);
 
-  function zoomIn(e: Event, image: Image) {
-    const from = e.currentTarget as Element;
-    const loaded = new Promise<string>((resolve) => {
+  let zoom: {
+    image: Image;
+    animated: boolean;
+    loaded: boolean;
+  };
+  let zoomFrom: Element;
+
+  function zoomIn(image: Image, animated = false) {
+    new Promise<void>((resolve) => {
       const img = new Image();
       img.src = image.full.src;
-      img.addEventListener('load', () => resolve(image.full.src));
+      img.addEventListener('load', () => (zoom.loaded = true));
     });
-    zoom = { ...image, from, animationDone: false };
+    zoomFrom = image.ref;
+    zoom = {
+      image: image,
+      animated,
+      loaded: false,
+    };
   }
 
   function zoomOut() {
+    // HACK: why doesn't unsetting zoom work here? https://github.com/sveltejs/svelte/issues/8061
+    if (zoom) document.querySelector('.zoom.show').classList.remove('show');
     zoom = null;
-    // HACK: why doesn't unsetting zoom work here?
-    document.querySelector('.zoom.show').classList.remove('show');
-  }
-  function zoomOutOnEscape(e: KeyboardEvent) {
-    if (e.key === 'Escape' && zoom) zoomOut();
   }
 
-  // Stolen from https://github.com/sveltejs/svelte/blob/master/src/runtime/transition/index.ts
-  function zoomFromElement(node: Element, fromNode: Element): TransitionConfig {
-    const from = fromNode.getBoundingClientRect();
-    const to = node.getBoundingClientRect();
-
-    const dx = from.x - to.x;
-    const dy = from.y - to.y;
-    const dw = from.width / to.width;
-    const dh = from.height / to.height;
-
-    const style = getComputedStyle(node);
-    const transform = style.transform === 'none' ? '' : style.transform;
-    const opacity = +style.opacity;
-
-    return {
-      duration: 350,
-      easing: easing,
-      css: (t, u) => `
-        opacity: ${t * opacity};
-        transform-origin: top left;
-        transform: ${transform}
-          translate(${u * dx}px, ${u * dy}px)
-          scale(${t + (1 - t) * dw}, ${t + (1 - t) * dh});
-      `,
-    };
+  const imageMap = new Map(images.map((x, i) => [x.id, i]));
+  $: if (browser) {
+    // XXX skip animation and scroll to item on first load
+    const i = imageMap.get(selected);
+    if (images[i]) zoomIn(images[i]);
+    else zoomOut();
   }
 </script>
 
-<svelte:window on:keydown={zoomOutOnEscape} />
+<svelte:window on:keydown={(e) => e.key === 'Escape' && select(null)} />
 <svelte:body use:disableScroll={!!zoom} />
 
 <div class="grid">
@@ -75,9 +68,9 @@
       class="img-container"
       role="button"
       tabindex="0"
-      on:click={(e) => zoomIn(e, img)}
-      on:keydown={(e) =>
-        e.key === 'Enter' && (zoom ? zoomOut() : zoomIn(e, img))}
+      bind:this={img.ref}
+      on:click={() => select(img.id)}
+      on:keydown={(e) => e.key === 'Enter' && select(zoom ? null : img.id)}
       on:touchstart
       style:aspect-ratio={aspectRatio}
       style:max-width={$isDesktopMedia
@@ -88,23 +81,21 @@
         class="placeholder"
         style:background-image={`url(${img.placeholder})`}
       />
-      {#if $isDesktopMedia}
-        <img
-          class="thumb"
-          src={img.thumb.src}
+      <!-- TODO: turn this into a loadable-on-scroll element -->
+      <picture>
+        <source
+          srcset={img.thumb.src}
           width={img.thumb.width}
           height={img.thumb.height}
-          alt={img.alt}
+          media={`(min-width: ${DESKTOP_WIDTH}px)`}
         />
-      {:else}
         <img
-          class="mobile"
           src={img.mobile.src}
           width={img.mobile.width}
           height={img.mobile.height}
           alt={img.alt}
         />
-      {/if}
+      </picture>
       <p>
         {new Date(img.date).toLocaleDateString('en-US', {
           month: 'long',
@@ -115,15 +106,21 @@
   {/each}
 </div>
 {#if zoom}
-  <div class="zoom" class:show={zoom} on:click={zoomOut} on:keydown={zoomOut}>
+  <div
+    class="zoom"
+    class:show={!!zoom}
+    on:click={() => select(null)}
+    on:keydown={() => select(null)}
+  >
+    <!-- TODO next/prev on left/right arrow -->
     <figure
-      transition:zoomFromElement={zoom.from}
-      on:introend={() => (zoom.animationDone = true)}
-      style:aspect-ratio={zoom.full.width / zoom.full.height}
+      transition:zoomFromElement={zoomFrom}
+      on:introend={() => (zoom.animated = true)}
+      style:aspect-ratio={zoom.image.full.width / zoom.image.full.height}
       style:background-image={`${
-        zoom.animationDone ? `url(${zoom.full.src}),` : ''
+        zoom.animated && zoom.loaded ? `url(${zoom.image.full.src}),` : ''
       }
-        url(${zoom.thumb.src})`}
+        url(${zoom.image.thumb.src})`}
     >
       <!-- TODO {zoom.description || ''} -->
     </figure>
@@ -162,10 +159,6 @@
     height: auto;
   }
 
-  img.thumb {
-    display: none;
-  }
-
   .img-container p {
     background: rgba(0, 0, 0, 0.3);
     border-radius: 5px;
@@ -194,18 +187,12 @@
       flex: auto;
     }
 
-    img.mobile {
-      display: none;
-    }
-    img.thumb {
-      display: block;
-    }
-
     .img-container:hover p {
       opacity: 1;
     }
 
     .zoom {
+      /* TODO: shaky on chrome */
       -webkit-backdrop-filter: blur(7px) opacity(0);
       backdrop-filter: blur(7px) opacity(0);
       cursor: zoom-out;
@@ -240,11 +227,6 @@
       position: relative;
       top: 50%;
       translate: 0 -50%;
-    }
-
-    /* TODO: move to app.css? */
-    :global(body.no-scroll) {
-      overflow: hidden;
     }
   }
 </style>

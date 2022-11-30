@@ -1,6 +1,9 @@
 import { browser } from '$app/environment';
 import type { Action } from 'svelte/action';
-import { quintInOut } from 'svelte/easing';
+import { cubicInOut, quintInOut } from 'svelte/easing';
+import type { TransitionConfig } from 'svelte/transition';
+
+export const DESKTOP_WIDTH = 750;
 
 // TODO: compare with native CSS scroll-behavior: smooth.
 export function scrollTo(targetY: number): void {
@@ -42,4 +45,34 @@ export function cssVar(name: string): string {
   return browser
     ? getComputedStyle(document.body).getPropertyValue(name)
     : null;
+}
+
+// Stolen from https://github.com/sveltejs/svelte/blob/master/src/runtime/transition/index.ts
+export function zoomFromElement(
+  node: Element,
+  fromNode: Element
+): TransitionConfig {
+  const from = fromNode.getBoundingClientRect();
+  const to = node.getBoundingClientRect();
+
+  const dx = from.x - to.x;
+  const dy = from.y - to.y;
+  const dw = from.width / to.width;
+  const dh = from.height / to.height;
+
+  const style = getComputedStyle(node);
+  const transform = style.transform === 'none' ? '' : style.transform;
+  const opacity = +style.opacity;
+
+  return {
+    duration: 350,
+    easing: cubicInOut,
+    css: (t, u) => `
+        opacity: ${t * opacity};
+        transform-origin: top left;
+        transform: ${transform}
+          translate(${u * dx}px, ${u * dy}px)
+          scale(${t + (1 - t) * dw}, ${t + (1 - t) * dh});
+      `,
+  };
 }

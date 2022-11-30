@@ -97,6 +97,7 @@ async function processImage(filename) {
   });
 
   return {
+    id,
     md5,
     date,
     full: imgData(fullFilename, full),
