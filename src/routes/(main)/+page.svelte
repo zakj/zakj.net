@@ -3,6 +3,10 @@
   import Triptych from '$lib/Triptych.svelte';
 </script>
 
+<svelte:head>
+  <link rel="me" href="https://mastodon.social/@zakj" />
+</svelte:head>
+
 <p>
   Hello! I&rsquo;m Zak, a design-minded engineer in Oakland, CA. I currently
   lead a team responsible for building UX across all our client platforms at
