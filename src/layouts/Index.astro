@@ -1,0 +1,25 @@
+---
+import Base from '$layouts/Base.astro';
+const { title } = Astro.props.frontmatter;
+---
+
+<Base title={title}>
+  <slot />
+</Base>
+
+<style is:global>
+  body {
+    display: flex;
+    flex-direction: column;
+    padding: max(1rem, 5vh);
+    align-items: center;
+  }
+
+  body > * {
+    width: min(100%, 60ch);
+  }
+
+  body > * + * {
+    margin-top: 0.7rem;
+  }
+</style>
