@@ -53,7 +53,7 @@
 <style>
   div {
     display: grid;
-    min-height: 100vh;
+    min-height: 100dvh;
     place-content: center;
   }
 </style>
