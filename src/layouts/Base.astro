@@ -41,6 +41,14 @@ import '$reset.css';
       content="#222"
       media="(prefers-color-scheme: light)"
     />
+
+    <link
+      rel="preload"
+      href="/fonts/GT-Sectra-Regular.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin="anonymous"
+    />
   </head>
 
   <body>
@@ -59,6 +67,16 @@ import '$reset.css';
     background: var(--color-bg);
     color: var(--color-text);
     font-size: 17px;
+    font-family: GT Sectra, serif;
+  }
+
+  @font-face {
+    font-display: fallback;
+    font-family: GT Sectra;
+    font-style: normal;
+    font-weight: normal;
+    src: url(/fonts/GT-Sectra-Regular.woff2) format('woff2'),
+      url(/fonts/GT-Sectra-Regular.woff) format('woff');
   }
 
   @media (prefers-color-scheme: dark) {
