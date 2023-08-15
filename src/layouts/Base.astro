@@ -51,7 +51,7 @@ import '$reset.css';
     />
   </head>
 
-  <body>
+  <body class="loading">
     <slot />
   </body>
 </html>
@@ -95,12 +95,19 @@ import '$reset.css';
 
   a {
     color: inherit;
-    text-decoration-color: var(--color-underline);
     text-decoration-thickness: 0.07em;
     text-underline-position: from-font;
     transition: text-decoration-color 150ms ease-in-out;
+    text-decoration-color: var(--color-underline);
   }
   a:hover {
     text-decoration-color: inherit;
   }
+  body.loading a {
+    text-decoration-color: transparent;
+  }
 </style>
+
+<script>
+  document.fonts.ready.then(() => document.body.classList.remove('loading'));
+</script>
