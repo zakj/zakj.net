@@ -17,8 +17,8 @@ Find me on [GitHub][], [LinkedIn][], or [via email][email].
 [grammarly]: https://www.grammarly.com/
 [mixpanel]: https://mixpanel.com/
 [etsy]: https://www.etsy.com/
-[camping]: XXX
-[grammar]: XXX
+[camping]: https://www.instagram.com/p/BkwS992lCsW/
+[grammar]: https://brians.wsu.edu/common-errors-in-english-usage/
 [github]: https://github.com/zakj
-[linkedin]: XXX
+[linkedin]: https://www.linkedin.com/in/zakjohnson
 [email]: mailto:me@zakj.net
