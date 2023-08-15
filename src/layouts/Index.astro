@@ -1,20 +1,25 @@
 ---
 import Base from '$layouts/Base.astro';
 import { getImage } from 'astro:assets';
-import baseBgImg from '~/assets/clement-m-h7vKkZNNThE-unsplash.jpeg';
+import bgImg from '~/assets/clement-m-h7vKkZNNThE-unsplash.jpeg';
+import bgImgDark from '~/assets/nandhu-kumar-t9UpW8MUmtw-unsplash.jpg';
 
 const { title } = Astro.props.frontmatter;
-const bgImg = await getImage({ src: baseBgImg });
+
+const vars = {
+  bgImg: `url(${(await getImage({ src: bgImg })).src})`,
+  bgImgDark: `url(${(await getImage({ src: bgImgDark })).src})`,
+};
 ---
 
 <Base title={title}>
   <main><slot /></main>
-  <footer style={`background-image: url(${bgImg.src})`}>
+  <footer>
     <a href="/colophon">Colophon</a>
   </footer>
 </Base>
 
-<style is:global>
+<style is:global define:vars={vars}>
   :root {
     --page-padding: 1.5rem;
   }
@@ -45,23 +50,42 @@ const bgImg = await getImage({ src: baseBgImg });
 
   footer {
     aspect-ratio: 4608/2082; /* from bgImg */
+    background-image: var(--bgImg);
     background-size: contain;
+    display: grid;
     margin-top: auto;
     width: 100dvw;
 
-    /* TODO autoprefix? */
+    /* TODO autoprefix */
     -webkit-mask-image: linear-gradient(transparent, white 20%);
     mask-image: linear-gradient(transparent, white 20%);
-
-    display: grid;
   }
 
   footer a {
-    /* XXX TODO cleanup */
-    place-self: end;
-    color: var(--color-white);
+    /* TODO is there a more resilient way to "force" dark mode for a given element? */
     --color-underline: rgba(255, 255, 255, 0.2);
+    color: var(--color-white);
     margin: calc(var(--page-padding) * 0.8) var(--page-padding);
+    place-self: end;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    body {
+      /* TODO: tune colors */
+      background: #1f1f1f;
+      background-image: linear-gradient(
+        121deg,
+        rgb(146, 153, 105, 0.2),
+        transparent 60vh
+      );
+    }
+
+    footer {
+      background-image: var(--bgImgDark);
+      /* TODO: autoprefix */
+      -webkit-mask-image: linear-gradient(transparent, white 60%);
+      mask-image: linear-gradient(transparent, white 60%);
+    }
   }
 
   @media screen and (min-width: 750px) {
