@@ -9,11 +9,13 @@ Things I used:
 - Inspiration from Josh Comeau's [CSS reset][]
 - [Silhouette of trees covered by fog][lightbg] by [Clément M.][]
 - [Tall green trees][darkbg] by [Nandhu Kumar][]
+- Icons from [Tabler][]
 
-[Astro]: https://astro.build/
-[TypeScript]: https://www.typescriptlang.org/
-[CSS reset]: https://www.joshwcomeau.com/css/custom-css-reset/
+[astro]: https://astro.build/
+[typescript]: https://www.typescriptlang.org/
+[css reset]: https://www.joshwcomeau.com/css/custom-css-reset/
 [lightbg]: https://unsplash.com/photos/h7vKkZNNThE
-[Clément M.]: https://unsplash.com/@cmreflections
+[clément m.]: https://unsplash.com/@cmreflections
 [darkbg]: https://unsplash.com/photos/t9UpW8MUmtw
-[Nandhu Kumar]: https://unsplash.com/@nandhukumarndd
+[nandhu kumar]: https://unsplash.com/@nandhukumarndd
+[tabler]: https://tabler-icons.io/
