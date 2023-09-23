@@ -2,12 +2,14 @@
 export interface Props {
   title: string;
   description?: string;
+  favicon?: string;
   image?: string;
 }
 
 const {
   title = 'Zak Johnson',
   description = 'Whiskey ginger & a dash of bitters.',
+  favicon = '/favicon.svg',
   image,
 } = Astro.props;
 
@@ -28,7 +30,7 @@ import '$reset.css';
     <meta property="og:url" content={Astro.url} />
     {image ? <meta property="og:image" content={image} /> : ''}
 
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href={favicon} type="image/svg+xml" />
     <!-- <link rel="apple-touch-icon" href="icon.png" /> -->
 
     <meta

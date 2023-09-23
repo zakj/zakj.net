@@ -1,11 +1,11 @@
 ---
-import Base from '$layouts/Base.astro';
-// TODO: Astro doesn't allow importing a component with the same name as the current file?
+import hourglassIcon from '$assets/icons/hourglass-empty.svg';
 import Countdown_ from '$components/Countdown.svelte';
+import Base from '$layouts/Base.astro';
 
-// TODO: favicon
+// TODO: Astro doesn't allow importing a component with the same name as the current file?
 ---
 
-<Base title="Countdown">
+<Base title="Countdown" description="A simple countdown timer." favicon={hourglassIcon.src}>
   <Countdown_ client:only />
 </Base>
