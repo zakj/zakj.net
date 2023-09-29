@@ -16,6 +16,8 @@ const {
 import '$reset.css';
 import '@fontsource-variable/crimson-pro';
 import '@fontsource-variable/yanone-kaffeesatz';
+import fontCrimsonPro from '@fontsource-variable/crimson-pro/files/crimson-pro-latin-wght-normal.woff2'
+import fontYanoneKaffeesatz from '@fontsource-variable/yanone-kaffeesatz/files/yanone-kaffeesatz-latin-wght-normal.woff2'
 ---
 
 <!DOCTYPE html>
@@ -46,14 +48,9 @@ import '@fontsource-variable/yanone-kaffeesatz';
       media="(prefers-color-scheme: light)"
     />
 
-    <!-- TODO load new font files
-    <link
-      rel="preload"
-      href="/fonts/GT-Sectra-Regular.woff2"
-      as="font"
-      type="font/woff2"
-      crossorigin="anonymous"
-    /> -->
+    <link rel="preload" href={fontCrimsonPro} as="font" type="font/woff2" crossorigin="anonymous" />
+    <link rel="preload" href={fontYanoneKaffeesatz} as="font" type="font/woff2" crossorigin="anonymous" />
+    <slot name="extra-head"></slot>
   </head>
 
   <body class="loading">

@@ -1,6 +1,12 @@
 ---
 import Timer_ from '$components/Timer.svelte';
 import Base from '$layouts/Base.astro';
+
+import '@fontsource/staatliches';
+import fontStaatliches from '@fontsource/staatliches/files/staatliches-latin-400-normal.woff2';
 ---
 
-<Base title="Exercise timer" ><Timer_ client:only /></Base>
+<Base title="Exercise timer" >
+  <link rel="preload" href={fontStaatliches} as="font" type="font/woff2" crossorigin="anonymous" slot="extra-head" />
+  <Timer_ client:only />
+</Base>

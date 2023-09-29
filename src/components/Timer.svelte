@@ -1,7 +1,6 @@
 <script lang="ts">
   import pingHiSrc from '$assets/audio/ping-hi.mp3';
   import pingLoSrc from '$assets/audio/ping-lo.mp3';
-  import '@fontsource/staatliches';
   import { onDestroy } from 'svelte';
 
   // Playing this sound muted here in a user-interaction handler allows us to
