@@ -92,7 +92,7 @@ const vars = {
       animation-name: fade-in-text;
       animation-duration: 500ms;
       animation-fill-mode: backwards;
-      animation-delay: calc((var(--animate-order) - 1) * 75ms);
+      animation-delay: calc((var(--animate-order) - 1) * 75ms + 250ms);
     }
 
     /* TODO ugh */
@@ -105,11 +105,14 @@ const vars = {
     main > :nth-child(3) {
       --animate-order: 3;
     }
+    main > :nth-child(4) {
+      --animate-order: 4;
+    }
 
     @keyframes fade-in-text {
       from {
         filter: blur(5px);
-        opacity: 0.3;
+        opacity: 0.0;
         transform: scale(1.02);
         translate: 0 -5px;
       }
