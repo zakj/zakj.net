@@ -49,21 +49,19 @@ const vars = {
   }
 
   footer {
+    /* TODO is there a more resilient way to "force" dark mode for a given element? */
+    --color-underline: rgba(255, 255, 255, 0.2);
+    align-items: flex-end;
     aspect-ratio: 4608/2082; /* from bgImg */
     background-image: var(--bgImg);
     background-size: contain;
-    display: grid;
+    color: var(--color-white);
+    display: flex;
+    justify-content: flex-end;
     margin-top: auto;
     mask-image: linear-gradient(transparent, white 20%);
+    padding: calc(var(--page-padding) * 0.8) var(--page-padding);
     width: 100dvw;
-  }
-
-  footer a {
-    /* TODO is there a more resilient way to "force" dark mode for a given element? */
-    --color-underline: rgba(255, 255, 255, 0.2);
-    color: var(--color-white);
-    margin: calc(var(--page-padding) * 0.8) var(--page-padding);
-    place-self: end;
   }
 
   @media (prefers-color-scheme: dark) {

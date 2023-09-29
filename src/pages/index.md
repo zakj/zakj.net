@@ -3,10 +3,12 @@ layout: ../layouts/Index.astro
 title: Zak Johnson
 ---
 
+# Whiskey, ginger, & a dash of bitters.
+
 Hello! I'm Zak, a design-minded engineer in Oakland, CA. I currently lead
 [Grammarly][]'s North America core product team. I have been building/breaking
-things on the web since the mid-90s, previously with companies like
-[Mixpanel][] and [Etsy][].
+things on the web since the mid-90s, previously with companies like [Mixpanel][]
+and [Etsy][].
 
 I have various interests, including but not limited to: motorcycling, yoga,
 [hammock camping][camping], text editors, significant whitespace, making lists,
