@@ -3,7 +3,7 @@ layout: ../layouts/Index.astro
 title: Zak Johnson
 ---
 
-# Whiskey, ginger, & a dash of bitters.
+# Whiskey, ginger, & a dash of&nbsp;bitters.
 
 Hello! I'm Zak, a design-minded engineer in Oakland, CA. I currently lead
 [Grammarly][]'s North America core product team. I have been building/breaking
