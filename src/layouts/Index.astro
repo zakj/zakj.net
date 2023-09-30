@@ -1,6 +1,7 @@
 ---
 import bgImg from '$assets/clement-m-h7vKkZNNThE-unsplash.jpeg';
 import bgImgDark from '$assets/nandhu-kumar-t9UpW8MUmtw-unsplash.jpg';
+import ogImg from '$assets/og-image-index.webp';
 import Base from '$layouts/Base.astro';
 import { getImage } from 'astro:assets';
 
@@ -12,7 +13,7 @@ const vars = {
 };
 ---
 
-<Base title={title}>
+<Base title={title} image={ogImg.src}>
   <main><slot /></main>
   <footer>
     <a href="/colophon">Colophon</a>
