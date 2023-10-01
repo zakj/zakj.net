@@ -1,23 +1,25 @@
 ---
-export interface Props {
+import { type MarkdownLayoutProps } from 'astro';
+import '$reset.css';
+import '@fontsource-variable/crimson-pro';
+import '@fontsource-variable/yanone-kaffeesatz';
+import fontCrimsonPro from '@fontsource-variable/crimson-pro/files/crimson-pro-latin-wght-normal.woff2'
+import fontYanoneKaffeesatz from '@fontsource-variable/yanone-kaffeesatz/files/yanone-kaffeesatz-latin-wght-normal.woff2'
+
+type FrontmatterProps = {
   title: string;
   description?: string;
   favicon?: string;
   image?: string;
 }
+type Props = FrontmatterProps | MarkdownLayoutProps<FrontmatterProps>;
 
 const {
   title = 'Zak Johnson',
   description = 'Whiskey, ginger, & a dash of bitters.',
   favicon = '/favicon.svg',
   image,
-} = Astro.props;
-
-import '$reset.css';
-import '@fontsource-variable/crimson-pro';
-import '@fontsource-variable/yanone-kaffeesatz';
-import fontCrimsonPro from '@fontsource-variable/crimson-pro/files/crimson-pro-latin-wght-normal.woff2'
-import fontYanoneKaffeesatz from '@fontsource-variable/yanone-kaffeesatz/files/yanone-kaffeesatz-latin-wght-normal.woff2'
+} = 'frontmatter' in Astro.props ? Astro.props.frontmatter : Astro.props;
 ---
 
 <!DOCTYPE html>
