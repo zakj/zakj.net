@@ -56,7 +56,13 @@ const {
     <slot name="extra-head" />
   </head>
 
-  <body class="loading">
+  <body class="loading no-js">
+    <script is:inline>
+      document.body.classList.remove('no-js')
+      document.fonts.ready.then(() =>
+        document.body.classList.remove('loading'),
+      );
+    </script>
     <slot />
 
     <style is:global>
@@ -108,15 +114,9 @@ const {
       a:hover {
         text-decoration-color: inherit;
       }
-      body.loading a {
+      body.loading:not(.no-js) a {
         text-decoration-line: none;
       }
     </style>
-
-    <script>
-      document.fonts.ready.then(() =>
-        document.body.classList.remove('loading'),
-      );
-    </script>
   </body>
 </html>
