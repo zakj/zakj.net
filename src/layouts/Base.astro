@@ -1,4 +1,5 @@
 ---
+import ogImage from '$assets/og-image.webp';
 import PreloadFont from '$components/PreloadFont.astro';
 import '$reset.css';
 import '@fontsource-variable/crimson-pro';
@@ -10,22 +11,15 @@ export type Props = {
   title: string;
   description?: string;
   favicon?: string;
-  coverImage?: string | ImageMetadata;
+  coverImage?: string;
 };
 
 const {
   title = 'Zak Johnson',
   description = 'Whiskey, ginger, & a dash of bitters.',
   favicon = '/favicon.svg',
-  coverImage,
+  coverImage = ogImage.src,
 }: Props = Astro.props;
-
-// TODO: this feels like a hack. I'm only using it for index right now; maybe just default.
-const coverImageMetadata =
-  typeof coverImage === 'string'
-    ? (await import(coverImage /* @vite-ignore */)).default
-    : coverImage;
-const coverImageSrc = coverImageMetadata?.src;
 ---
 
 <!doctype html>
@@ -40,7 +34,7 @@ const coverImageSrc = coverImageMetadata?.src;
     <meta property="og:title" content={`${title} · zakj.net`} />
     <meta property="og:type" content="webpage" />
     <meta property="og:url" content={Astro.url} />
-    {coverImageSrc ? <meta property="og:image" content={coverImageSrc} /> : ''}
+    {coverImage ? <meta property="og:image" content={coverImage} /> : ''}
 
     <link rel="icon" href={favicon} type="image/svg+xml" />
     <!-- <link rel="apple-touch-icon" href="icon.png" /> -->
