@@ -5,22 +5,27 @@ import '@fontsource-variable/crimson-pro';
 import fontCrimsonPro from '@fontsource-variable/crimson-pro/files/crimson-pro-latin-wght-normal.woff2';
 import '@fontsource-variable/yanone-kaffeesatz';
 import fontYanoneKaffeesatz from '@fontsource-variable/yanone-kaffeesatz/files/yanone-kaffeesatz-latin-wght-normal.woff2';
-import { type MarkdownLayoutProps } from 'astro';
 
-type FrontmatterProps = {
+export type Props = {
   title: string;
   description?: string;
   favicon?: string;
-  image?: string;
+  coverImage?: string | ImageMetadata;
 };
-type Props = FrontmatterProps | MarkdownLayoutProps<FrontmatterProps>;
 
 const {
   title = 'Zak Johnson',
   description = 'Whiskey, ginger, & a dash of bitters.',
   favicon = '/favicon.svg',
-  image,
-} = 'frontmatter' in Astro.props ? Astro.props.frontmatter : Astro.props;
+  coverImage,
+}: Props = Astro.props;
+
+// TODO: this feels like a hack. I'm only using it for index right now; maybe just default.
+const coverImageMetadata =
+  typeof coverImage === 'string'
+    ? (await import(coverImage /* @vite-ignore */)).default
+    : coverImage;
+const coverImageSrc = coverImageMetadata?.src;
 ---
 
 <!doctype html>
@@ -35,7 +40,7 @@ const {
     <meta property="og:title" content={`${title} · zakj.net`} />
     <meta property="og:type" content="webpage" />
     <meta property="og:url" content={Astro.url} />
-    {image ? <meta property="og:image" content={image} /> : ''}
+    {coverImageSrc ? <meta property="og:image" content={coverImageSrc} /> : ''}
 
     <link rel="icon" href={favicon} type="image/svg+xml" />
     <!-- <link rel="apple-touch-icon" href="icon.png" /> -->
@@ -58,7 +63,7 @@ const {
 
   <body class="loading no-js">
     <script is:inline>
-      document.body.classList.remove('no-js')
+      document.body.classList.remove('no-js');
       document.fonts.ready.then(() =>
         document.body.classList.remove('loading'),
       );

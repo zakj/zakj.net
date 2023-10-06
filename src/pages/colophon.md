@@ -1,5 +1,6 @@
 ---
-layout: $layouts/Base.astro
+layout: $layouts/Text.astro
+title: Colophon
 ---
 
 # Colophon

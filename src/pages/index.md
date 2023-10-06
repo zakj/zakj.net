@@ -1,6 +1,7 @@
 ---
 layout: ../layouts/Index.astro
 title: Zak Johnson
+coverImage: ../assets/og-image-index.webp
 ---
 
 # Whiskey, ginger, & a dash of&nbsp;bitters.
