@@ -18,6 +18,11 @@ const vars = {
     if (sessionStorage.getItem(key))
       document.body.classList.add('seen-animation');
     sessionStorage.setItem(key, '1');
+    document
+      .querySelector('main > :last-child')
+      ?.addEventListener('animationend', (ev) =>
+        document.body.classList.add('seen-animation'),
+      );
   })();
 </script>
 
