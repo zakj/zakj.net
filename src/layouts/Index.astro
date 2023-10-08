@@ -35,13 +35,12 @@ const vars = {
 
 <style is:global define:vars={vars}>
   footer {
-    /* TODO is there a more resilient way to "force" dark mode for a given element? */
-    --color-underline: rgba(255, 255, 255, 0.2);
+    --color-fg: var(--color-white);
     align-items: flex-end;
     aspect-ratio: 4608/2082; /* from bgImg */
     background-image: var(--bgImg);
     background-size: contain;
-    color: var(--color-white);
+    color: var(--color-fg);
     display: flex;
     justify-content: flex-end;
     margin-top: auto;

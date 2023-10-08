@@ -69,13 +69,12 @@ const {
         --color-black: #222;
         --color-white: #fff;
         --color-bg: var(--color-white);
-        --color-text: var(--color-black);
-        --color-underline: rgba(34, 34, 34, 0.2);
+        --color-fg: var(--color-black);
         --font-family-body: Crimson Pro Variable, serif;
         --font-family-display: Yanone Kaffeesatz Variable, sans-serif;
 
         background: var(--color-bg);
-        color: var(--color-text);
+        color: var(--color-fg);
         font-size: 17px;
         font-family: var(--font-family-body);
       }
@@ -92,8 +91,7 @@ const {
       @media (prefers-color-scheme: dark) {
         :root {
           --color-bg: var(--color-black);
-          --color-text: var(--color-white);
-          --color-underline: rgba(255, 255, 255, 0.2);
+          --color-fg: var(--color-white);
         }
       }
 
@@ -105,10 +103,14 @@ const {
 
       a {
         color: inherit;
+        text-decoration-color: color-mix(
+          in srgb,
+          var(--color-fg) 20%,
+          transparent
+        );
         text-decoration-thickness: 0.07em;
         text-underline-position: from-font;
         transition: text-decoration-color 150ms ease-in-out;
-        text-decoration-color: var(--color-underline);
       }
       a:hover {
         text-decoration-color: inherit;
