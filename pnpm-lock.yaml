@@ -11,12 +11,6 @@ dependencies:
   '@fontsource-variable/crimson-pro':
     specifier: ^5.0.13
     version: 5.0.13
-  '@fontsource-variable/yanone-kaffeesatz':
-    specifier: ^5.0.14
-    version: 5.0.14
-  '@fontsource/staatliches':
-    specifier: ^5.0.14
-    version: 5.0.14
   astro:
     specifier: ^3.2.3
     version: 3.2.3
@@ -741,14 +735,6 @@ packages:
 
   /@fontsource-variable/crimson-pro@5.0.13:
     resolution: {integrity: sha512-PPiwCfpeSKFR0U5xb+1dS6An+YPZk7Syb0UqfPnXJUUXLJ18CQmi2H38dPTRE3J/kPvpatcOoyB8HooERtVXXg==}
-    dev: false
-
-  /@fontsource-variable/yanone-kaffeesatz@5.0.14:
-    resolution: {integrity: sha512-iaWvyhAfwWhOrAT4Z+5jbtm6e02L/UDF/zqncui76IjrbkM2iYfxoVdIJ0zbK3RguEmH0QtODT+mUAKQqQDzTg==}
-    dev: false
-
-  /@fontsource/staatliches@5.0.14:
-    resolution: {integrity: sha512-zha7xSVhIhb7dqKgerDz3ux5AHOp3OCxTSy5VHZjir9/2/3YNIHu6slZUE1UJld5N6vny1hl5YkxtJdLg20QLA==}
     dev: false
 
   /@jridgewell/gen-mapping@0.3.3:

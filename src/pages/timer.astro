@@ -1,13 +1,8 @@
 ---
-import PreloadFont from '$components/PreloadFont.astro';
 import Timer_ from '$components/Timer.svelte';
 import Base from '$layouts/Base.astro';
-
-import '@fontsource/staatliches';
-import fontStaatliches from '@fontsource/staatliches/files/staatliches-latin-400-normal.woff2';
 ---
 
 <Base title="Exercise timer">
-  <PreloadFont src={fontStaatliches} slot="extra-head" />
   <Timer_ client:only />
 </Base>

@@ -1,11 +1,9 @@
 ---
-import ogImage from '$assets/og-image.webp';
+import defaultCoverImage from '$assets/og-image.webp';
 import PreloadFont from '$components/PreloadFont.astro';
 import '$reset.css';
 import '@fontsource-variable/crimson-pro';
 import fontCrimsonPro from '@fontsource-variable/crimson-pro/files/crimson-pro-latin-wght-normal.woff2';
-import '@fontsource-variable/yanone-kaffeesatz';
-import fontYanoneKaffeesatz from '@fontsource-variable/yanone-kaffeesatz/files/yanone-kaffeesatz-latin-wght-normal.woff2';
 
 export type Props = {
   title: string;
@@ -18,7 +16,7 @@ const {
   title = 'Zak Johnson',
   description = 'Whiskey, ginger, & a dash of bitters.',
   favicon = '/favicon.svg',
-  coverImage = ogImage.src,
+  coverImage = defaultCoverImage.src,
 }: Props = Astro.props;
 ---
 
@@ -51,7 +49,8 @@ const {
     />
 
     <PreloadFont src={fontCrimsonPro} />
-    <PreloadFont src={fontYanoneKaffeesatz} />
+    <PreloadFont src="/fonts/GT-Walsheim-Black.woff2" />
+    <!-- <PreloadFont src="/fonts/GT-Walsheim-Bold.woff2" /> -->
     <slot name="extra-head" />
   </head>
 
@@ -65,27 +64,39 @@ const {
     <slot />
 
     <style is:global>
+      /* @font-face {
+        font-display: fallback;
+        font-family: GT Walsheim;
+        font-style: normal;
+        font-weight: normal;
+        src: url(/fonts/GT-Walsheim-Bold.woff2) format('woff2');
+      } */
+
+      @font-face {
+        font-display: fallback;
+        font-family: GT Walsheim;
+        font-style: normal;
+        font-weight: bold;
+        src: url(/fonts/GT-Walsheim-Black.woff2) format('woff2');
+      }
+
       :root {
         --color-black: #222;
         --color-white: #fff;
         --color-bg: var(--color-white);
         --color-fg: var(--color-black);
         --font-family-body: Crimson Pro Variable, serif;
-        --font-family-display: Yanone Kaffeesatz Variable, sans-serif;
+        --font-family-display: GT Walsheim, sans-serif;
+        --font-family-numeric: GT Walsheim, sans-serif;
+
+        /* @link https://utopia.fyi/clamp/calculator?a=390,750,17—28|30—50 */
+        --fluid-17-28: clamp(1.0625rem, 0.3177rem + 3.0556vw, 1.75rem);
+        --fluid-30-50: clamp(1.875rem, 0.5208rem + 5.5556vw, 3.125rem);
 
         background: var(--color-bg);
         color: var(--color-fg);
-        font-size: 17px;
         font-family: var(--font-family-body);
-      }
-
-      h1,
-      h2,
-      h3 {
-        font-family: var(--font-family-display);
-        text-transform: uppercase;
-        /* TODO: lacks browser support */
-        text-wrap: pretty;
+        font-size: var(--fluid-17-28);
       }
 
       @media (prefers-color-scheme: dark) {
@@ -95,10 +106,14 @@ const {
         }
       }
 
-      @media screen and (min-width: 750px) {
-        :root {
-          font-size: 28px;
-        }
+      h1,
+      h2,
+      h3 {
+        font-family: var(--font-family-display);
+        font-size: var(--fluid-30-50); /* TODO: h2 h3 */
+        text-transform: uppercase;
+        /* TODO: lacks browser support */
+        text-wrap: pretty;
       }
 
       a {

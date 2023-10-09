@@ -109,9 +109,10 @@
 
   main {
     display: grid;
-    font-family: Staatliches, system-ui, sans-serif;
-    font-size: 256px;
-    font-size: min(70vw, 60vh);
+    font-family: var(--font-family-numeric);
+    font-size: min(50vw, 60vh);
+    font-variant: tabular-nums;
+    font-weight: bold;
     place-content: center;
   }
 

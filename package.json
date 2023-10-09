@@ -12,8 +12,6 @@
   "dependencies": {
     "@astrojs/svelte": "^4.0.3",
     "@fontsource-variable/crimson-pro": "^5.0.13",
-    "@fontsource-variable/yanone-kaffeesatz": "^5.0.14",
-    "@fontsource/staatliches": "^5.0.14",
     "astro": "^3.2.3",
     "autoprefixer": "^10.4.16",
     "svelte": "^4.2.1"
