@@ -89,14 +89,10 @@ const {
         --font-family-display: GT Walsheim, sans-serif;
         --font-family-numeric: GT Walsheim, sans-serif;
 
-        /* @link https://utopia.fyi/clamp/calculator?a=390,750,17—28|30—50 */
-        --fluid-17-28: clamp(1.0625rem, 0.3177rem + 3.0556vw, 1.75rem);
-        --fluid-30-50: clamp(1.875rem, 0.5208rem + 5.5556vw, 3.125rem);
-
         background: var(--color-bg);
         color: var(--color-fg);
         font-family: var(--font-family-body);
-        font-size: var(--fluid-17-28);
+        font-size: fluid(17px, 28px, 390px, 750px);
       }
 
       @media (prefers-color-scheme: dark) {
@@ -110,7 +106,8 @@ const {
       h2,
       h3 {
         font-family: var(--font-family-display);
-        font-size: var(--fluid-30-50); /* TODO: h2 h3 */
+        font-size: fluid(30px, 50px, 390px, 750px); /* TODO: h2 h3 */
+        line-height: 1;
         text-transform: uppercase;
         /* TODO: lacks browser support */
         text-wrap: pretty;
