@@ -31,8 +31,12 @@ const props: Props =
     display: flex;
     flex-direction: column;
     min-height: 100dvh;
-    padding-inline: var(--page-padding);
-    padding-top: var(--page-padding);
+    padding-top: max(env(safe-area-inset-top), var(--page-padding));
+    padding-right: max(env(safe-area-inset-right), var(--page-padding));
+    padding-left: max(
+      calc(env(safe-area-inset-left) + 0.5rem),
+      var(--page-padding)
+    );
   }
 
   main {
@@ -55,7 +59,7 @@ const props: Props =
     }
   }
 
-  @media screen and (min-width: 750px) {
+  @media screen and (min-width: 750px) and (min-height: 350px) {
     :root {
       --page-padding: 3rem;
     }

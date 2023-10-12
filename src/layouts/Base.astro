@@ -27,7 +27,10 @@ const {
     <title>{title} · zakj.net</title>
     <meta name="author" content="Zak Johnson" />
     <meta name="description" content={description} />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
 
     <meta property="og:title" content={`${title} · zakj.net`} />
     <meta property="og:type" content="webpage" />
@@ -106,7 +109,7 @@ const {
       h2,
       h3 {
         font-family: var(--font-family-display);
-        font-size: fluid(30px, 50px, 390px, 750px); /* TODO: h2 h3 */
+        font-size: fluid(30px, 70px, 390px, 750px); /* TODO: h2 h3 */
         line-height: 1;
         text-transform: uppercase;
         /* TODO: lacks browser support */
