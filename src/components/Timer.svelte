@@ -7,19 +7,15 @@
   // play it later without a user interaction on mobile Safari.
   function prePlayAudio(s: HTMLAudioElement) {
     s.muted = true;
-    setTimeout(() => (s.muted = false), 500);
     s.play();
+    setTimeout(() => (s.muted = false), s.duration * 1000);
     // HACK: On mobile Safari, replaying without a load cuts off the beginning
     // of the audio. Even setting s.currentTime = 0 doesn't work.
     s.addEventListener('ended', () => s.load());
   }
 
-  // TODO move to assets
-  let pingHi: HTMLAudioElement = new Audio(pingHiSrc);
-  let pingLo: HTMLAudioElement = new Audio(pingLoSrc);
-  // TODO: move to an interation handler; or not needed at all?
-  // prePlayAudio(pingHi);
-  // prePlayAudio(pingLo);
+  const pingHi: HTMLAudioElement = new Audio(pingHiSrc);
+  const pingLo: HTMLAudioElement = new Audio(pingLoSrc);
 
   type Section = {
     seconds: number;
@@ -62,6 +58,7 @@
   let current: Section | null;
   function selectTimer(timer: Timer) {
     const gen = cycle(timer);
+    prePlayAudio(pingLo);
     function run() {
       const next = gen.next();
       if (next.done) return;
@@ -95,7 +92,7 @@
         {timer.map((t) => t.seconds).join('/')}
       </button>
     {/each}
-    <button on:click={() => stopTimer()}> X </button>
+    <button class="stop" on:click={() => stopTimer()}> X </button>
   </footer>
 </div>
 
@@ -123,11 +120,24 @@
   }
 
   button {
-    width: 60px;
-    height: 60px;
-    cursor: pointer;
+    background: none;
     border-radius: 60px;
-    border: 1px solid var(--color-fg);
+    border: none;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px,
+      rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+    cursor: pointer;
+    font-family: var(--font-family-numeric);
+    font-size: fluid(16px, 20px, 320px, 800px);
+    height: fluid(48px, 60px, 320px, 800px);
+    padding-inline: 1.5em;
+    user-select: none;
+  }
+  button:active {
+    box-shadow: rgba(6, 24, 44, 0.4) 0px 0px 0px 2px;
+  }
+  button.stop {
+    padding-inline: 0;
+    width: fluid(48px, 60px, 320px, 800px);
   }
 
   .rest {
