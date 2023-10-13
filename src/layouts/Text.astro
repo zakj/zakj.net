@@ -21,26 +21,30 @@ const props: Props =
 
   body {
     --bg-gradient-color: rgb(45, 61, 63, 0.2);
-    align-items: center;
     background-image: linear-gradient(
       121deg,
       transparent 60vh,
       var(--bg-gradient-color)
     );
     background-color: #f8f8f8;
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns:
+      [full-start]
+      minmax(
+        max(calc(env(safe-area-inset-left) + 0.5rem), var(--page-padding)),
+        1fr
+      )
+      [content-start]
+      minmax(auto, 50ch)
+      [content-end]
+      minmax(max(env(safe-area-inset-right), var(--page-padding)), 1fr)
+      [full-end];
     min-height: 100dvh;
     padding-top: max(env(safe-area-inset-top), var(--page-padding));
-    padding-right: max(env(safe-area-inset-right), var(--page-padding));
-    padding-left: max(
-      calc(env(safe-area-inset-left) + 0.5rem),
-      var(--page-padding)
-    );
   }
 
   main {
-    width: min(100%, 50ch);
+    grid-column: content;
   }
 
   main > * + * {
