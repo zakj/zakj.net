@@ -121,6 +121,7 @@
     display: flex;
     gap: 1em;
     justify-content: center;
+    padding-bottom: env(safe-area-inset-bottom);
   }
 
   button {
