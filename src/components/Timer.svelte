@@ -1,6 +1,7 @@
 <script lang="ts">
   import pingHiSrc from '$assets/audio/ping-hi.mp3';
   import pingLoSrc from '$assets/audio/ping-lo.mp3';
+  import NoSleep from '@zakj/no-sleep';
   import { onDestroy } from 'svelte';
 
   // Playing this sound muted here in a user-interaction handler allows us to
@@ -14,6 +15,7 @@
     s.addEventListener('ended', () => s.load());
   }
 
+  const noSleep = new NoSleep();
   const pingHi: HTMLAudioElement = new Audio(pingHiSrc);
   const pingLo: HTMLAudioElement = new Audio(pingLoSrc);
 
@@ -57,6 +59,7 @@
 
   let current: Section | null;
   function selectTimer(timer: Timer) {
+    noSleep.enable();
     const gen = cycle(timer);
     prePlayAudio(pingLo);
     function run() {
@@ -72,6 +75,7 @@
 
   function stopTimer() {
     cancelAnimationFrame(previousRAF);
+    noSleep.disable();
     current = null;
   }
   onDestroy(stopTimer);

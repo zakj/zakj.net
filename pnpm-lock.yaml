@@ -11,6 +11,9 @@ dependencies:
   '@fontsource-variable/crimson-pro':
     specifier: ^5.0.13
     version: 5.0.13
+  '@zakj/no-sleep':
+    specifier: ^0.13.0
+    version: 0.13.0
   astro:
     specifier: ^3.2.3
     version: 3.2.3
@@ -922,6 +925,10 @@ packages:
 
   /@types/unist@3.0.0:
     resolution: {integrity: sha512-MFETx3tbTjE7Uk6vvnWINA/1iJ7LuMdO4fcq8UfF0pRbj01aGLduVvQcRyswuACJdpnHgg8E3rQLhaRdNEJS0w==}
+    dev: false
+
+  /@zakj/no-sleep@0.13.0:
+    resolution: {integrity: sha512-BZZyWTCYx57n0/YLXVchD04vDSSmPn/L0YPyv0N0U8PY8oE3rCjs6hrxlENh5aLlsv3cR2nru3M8ykD8JZAhxg==}
     dev: false
 
   /acorn@8.10.0:
