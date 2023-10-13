@@ -125,6 +125,12 @@
     padding-bottom: env(safe-area-inset-bottom);
   }
 
+  @media (display-mode: standalone) {
+    footer {
+      background: green;
+    }
+  }
+
   button {
     background: var(--color-white);
     border-radius: 60px;
