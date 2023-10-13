@@ -91,7 +91,6 @@
   </main>
 
   <footer>
-    {typeof noSleep.noSleepVideo === 'undefined' ? 'native3' : 'video'}
     {#each timers as timer}
       <button on:click={() => selectTimer(timer)}>
         {timer.map((t) => t.seconds).join('/')}
