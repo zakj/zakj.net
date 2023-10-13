@@ -91,7 +91,7 @@
   </main>
 
   <footer>
-    {typeof noSleep.noSleepVideo === 'undefined' ? 'native' : 'video'}
+    {typeof noSleep.noSleepVideo === 'undefined' ? 'native2' : 'video'}
     {#each timers as timer}
       <button on:click={() => selectTimer(timer)}>
         {timer.map((t) => t.seconds).join('/')}
@@ -125,7 +125,7 @@
     padding-bottom: env(safe-area-inset-bottom);
   }
 
-  @media (display-mode: standalone) {
+  @media all and (display-mode: standalone) {
     footer {
       background: green;
     }
