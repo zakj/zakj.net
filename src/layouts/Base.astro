@@ -40,6 +40,7 @@ const {
     <link rel="icon" href={favicon} type="image/svg+xml" />
     <!-- <link rel="apple-touch-icon" href="icon.png" /> -->
 
+    <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta
       name="theme-color"
       content="#fff"
@@ -59,10 +60,10 @@ const {
 
   <body class="loading no-js">
     <script is:inline>
-      document.body.classList.remove('no-js');
-      document.fonts.ready.then(() =>
-        document.body.classList.remove('loading'),
-      );
+    document.body.classList.remove('no-js');
+    document.fonts.ready.then(() =>
+      document.body.classList.remove('loading'),
+    );
     </script>
     <slot />
 
