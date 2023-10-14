@@ -3,7 +3,7 @@
   import pingLoSrc from '$assets/audio/ping-lo.mp3';
   import { prePlayAudio, timer, type Timer } from '$util';
   import NoSleep from '@zakj/no-sleep';
-  import { onDestroy } from 'svelte';
+  import { onDestroy, tick } from 'svelte';
 
   const noSleep = new NoSleep();
   const pingHi: HTMLAudioElement = new Audio(pingHiSrc);
@@ -38,11 +38,18 @@
     return `${minutes}:${seconds.toString().padStart(2, '0')}`;
   }
 
-  let showOverallForm = false;
+  let showingOverallForm = false;
+  let overallInput: HTMLInputElement;
   let overallValue: number;
   let overallTimer: Timer;
   let phase: Phase | null;
   let currentTimer: Timer;
+
+  async function showOverallForm() {
+    showingOverallForm = true;
+    await tick();
+    overallInput.focus();
+  }
 
   function startOverallTimer() {
     overallTimer = timer(overallValue * 60 * 1000);
@@ -83,14 +90,20 @@
   >
     {#if overallTimer}
       {secondsToMinutes($overallTimer.remaining)}
-    {:else if showOverallForm}
+    {:else if showingOverallForm}
       <form on:submit|preventDefault={startOverallTimer}>
-        <input type="number" placeholder="Minutes…" bind:value={overallValue} />
+        <input
+          type="number"
+          inputmode="numeric"
+          placeholder="Minutes…"
+          required
+          bind:this={overallInput}
+          bind:value={overallValue}
+        />
+        <button type="submit">Start</button>
       </form>
     {:else}
-      <button on:click={() => (showOverallForm = true)}
-        >Start class timer</button
-      >
+      <button on:click={showOverallForm}>Start class timer</button>
     {/if}
   </header>
 
@@ -133,6 +146,14 @@
   }
   header input {
     font: inherit;
+    width: 7em;
+  }
+  header button[type='submit'] {
+    background-color: transparent;
+    box-shadow: none;
+    font: inherit;
+    height: auto;
+    padding: 0 0 0 0.5em;
   }
 
   main {
