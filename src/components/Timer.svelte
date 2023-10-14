@@ -85,11 +85,12 @@
 
 <div class="wrapper">
   <header
-    class:countdown={overallTimer}
+    class:countdown={$overallTimer}
     style:--progress={$overallTimer?.progress}
   >
     {#if overallTimer}
       {secondsToMinutes($overallTimer.remaining)}
+      <progress max="1" value={$overallTimer.progress} />
     {:else if showingOverallForm}
       <form on:submit|preventDefault={startOverallTimer}>
         <input
@@ -137,6 +138,7 @@
     );
     display: flex;
     justify-content: center;
+    position: relative;
   }
   header.countdown {
     font-family: var(--font-family-numeric);
@@ -154,7 +156,23 @@
     color: inherit;
     font: inherit;
     height: auto;
-    padding: 0 0 0 0.5em;
+    padding: 0 0.5em;
+  }
+  header progress {
+    --height: 6px;
+    appearance: none;
+    bottom: -1rem;
+    height: var(--height);
+    position: absolute;
+    width: 100%;
+  }
+  header progress::-webkit-progress-bar {
+    background-color: color-mix(in srgb, var(--color-fg) 5%, transparent);
+    border-radius: var(--height);
+  }
+  header progress::-webkit-progress-value {
+    background-color: var(--color-fg);
+    border-radius: var(--height);
   }
 
   main {

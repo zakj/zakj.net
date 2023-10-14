@@ -31,7 +31,7 @@ export function timer(ms: number): Timer {
       const elapsedMs = performance.now() - start;
       set({
         progress: Math.max(0, Math.min(1, elapsedMs / ms)).toFixed(4),
-        remaining: Math.ceil((ms - elapsedMs) / 1000),
+        remaining: Math.max(0, Math.ceil((ms - elapsedMs) / 1000)),
       });
       if (elapsedMs >= ms) resolve();
       else requestId = requestAnimationFrame(tick);
