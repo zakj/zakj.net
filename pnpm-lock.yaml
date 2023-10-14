@@ -12,8 +12,8 @@ dependencies:
     specifier: ^5.0.13
     version: 5.0.13
   '@zakj/no-sleep':
-    specifier: ^0.13.2
-    version: 0.13.2
+    specifier: ^0.13.3
+    version: 0.13.3
   astro:
     specifier: ^3.2.3
     version: 3.2.3
@@ -1988,8 +1988,8 @@ packages:
     resolution: {integrity: sha512-MFETx3tbTjE7Uk6vvnWINA/1iJ7LuMdO4fcq8UfF0pRbj01aGLduVvQcRyswuACJdpnHgg8E3rQLhaRdNEJS0w==}
     dev: false
 
-  /@zakj/no-sleep@0.13.2:
-    resolution: {integrity: sha512-mCk5rLiimi+v6zixINJ2BuzrEsPc69bAg8Udz9PzfHaS2iRejgp2MTLn+0wtx53+UwEglPHri+S3DjVe8HhDtg==}
+  /@zakj/no-sleep@0.13.3:
+    resolution: {integrity: sha512-F1vo5qVbtBU/sGdVBL9Eedwuq0kdsaUMEZwq3ae516iq4BH1P3d6sUOla/NOGFNsYaycLkohfi58x4RZWkFIDg==}
     dev: false
 
   /acorn@8.10.0:
