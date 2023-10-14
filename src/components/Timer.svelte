@@ -151,6 +151,7 @@
   header button[type='submit'] {
     background-color: transparent;
     box-shadow: none;
+    color: inherit;
     font: inherit;
     height: auto;
     padding: 0 0 0 0.5em;
