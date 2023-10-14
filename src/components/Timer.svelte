@@ -1,52 +1,21 @@
 <script lang="ts">
   import pingHiSrc from '$assets/audio/ping-hi.mp3';
   import pingLoSrc from '$assets/audio/ping-lo.mp3';
+  import { prePlayAudio, timer, type Timer } from '$util';
   import NoSleep from '@zakj/no-sleep';
   import { onDestroy } from 'svelte';
-
-  // Playing this sound muted here in a user-interaction handler allows us to
-  // play it later without a user interaction on mobile Safari.
-  function prePlayAudio(s: HTMLAudioElement) {
-    s.muted = true;
-    s.play();
-    setTimeout(() => (s.muted = false), s.duration * 1000);
-    // HACK: On mobile Safari, replaying without a load cuts off the beginning
-    // of the audio. Even setting s.currentTime = 0 doesn't work.
-    s.addEventListener('ended', () => s.load());
-  }
 
   const noSleep = new NoSleep();
   const pingHi: HTMLAudioElement = new Audio(pingHiSrc);
   const pingLo: HTMLAudioElement = new Audio(pingLoSrc);
 
-  type Section = {
+  type Phase = {
     seconds: number;
     label: string;
   };
-  type Timer = Section[];
+  type IntervalTimer = Phase[];
 
-  function* cycle<T>(elements: T[]): Generator<T> {
-    while (true) {
-      for (const element of elements) yield element;
-    }
-  }
-
-  let elapsedMs = 0;
-  let previousRAF: number;
-  function startTimer(ms: number): Promise<void> {
-    cancelAnimationFrame(previousRAF);
-    return new Promise((resolve) => {
-      const start = performance.now();
-      function tick() {
-        elapsedMs = performance.now() - start;
-        if (elapsedMs >= ms) resolve();
-        else previousRAF = requestAnimationFrame(tick);
-      }
-      tick();
-    });
-  }
-
-  const timers: Timer[] = [
+  const timers: IntervalTimer[] = [
     [
       { seconds: 45, label: 'work' },
       { seconds: 10, label: 'rest' },
@@ -57,55 +26,113 @@
     ],
   ];
 
-  let current: Section | null;
-  function selectTimer(timer: Timer) {
+  function* cycle<T>(elements: T[]): Generator<T> {
+    while (true) {
+      for (const element of elements) yield element;
+    }
+  }
+
+  function secondsToMinutes(s: number) {
+    const minutes = Math.floor(s / 60);
+    const seconds = s % 60;
+    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+  }
+
+  let showOverallForm = false;
+  let overallValue: number;
+  let overallTimer: Timer;
+  let phase: Phase | null;
+  let currentTimer: Timer;
+
+  function startOverallTimer() {
+    overallTimer = timer(overallValue * 60 * 1000);
+  }
+
+  function selectInterval(interval: IntervalTimer) {
     noSleep.enable();
-    const gen = cycle(timer);
     prePlayAudio(pingLo);
+    const gen = cycle(interval);
     function run() {
       const next = gen.next();
       if (next.done) return;
-      current = next.value;
-      if (current.label === 'work') pingHi.play();
-      if (current.label === 'rest') pingLo.play();
-      startTimer(current.seconds * 1000).then(run);
+      phase = next.value;
+      if (phase.label === 'work') pingHi.play();
+      if (phase.label === 'rest') pingLo.play();
+      currentTimer = timer(phase.seconds * 1000);
+      currentTimer.completed.then(run);
     }
     run();
   }
 
-  function stopTimer() {
-    cancelAnimationFrame(previousRAF);
+  function stopInterval() {
+    currentTimer?.cancel();
     noSleep.disable();
-    current = null;
+    phase = null;
   }
-  onDestroy(stopTimer);
+
+  onDestroy(() => {
+    overallTimer?.cancel();
+    stopInterval();
+  });
 </script>
 
 <div class="wrapper">
-  <main>
-    {#if current}
-      <span class={current.label}>
-        {Math.ceil(current.seconds - elapsedMs / 1000)}
-      </span>
+  <header
+    class:countdown={overallTimer}
+    style:--progress={$overallTimer?.progress}
+  >
+    {#if overallTimer}
+      {secondsToMinutes($overallTimer.remaining)}
+    {:else if showOverallForm}
+      <form on:submit|preventDefault={startOverallTimer}>
+        <input type="number" placeholder="Minutes…" bind:value={overallValue} />
+      </form>
+    {:else}
+      <button on:click={() => (showOverallForm = true)}
+        >Start class timer</button
+      >
     {/if}
+  </header>
+
+  <main class={phase?.label}>
+    {#if phase}{$currentTimer.remaining}{/if}
   </main>
 
   <footer>
     {#each timers as timer}
-      <button on:click={() => selectTimer(timer)}>
+      <button on:click={() => selectInterval(timer)}>
         {timer.map((t) => t.seconds).join('/')}
       </button>
     {/each}
-    <button class="stop" on:click={() => stopTimer()}> X </button>
+    <button class="stop" on:click={stopInterval}> X </button>
   </footer>
 </div>
 
 <style>
   .wrapper {
     display: grid;
-    grid-template-rows: 1fr auto;
+    grid-template-rows: auto 1fr auto;
     min-height: 100dvh;
     padding: 1em;
+  }
+
+  header {
+    color: color-mix(
+      in srgb,
+      currentColor,
+      red calc((var(--progress) - 0.9) / 0.1 * 100%)
+    );
+    display: flex;
+    justify-content: center;
+  }
+  header.countdown {
+    font-family: var(--font-family-numeric);
+    font-size: fluid(60px, 80px, 375px, 800px);
+    font-variant: tabular-nums;
+    font-weight: bold;
+  }
+  header input {
+    font: inherit;
   }
 
   main {
