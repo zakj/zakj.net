@@ -1,6 +1,7 @@
 <script lang="ts">
   import pingHiSrc from '$assets/audio/ping-hi.mp3';
   import pingLoSrc from '$assets/audio/ping-lo.mp3';
+  import cancelIcon from '$assets/icons/alarm-off.svg';
   import { prePlayAudio, timer, type Timer } from '$util';
   import NoSleep from '@zakj/no-sleep';
   import { onDestroy, tick } from 'svelte';
@@ -118,7 +119,14 @@
         {timer.map((t) => t.seconds).join('/')}
       </button>
     {/each}
-    <button class="stop" on:click={stopInterval}> X </button>
+    <button class="stop" disabled={!phase} on:click={stopInterval}>
+      <img
+        src={cancelIcon.src}
+        alt="Cancel"
+        height={cancelIcon.height}
+        width={cancelIcon.width}
+      />
+    </button>
   </footer>
 </div>
 
@@ -205,11 +213,14 @@
     padding-inline: 1.5em;
     user-select: none;
   }
+  button:disabled {
+    opacity: 0.5;
+  }
   button:active {
     box-shadow: rgba(6, 24, 44, 0.4) 0px 0px 0px 2px;
   }
   button.stop {
-    padding-inline: 0;
+    padding-inline: calc(1.5em - 12px);
     width: fluid(48px, 60px, 320px, 800px);
   }
 
