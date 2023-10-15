@@ -115,27 +115,12 @@
   $: drawCanvas(canvas, elapsedMs, exercise.duration);
 </script>
 
-<!-- 
-<HeadMeta title="Plank!" description="A simple timer for five-minute planks.">
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1, viewport-fit=cover"
-  />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta
-    name="apple-mobile-web-app-status-bar-style"
-    content="black-translucent"
-  />
-  <meta name="apple-mobile-web-app-title" content="Plank!" />
-  <link rel="apple-touch-icon" href="/img/plank-touch-icon.png" />
-</HeadMeta> -->
-
 <div class="page">
   <main>
     {#if state === State.Exercise}
       <canvas width="1000" height="1000" bind:this={canvas} />
     {/if}
-    <div
+    <button
       class="circle"
       class:clickable={state === State.Idle}
       on:click={() => (state === State.Idle ? handlePlay() : null)}
@@ -153,7 +138,7 @@
       {:else if state === State.Done}
         {successEmoji()}
       {/if}
-    </div>
+    </button>
   </main>
   <footer>
     {#if [State.Break, State.Exercise].includes(state)}
@@ -212,6 +197,7 @@
     align-items: center;
     background-color: var(--color-white);
     border-radius: calc(var(--size) / 2);
+    border: none;
     display: flex;
     font-family: var(--font-family-display);
     font-size: 84px;

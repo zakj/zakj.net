@@ -1,7 +1,23 @@
 ---
 import icon from '$assets/icons/plank.svg';
+import touchIcon from '$assets/plank-touch-icon.png';
 import Plank_ from '$components/Plank.svelte';
 import Base from '$layouts/Base.astro';
 ---
 
-<Base title="Plank!" favicon={icon.src}><Plank_ client:load /></Base>
+<Base
+  title="Plank!"
+  favicon={icon.src}
+  description="A simple timer for five-minute planks."
+>
+  <Plank_ client:load />
+
+  <Fragment slot="extra-head">
+    <meta
+      name="apple-mobile-web-app-status-bar-style"
+      content="black-translucent"
+    />
+    <meta name="apple-mobile-web-app-title" content="Plank!" />
+    <link rel="apple-touch-icon" href={touchIcon.src} />
+  </Fragment>
+</Base>
