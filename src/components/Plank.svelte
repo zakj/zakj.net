@@ -1,6 +1,8 @@
 <script lang="ts">
   // import HeadMeta from '$lib/HeadMeta.svelte';
-  import NoSleep, { type NoSleep as INoSleep } from '@zakj/no-sleep';
+  import boopSrc from '$assets/audio/boop.mp3';
+  import { prePlayAudio } from '$util';
+  import NoSleep, { type INoSleep } from '@zakj/no-sleep';
 
   type Exercise = {
     name: string;
@@ -46,7 +48,7 @@
   let boop: HTMLAudioElement;
   if (typeof navigator !== 'undefined') {
     noSleep = new NoSleep();
-    boop = new Audio('/audio/boop.4a');
+    boop = new Audio(boopSrc);
   }
 
   const choice = <T extends unknown>(xs: T[]) =>
@@ -66,17 +68,10 @@
   }
 
   function handlePlay() {
-    // noSleep.enable();
+    noSleep.enable();
     state = State.Break;
     startTimer(500).then(handleTimerComplete);
-    // Playing this sound muted here in a user-interaction handler allows us to
-    // play it later without a user interaction on mobile Safari.
-    boop.muted = true;
-    setTimeout(() => (boop.muted = false), 500);
-    boop.play();
-    // HACK: On mobile Safari, replaying without a load cuts off the beginning
-    // of the audio. Even setting boop.currentTime = 0 doesn't work.
-    boop.addEventListener('ended', () => boop.load());
+    prePlayAudio(boop);
   }
 
   function handleTimerComplete() {
@@ -91,7 +86,7 @@
         startTimer(BREAK_TIME).then(handleTimerComplete);
       } else {
         state = State.Done;
-        // noSleep.disable();
+        noSleep.disable();
       }
     }
   }
