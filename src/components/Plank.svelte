@@ -1,8 +1,9 @@
 <script lang="ts">
   // import HeadMeta from '$lib/HeadMeta.svelte';
   import boopSrc from '$assets/audio/boop.mp3';
-  import { prePlayAudio } from '$util';
+  import { choice, prePlayAudio, timer, type Timer } from '$util';
   import NoSleep, { type INoSleep } from '@zakj/no-sleep';
+  import { onDestroy } from 'svelte';
 
   type Exercise = {
     name: string;
@@ -38,11 +39,10 @@
   }
 
   let state = State.Idle;
-  let elapsedMs = 0;
+  let currentTimer: Timer;
   let index = 0;
   let canvas: HTMLCanvasElement;
   $: exercise = EXERCISES[index];
-  $: elapsed = elapsedMs / 1000;
 
   let noSleep: INoSleep;
   let boop: HTMLAudioElement;
@@ -51,39 +51,26 @@
     boop = new Audio(boopSrc);
   }
 
-  const choice = <T extends unknown>(xs: T[]) =>
-    xs[Math.floor(Math.random() * xs.length)];
-  const successEmoji = () => choice(['🙌', '🎉']);
-
-  function startTimer(ms: number): Promise<void> {
-    return new Promise((resolve) => {
-      const start = performance.now();
-      function tick() {
-        elapsedMs = performance.now() - start;
-        if (elapsedMs >= ms) resolve();
-        else requestAnimationFrame(tick);
-      }
-      tick();
-    });
-  }
-
   function handlePlay() {
+    prePlayAudio(boop);
     noSleep.enable();
     state = State.Break;
-    startTimer(500).then(handleTimerComplete);
-    prePlayAudio(boop);
+    currentTimer = timer(500);
+    currentTimer.completed.then(handleTimerComplete);
   }
 
   function handleTimerComplete() {
     if (state === State.Break) {
       state = State.Exercise;
-      startTimer(exercise.duration * 1000).then(handleTimerComplete);
+      currentTimer = timer(exercise.duration * 1000);
+      currentTimer.completed.then(handleTimerComplete);
     } else if (state === State.Exercise) {
       boop.play();
       if (index + 1 < EXERCISES.length) {
         index++;
         state = State.Break;
-        startTimer(BREAK_TIME).then(handleTimerComplete);
+        currentTimer = timer(BREAK_TIME);
+        currentTimer.completed.then(handleTimerComplete);
       } else {
         state = State.Done;
         noSleep.disable();
@@ -101,7 +88,7 @@
     const c = canvas.width / 2;
     const r = canvas.width;
     const startAngle = 1.5;
-    const percentComplete = elapsed / (duration * 1000);
+    const percentComplete = elapsed / duration;
     const endAngle = (percentComplete * 2 + startAngle) % 2;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.beginPath();
@@ -112,7 +99,15 @@
     ctx.fill();
   }
 
-  $: drawCanvas(canvas, elapsedMs, exercise.duration);
+  $: drawCanvas(
+    canvas,
+    $currentTimer?.elapsedMs ?? 0,
+    exercise.duration * 1000
+  );
+
+  onDestroy(() => {
+    currentTimer?.cancel();
+  });
 </script>
 
 <div class="page">
@@ -134,9 +129,9 @@
       {:else if state === State.Break}
         {exercise.duration}
       {:else if state === State.Exercise}
-        {Math.ceil(exercise.duration - elapsed)}
+        {$currentTimer.remaining}
       {:else if state === State.Done}
-        {successEmoji()}
+        {choice(['🙌', '🎉'])}
       {/if}
     </button>
   </main>
