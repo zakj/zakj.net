@@ -193,6 +193,7 @@
     background-color: var(--color-white);
     border-radius: calc(var(--size) / 2);
     border: none;
+    color: inherit;
     display: flex;
     font-family: var(--font-family-display);
     font-size: 84px;
@@ -200,6 +201,7 @@
     font-weight: bold;
     height: var(--size);
     justify-content: center;
+    padding: 0;
     width: var(--size);
     z-index: 1;
   }
