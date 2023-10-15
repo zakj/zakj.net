@@ -12,7 +12,7 @@
   "dependencies": {
     "@astrojs/svelte": "^4.0.3",
     "@fontsource-variable/crimson-pro": "^5.0.14",
-    "@zakj/no-sleep": "^0.13.3",
+    "@zakj/no-sleep": "^0.13.5",
     "astro": "^3.3.0",
     "astrojs-service-worker": "^1.1.0",
     "autoprefixer": "^10.4.16",
