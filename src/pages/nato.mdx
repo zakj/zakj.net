@@ -1,0 +1,27 @@
+---
+layout: $layouts/Text.astro
+title: NATO Alphabet
+---
+
+import alphabet from '$nato';
+import Nato from '$components/Nato.svelte';
+
+# NATO Alphabet
+
+The [NATO phonetic alphabet][wp] is used to clearly distinguish spoken letters—a
+helpful and consistent substitute for "a for apple," etc. I can never remember
+them all when I need them, so here they are for easy reference. Type in the
+input below to display the code words for each letter.
+
+[wp]: https://en.wikipedia.org/wiki/NATO_phonetic_alphabet
+
+<Nato alphabet={alphabet} client:idle />
+
+<aside style="column-width: 10ch;">
+  {[...alphabet.values()].map((v) => (
+    <div>
+      <b>{v[0].toUpperCase()}</b>
+      {v.slice(1)}{' '}
+    </div>
+  ))}
+</aside>

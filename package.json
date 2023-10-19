@@ -10,6 +10,7 @@
     "astro": "astro"
   },
   "dependencies": {
+    "@astrojs/mdx": "^1.1.2",
     "@astrojs/svelte": "^4.0.3",
     "@fontsource-variable/crimson-pro": "^5.0.14",
     "@zakj/no-sleep": "^0.13.5",
