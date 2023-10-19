@@ -38,15 +38,15 @@
   }
   .preview:has(input:is(:focus, .value)) {
     border-radius: calc(var(--input-radius) + var(--input-margin));
-    box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px,
-      rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
+    box-shadow: color-mix(in srgb, currentColor 16%, transparent) 0 10px 36px,
+      color-mix(in srgb, currentColor 6%, transparent) 0 0 0 1px;
   }
 
   input {
     border-radius: var(--input-radius);
     border: none;
-    box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px,
-      rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
+    box-shadow: color-mix(in srgb, currentColor 2%, transparent) 0 1px 3px,
+      color-mix(in srgb, currentColor 15%, transparent) 0 0 0 1px;
     font: inherit;
     line-height: 1.5;
     margin: var(--input-margin);
