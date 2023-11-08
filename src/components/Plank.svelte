@@ -1,5 +1,4 @@
 <script lang="ts">
-  // import HeadMeta from '$lib/HeadMeta.svelte';
   import boopSrc from '$assets/audio/boop.mp3';
   import { choice, prePlayAudio, timer, type Timer } from '$util';
   import NoSleep, { type INoSleep } from '@zakj/no-sleep';
@@ -46,7 +45,7 @@
 
   let noSleep: INoSleep;
   let boop: HTMLAudioElement;
-  if (typeof navigator !== 'undefined') {
+  if (typeof document !== 'undefined') {
     noSleep = new NoSleep();
     boop = new Audio(boopSrc);
   }
@@ -264,6 +263,10 @@
   }
 
   @media screen and (min-width: 750px) {
+    .page {
+      --padding: 36px;
+    }
+
     .circle {
       --size: 350px;
       font-size: 128px;
@@ -282,7 +285,7 @@
 
     h1,
     .exercise {
-      font-size: 30px;
+      font-size: 42px;
     }
   }
 </style>
