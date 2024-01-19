@@ -1,0 +1,16 @@
+---
+layout: $layouts/Text.astro
+title: SVG arc paths
+---
+
+import SvgArcGenerator from '$components/SvgArcGenerator.svelte';
+
+# SVG arc paths
+
+I often write SVGs by hand, and struggle with building arcs (`A` and `a`) due to
+their argument structure. This little tool allows for specifying the start/end
+angles instead of start/end coordinates. The output path assumes a `viewBox` of
+`0 0 100 100` with the arc's circle at the center; use the additional fields to
+change those assumptions.
+
+<SvgArcGenerator client:idle />

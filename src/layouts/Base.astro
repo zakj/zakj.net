@@ -92,11 +92,29 @@ const {
         --font-family-body: Crimson Pro Variable, serif;
         --font-family-display: GT Walsheim, sans-serif;
         --font-family-numeric: GT Walsheim, sans-serif;
+        --font-family-monospace: Menlo, monospace;
+        --font-size-body: fluid(17px, 28px, 390px, 750px);
+        --font-size-small: fluid(12px, 14px, 390px, 750px);
+        --font-size-monospace: fluid(12px, 22px, 390px, 750px);
 
         background: var(--color-bg);
         color: var(--color-fg);
         font-family: var(--font-family-body);
-        font-size: fluid(17px, 28px, 390px, 750px);
+        font-size: var(--font-size-body);
+      }
+
+      code,
+      pre {
+        background-color: color-mix(in srgb, var(--color-fg) 3%, transparent);
+        border-radius: 3px;
+        border: 2px solid color-mix(in srgb, var(--color-fg) 6%, transparent);
+        font-family: var(--font-family-monospace);
+        font-size: var(--font-size-monospace);
+        padding-inline: 0.1em;
+      }
+      pre {
+        padding: 0.5em 0.8em;
+        white-space: pre-wrap;
       }
 
       @media (prefers-color-scheme: dark) {
