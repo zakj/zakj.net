@@ -1,6 +1,7 @@
 <script lang="ts">
   import calendarPlusIcon from '$assets/icons/calendar-plus.svg';
   import circleXIcon from '$assets/icons/circle-x.svg';
+  import { formatDistanceToNow, isFuture } from 'date-fns';
   import { writable } from 'svelte/store';
   import TimeDelta from './TimeDelta.svelte';
 
@@ -15,9 +16,13 @@
     const { subscribe, update } = writable(ts);
 
     subscribe((ts) => {
+      const next = ts.find(isFuture);
+      if (next) {
+        document.title = formatDistanceToNow(next) + ' · Countdown · zakj.net';
+      }
       url.searchParams.delete('t');
       ts.map((d) => d.getTime() / 1000).forEach((s) =>
-        url.searchParams.append('t', s.toString())
+        url.searchParams.append('t', s.toString()),
       );
       history.replaceState({}, '', url.toString());
     });
