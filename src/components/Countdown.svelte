@@ -2,7 +2,7 @@
   import calendarPlusIcon from '$assets/icons/calendar-plus.svg';
   import circleXIcon from '$assets/icons/circle-x.svg';
   import { formatDistanceToNow, isFuture } from 'date-fns';
-  import { writable } from 'svelte/store';
+  import { writable, type Subscriber } from 'svelte/store';
   import TimeDelta from './TimeDelta.svelte';
 
   // A store to sync timers with URL searchParams.
@@ -16,10 +16,6 @@
     const { subscribe, update } = writable(ts);
 
     subscribe((ts) => {
-      const next = ts.find(isFuture);
-      if (next) {
-        document.title = formatDistanceToNow(next) + ' · Countdown · zakj.net';
-      }
       url.searchParams.delete('t');
       ts.map((d) => d.getTime() / 1000).forEach((s) =>
         url.searchParams.append('t', s.toString()),
@@ -44,6 +40,27 @@
       },
     };
   })();
+
+  // Put the next upcoming timer in the document title.
+  const now = (() => {
+    const { subscribe, set } = writable<Date>();
+    const update = () => set(new Date());
+    return {
+      subscribe: (fn: Subscriber<Date>) => {
+        update();
+        subscribe(fn);
+        const interval = setInterval(update, 10_000);
+        return () => clearInterval(interval);
+      },
+    };
+  })();
+  now.subscribe(() => {
+    timers.subscribe((timers) => {
+      const next = timers.find(isFuture);
+      if (!next) return;
+      document.title = formatDistanceToNow(next) + ' · Countdown · zakj.net';
+    });
+  });
 
   let showAddForm = false;
   let value: string;
