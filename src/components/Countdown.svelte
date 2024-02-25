@@ -111,7 +111,7 @@
   :global(body) {
     display: flex;
     flex-direction: column;
-    min-height: 100vh;
+    min-height: 100dvh;
   }
   main {
     display: flex;
@@ -169,5 +169,41 @@
   }
   .add img {
     margin: 0 auto;
+  }
+
+  /* TODO duplicated from elsewhere; move to base? */
+  :root {
+    --input-radius: 5px;
+    --input-margin: 8px;
+    --input-padding: 0.5em;
+  }
+  input {
+    border-radius: var(--input-radius);
+    border: none;
+    box-shadow:
+      color-mix(in srgb, currentColor 2%, transparent) 0 1px 3px,
+      color-mix(in srgb, currentColor 15%, transparent) 0 0 0 1px;
+    font: inherit;
+    line-height: 1.5;
+    margin: var(--input-margin);
+    padding-inline: var(--input-padding);
+  }
+
+  /* TODO copied from input; need to decide on global styles */
+  button {
+    border-radius: var(--input-radius);
+    border: none;
+    box-shadow:
+      color-mix(in srgb, currentColor 2%, transparent) 0 1px 3px,
+      color-mix(in srgb, currentColor 15%, transparent) 0 0 0 1px;
+    font: inherit;
+    line-height: 1.5;
+    margin: var(--input-margin);
+    padding-inline: var(--input-padding);
+  }
+
+  form {
+    /* Fixes a weird vertical-centering bug when the input is empty on Mobile Safari. */
+    display: flex;
   }
 </style>
