@@ -1,7 +1,8 @@
 <script lang="ts">
   import {
-    formatDistanceToNow,
+    formatDuration,
     formatRelative,
+    intervalToDuration,
     isFuture,
     type Locale,
   } from 'date-fns';
@@ -28,14 +29,21 @@
   // A countdown store.
   const remaining = ((end: Date) => {
     const { subscribe, set } = writable<{ distance: string; label: string }>();
-    const update = () =>
+    const update = () => {
+      const now = new Date();
+      const duration = intervalToDuration(
+        end >= now ? { start: now, end } : { start: end, end: now },
+      );
+      duration.seconds = 0; // we don't update with enough granularity to show this
+
       set({
-        distance: formatDistanceToNow(end),
+        distance: formatDuration(duration, { delimiter: ', ' }),
         label: [
           isFuture(end) ? 'until' : 'since',
-          formatRelative(ts, new Date(), { locale }),
+          formatRelative(ts, now, { locale }),
         ].join(' '),
       });
+    };
     return {
       subscribe: (fn: Subscriber<{ distance: string; label: string }>) => {
         subscribe(fn);
