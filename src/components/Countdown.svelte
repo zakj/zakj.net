@@ -78,12 +78,13 @@
   <div class="timers">
     {#each $timers as ts, i}
       <div class="timer">
-        <TimeDelta {ts} />
-        <div>
+        <div class="close-button">
           <button on:click={() => timers.removeAt(i)}>
             <img src={circleXIcon.src} alt="Remove" width="24" height="24" />
           </button>
         </div>
+        <TimeDelta {ts} />
+        <div><!-- spacer  --></div>
       </div>
     {/each}
   </div>
@@ -113,28 +114,29 @@
     flex-direction: column;
     min-height: 100dvh;
   }
+  /* TODO font sizes on mobile especially */
   main {
     display: flex;
     flex-direction: column;
     flex: 1;
     place-content: center;
-    place-items: center;
   }
   .timers {
-    align-items: flex-start;
+    align-items: stretch;
     display: flex;
     flex-direction: column;
     gap: 0.7em;
-    translate: -12px 0; /* ignore remove button when centering */
   }
   footer {
     display: grid;
     margin: 1em;
     place-content: center;
+    /* TODO: footer should get a constant height to avoid wiggle when showing the add form */
   }
 
   :is(.timer button, .add) {
     border: none;
+    box-shadow: none; /* TODO: handle this better when refactoring button styles */
     cursor: pointer;
     opacity: 0.4;
     padding: 0;
@@ -145,10 +147,15 @@
   }
 
   .timer {
-    display: flex;
-    flex-direction: row-reverse;
-    gap: 0.4em;
     align-items: center;
+    display: flex;
+    gap: 0.4em;
+  }
+  .timer > div {
+    flex: 1;
+  }
+  .timer .close-button {
+    text-align: right;
   }
   .timer button {
     background: transparent;
