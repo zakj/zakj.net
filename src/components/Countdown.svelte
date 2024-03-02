@@ -74,17 +74,16 @@
   }
 </script>
 
-<main>
+<main tabindex="-1">
   <div class="timers">
     {#each $timers as ts, i}
-      <div class="timer">
+      <div class="timer" tabindex="-1">
         <div class="close-button">
           <button on:click={() => timers.removeAt(i)}>
             <img src={circleXIcon.src} alt="Remove" width="24" height="24" />
           </button>
         </div>
         <TimeDelta {ts} />
-        <div><!-- spacer  --></div>
       </div>
     {/each}
   </div>
@@ -120,12 +119,12 @@
     flex-direction: column;
     flex: 1;
     place-content: center;
+    place-items: center;
   }
   .timers {
-    align-items: stretch;
-    display: flex;
-    flex-direction: column;
-    gap: 0.7em;
+    display: grid;
+    grid-template-columns: 40px max-content 40px;
+    row-gap: 0.7em;
   }
   footer {
     display: grid;
@@ -147,22 +146,22 @@
   }
 
   .timer {
-    align-items: center;
-    display: flex;
-    gap: 0.4em;
+    display: grid;
+    grid-column: 1 / 4;
+    grid-template-rows: subgrid;
+    grid: subgrid/subgrid;
   }
-  .timer > div {
-    flex: 1;
-  }
-  .timer .close-button {
-    text-align: right;
+  .close-button {
+    grid-column: 1 / 2;
   }
   .timer button {
     background: transparent;
+    display: none;
     opacity: 0;
   }
-  .timer:hover button {
+  .timer:is(:focus, :hover) button {
     opacity: 0.4;
+    display: inline;
   }
   .timer:hover button:hover {
     opacity: 1;
