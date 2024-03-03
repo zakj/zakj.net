@@ -37,7 +37,7 @@
       duration.seconds = 0; // we don't update with enough granularity to show this
 
       set({
-        distance: formatDuration(duration, { delimiter: ', ' }),
+        distance: formatDuration(duration, { delimiter: ', ' }) || '0 minutes',
         label: [
           isFuture(end) ? 'until' : 'since',
           formatRelative(ts, now, { locale }),
