@@ -5,22 +5,37 @@
   import { writable, type Subscriber } from 'svelte/store';
   import TimeDelta from './TimeDelta.svelte';
 
-  // A store to sync timers with URL searchParams.
+  // A store to sync timers with URL hash.
   const timers = (() => {
     const dateSort = (a: Date, b: Date): number => a.getTime() - b.getTime();
-    const url = new URL(document.location.href);
-    const ts: Date[] = url.searchParams
-      .getAll('t')
-      .map((t) => new Date(Number(t) * 1000));
-    ts.sort(dateSort);
-    const { subscribe, update } = writable(ts);
+    const { subscribe, update, set } = writable<Date[]>([]);
+
+    // Migrate from previous searchParams URLs. TODO: remove this later
+    (() => {
+      const ts = new URL(document.location.href).searchParams.getAll('t');
+      if (ts.length < 1) return;
+      document.location.hash = ts.join(',');
+      document.location.search = '';
+    })();
+
+    function updateTs() {
+      const hash = document.location.hash.slice(1);
+      const ts: Date[] = hash
+        .split(',')
+        .filter((x) => x !== '')
+        .map((t) => new Date(Number(t) * 1000));
+      ts.sort(dateSort);
+      set(ts);
+    }
+
+    updateTs();
+    addEventListener('hashchange', updateTs);
 
     subscribe((ts) => {
-      url.searchParams.delete('t');
-      ts.map((d) => d.getTime() / 1000).forEach((s) =>
-        url.searchParams.append('t', s.toString()),
-      );
-      history.replaceState({}, '', url.toString());
+      const url = new URL(document.location.href);
+      url.hash = ts.map((d) => d.getTime() / 1000).join(',');
+      if (url.hash !== document.location.hash)
+        history.pushState({}, '', url.toString());
     });
 
     return {
