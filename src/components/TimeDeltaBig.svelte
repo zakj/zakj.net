@@ -182,4 +182,10 @@
       font-size: 2vw;
     }
   }
+
+  @media (prefers-color-scheme: dark) {
+    .card {
+      background-color: #333;
+    }
+  }
 </style>
