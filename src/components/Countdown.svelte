@@ -4,6 +4,7 @@
   import { formatDistanceToNow, isFuture } from 'date-fns';
   import { writable, type Subscriber } from 'svelte/store';
   import TimeDelta from './TimeDelta.svelte';
+  import TimeDeltaBig from './TimeDeltaBig.svelte';
 
   // A store to sync timers with URL hash.
   const timers = (() => {
@@ -98,7 +99,11 @@
             <img src={circleXIcon.src} alt="Remove" width="24" height="24" />
           </button>
         </div>
-        <TimeDelta {ts} />
+        {#if $timers.length == 1}
+          <TimeDeltaBig {ts} />
+        {:else}
+          <TimeDelta {ts} />
+        {/if}
       </div>
     {/each}
   </div>
