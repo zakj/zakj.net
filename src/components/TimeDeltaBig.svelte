@@ -179,7 +179,7 @@
         / 1.618fr 1fr;
     }
     .card .unit {
-      font-size: 2vw;
+      font-size: 3vw;
     }
   }
 
