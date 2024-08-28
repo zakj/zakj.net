@@ -85,10 +85,24 @@ const {
       }
 
       :root {
-        --color-black: #222;
-        --color-white: #fff;
-        --color-bg: var(--color-white);
+        /* Explicit colors */
+
+        --color-black-h: 0;
+        --color-black-s: 0%;
+        --color-black-l: 13.3%;
+        --color-black: hsl(var(--color-black-h), var(--color-black-s), var(--color-black-l));
+
+        --color-white-h: 0;
+        --color-white-s: 0%;
+        --color-white-l: 100%;
+        --color-white: hsl(var(--color-white-h), var(--color-white-s), var(--color-white-l));
+
+        /* Semantic colors */
         --color-fg: var(--color-black);
+        --color-bg: var(--color-white);
+        --color-bg-elevate: hsl(var(--color-white-h), var(--color-white-s), calc(var(--color-white-l) - 7%));
+
+        /* Fonts */
         --font-family-body: Crimson Pro Variable, serif;
         --font-family-display: GT Walsheim, sans-serif;
         --font-family-numeric: GT Walsheim, sans-serif;
@@ -96,6 +110,25 @@ const {
         --font-size-body: fluid(17px, 28px, 390px, 750px);
         --font-size-small: fluid(12px, 14px, 390px, 750px);
         --font-size-monospace: fluid(12px, 22px, 390px, 750px);
+
+        /* Shadows */
+
+        /* Add an inset glow and light border to handle light/dark colorschemes. */
+        --shadow-border:
+          inset 0 0 0.5px 1px hsla(0, 0%, 100%, 0.075),
+          0 0 0 1px hsla(0, 0%, 0%, 0.05);
+        /* For slightly raised cards. */
+        --shadow-card:
+          var(--shadow-border),
+          hsla(0, 10%, 28%, 0.25) 0px 2px 5px -1px,
+          hsla(0, 0%, 0%, 0.3) 0px 1px 3px -1px;
+        /* For elements that float above their background. */
+        --shadow-float:
+          var(--shadow-border),
+          color-mix(in srgb, var(--color-black) 16%, transparent) 0 10px 36px,
+          /* hsl(var(--color-black-h), var(--color-black-s), calc(var(--color-black-l) * 6)) 0 10px 36px, */
+          /* color-mix(in srgb, currentColor 16%, transparent) 0 10px 36px, */
+          color-mix(in srgb, var(--color-black) 6%, transparent) 0 0 0 1px;
 
         background: var(--color-bg);
         color: var(--color-fg);
@@ -119,8 +152,9 @@ const {
 
       @media (prefers-color-scheme: dark) {
         :root {
-          --color-bg: var(--color-black);
           --color-fg: var(--color-white);
+          --color-bg: var(--color-black);
+          --color-bg-elevate: hsl(var(--color-black-h), var(--color-black-s), calc(var(--color-black-l) + 7%));
         }
       }
 

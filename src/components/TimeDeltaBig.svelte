@@ -118,10 +118,9 @@
   }
 
   .card {
-    background-color: #eee;
+    background-color: var(--color-bg-elevate);
     border-radius: 8px;
-    box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px,
-      rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+    box-shadow: var(--shadow-card);
     display: grid;
     font-family: var(--font-family-display);
     grid-template:
@@ -180,12 +179,6 @@
     }
     .card .unit {
       font-size: 3vw;
-    }
-  }
-
-  @media (prefers-color-scheme: dark) {
-    .card {
-      background-color: #333;
     }
   }
 </style>

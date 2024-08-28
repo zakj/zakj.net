@@ -30,23 +30,21 @@
   }
 
   .preview {
-    border-radius: var(--input-radius);
+    border-radius: calc(var(--input-radius) + var(--input-margin));
     display: flex;
     flex-direction: column;
     margin-block: 1em;
     margin-inline: calc(-1 * var(--input-margin));
   }
   .preview:has(input:is(:focus, .value)) {
-    border-radius: calc(var(--input-radius) + var(--input-margin));
-    box-shadow: color-mix(in srgb, currentColor 16%, transparent) 0 10px 36px,
-      color-mix(in srgb, currentColor 6%, transparent) 0 0 0 1px;
+    background-color: var(--color-bg-elevate);
+    box-shadow: var(--shadow-float);
   }
 
   input {
     border-radius: var(--input-radius);
     border: none;
-    box-shadow: color-mix(in srgb, currentColor 2%, transparent) 0 1px 3px,
-      color-mix(in srgb, currentColor 15%, transparent) 0 0 0 1px;
+    box-shadow: var(--shadow-border);
     font: inherit;
     line-height: 1.5;
     margin: var(--input-margin);
