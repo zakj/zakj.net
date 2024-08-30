@@ -6,27 +6,15 @@
   import TimeDelta from './TimeDelta.svelte';
   import TimeDeltaBig from './TimeDeltaBig.svelte';
 
-  // A store to sync timers with URL hash.
-  const timers = (() => {
-    const dateSort = (a: Date, b: Date): number => a.getTime() - b.getTime();
-    const { subscribe, update, set } = writable<Date[]>([]);
-
-    // Migrate from previous searchParams URLs. TODO: remove this later
-    (() => {
-      const ts = new URL(document.location.href).searchParams.getAll('t');
-      if (ts.length < 1) return;
-      document.location.hash = ts.join(',');
-      document.location.search = '';
-    })();
+  // A store to sync timer state with URL hash.
+  const target = (() => {
+    const { subscribe, set } = writable<Date | null>();
 
     function updateTs() {
-      const hash = document.location.hash.slice(1);
-      const ts: Date[] = hash
+      set(document.location.hash.slice(1)
         .split(',')
         .filter((x) => x !== '')
-        .map((t) => new Date(Number(t) * 1000));
-      ts.sort(dateSort);
-      set(ts);
+        .map((t) => new Date(Number(t) * 1000))[0]);
     }
 
     updateTs();
@@ -34,30 +22,15 @@
 
     subscribe((ts) => {
       const url = new URL(document.location.href);
-      url.hash = ts.map((d) => d.getTime() / 1000).join(',');
+      url.hash = ts ? (ts.getTime() / 1000).toString() : '';
       if (url.hash !== document.location.hash)
         history.pushState({}, '', url.toString());
     });
 
-    return {
-      subscribe,
-      add: (t: Date) => {
-        update((ts) => {
-          ts.push(t);
-          ts.sort(dateSort);
-          return ts;
-        });
-      },
-      removeAt: (i: number) => {
-        update((ts) => {
-          ts.splice(i, 1);
-          return ts;
-        });
-      },
-    };
+    return { subscribe, set };
   })();
 
-  // Put the next upcoming timer in the document title.
+  // Put the timer in the document title.
   const now = (() => {
     const { subscribe, set } = writable<Date>();
     const update = () => set(new Date());
@@ -71,130 +44,49 @@
     };
   })();
   now.subscribe(() => {
-    timers.subscribe((timers) => {
-      const next = timers.find(isFuture);
-      if (!next) return;
-      document.title = formatDistanceToNow(next) + ' · Countdown · zakj.net';
+    target.subscribe((ts) => {
+      let titleParts = ['Countdown', 'zakj.net']
+      if (ts && isFuture(ts)) titleParts = [formatDistanceToNow(ts), ...titleParts];
+      document.title = titleParts.join(' · ');
     });
   });
 
-  let showAddForm = false;
   let value: string;
 
-  function addItem() {
+  function setTargetFromForm() {
     const d = new Date(value);
     if (isNaN(d.getTime())) return;
-    timers.add(d);
-    showAddForm = false;
+    target.set(d)
     value = '';
+  }
+
+  function onKeyDown(e: KeyboardEvent) {
+    if ($target && ['Backspace', 'Delete'].includes(e.key) ) target.set(null)
   }
 </script>
 
-<main tabindex="-1">
-  <div class="timers">
-    {#each $timers as ts, i}
-      <div class="timer" tabindex="-1">
-        <div class="close-button">
-          <button on:click={() => timers.removeAt(i)}>
-            <img src={circleXIcon.src} alt="Remove" width="24" height="24" />
-          </button>
-        </div>
-        {#if $timers.length == 1}
-          <TimeDeltaBig {ts} />
-        {:else}
-          <TimeDelta {ts} />
-        {/if}
-      </div>
-    {/each}
-  </div>
+<svelte:window on:keydown={onKeyDown} />
+
+<main>
+  {#if $target}
+    <TimeDeltaBig ts={$target} />
+  {:else}
+    <form on:submit|preventDefault={setTargetFromForm}>
+      <input type="datetime-local" bind:value />
+      <button type="submit">Countdown!</button>
+    </form>
+  {/if}
 </main>
 
-<footer>
-  {#if showAddForm || $timers.length === 0}
-    <form on:submit|preventDefault={addItem}>
-      <input type="datetime-local" bind:value />
-      <button type="submit">Set</button>
-    </form>
-  {:else}
-    <button class="add" on:click={() => (showAddForm = true)}>
-      <img
-        src={calendarPlusIcon.src}
-        alt="Add countdown"
-        width="24"
-        height="24"
-      />
-    </button>
-  {/if}
-</footer>
 
 <style>
-  :global(body) {
-    display: flex;
-    flex-direction: column;
-    min-height: 100dvh;
-  }
   /* TODO font sizes on mobile especially */
   main {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
+    min-height: 100dvh;
+    display: grid;
     place-content: center;
-    place-items: center;
-  }
-  .timers {
-    display: grid;
-    grid-template-columns: 40px max-content 40px;
-    row-gap: 0.7em;
-  }
-  footer {
-    display: grid;
-    margin: 1em;
-    place-content: center;
-    /* TODO: footer should get a constant height to avoid wiggle when showing the add form */
-  }
-
-  :is(.timer button, .add) {
-    border: none;
-    box-shadow: none; /* TODO: handle this better when refactoring button styles */
-    cursor: pointer;
-    opacity: 0.4;
-    padding: 0;
-    transition: opacity 150ms;
-  }
-  :is(.timer button, .add):hover {
-    opacity: 1;
-  }
-
-  .timer {
-    display: grid;
-    grid-column: 1 / 4;
-    grid-template-rows: subgrid;
-    grid: subgrid/subgrid;
-  }
-  .close-button {
-    grid-column: 1 / 2;
-  }
-  .timer button {
-    background: transparent;
-    display: none;
-    opacity: 0;
-  }
-  .timer:is(:focus, :hover) button {
-    opacity: 0.4;
-    display: inline;
-  }
-  .timer:hover button:hover {
-    opacity: 1;
-  }
-
-  .add {
-    --size: 50px;
-    border-radius: 100%;
-    height: var(--size);
-    width: var(--size);
-  }
-  .add img {
-    margin: 0 auto;
+    outline: 2px solid orange;
+    padding-bottom: 10vh;  /* position contents slightly above center visually */
   }
 
   /* TODO duplicated from elsewhere; move to base? */
@@ -228,8 +120,8 @@
     padding-inline: var(--input-padding);
   }
 
+  /* Fixes a weird vertical-centering bug when the input is empty on Mobile Safari. */
   form {
-    /* Fixes a weird vertical-centering bug when the input is empty on Mobile Safari. */
     display: flex;
   }
 </style>
