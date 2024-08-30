@@ -142,6 +142,12 @@
   .card:nth-child(3) {
     grid-area: small;
   }
+  .card:only-child {
+      grid-area: big / big / small / small;
+  }
+  .card:nth-child(2):not(:has(+ .card)) {
+      grid-area: med / med / small / small;
+  }
 
   .card .num {
     --num-size: 20vw;
