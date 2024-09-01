@@ -1,20 +1,15 @@
 <script lang="ts">
-  import calendarPlusIcon from '$assets/icons/calendar-plus.svg';
-  import circleXIcon from '$assets/icons/circle-x.svg';
   import { formatDistanceToNow, isFuture } from 'date-fns';
   import { writable, type Subscriber } from 'svelte/store';
   import TimeDelta from './TimeDelta.svelte';
-  import TimeDeltaBig from './TimeDeltaBig.svelte';
 
   // A store to sync timer state with URL hash.
   const target = (() => {
     const { subscribe, set } = writable<Date | null>();
 
     function updateTs() {
-      set(document.location.hash.slice(1)
-        .split(',')
-        .filter((x) => x !== '')
-        .map((t) => new Date(Number(t) * 1000))[0]);
+      const hash = document.location.hash.slice(1);
+      if (hash) set(new Date(Number(hash) * 1000));
     }
 
     updateTs();
@@ -45,8 +40,9 @@
   })();
   now.subscribe(() => {
     target.subscribe((ts) => {
-      let titleParts = ['Countdown', 'zakj.net']
-      if (ts && isFuture(ts)) titleParts = [formatDistanceToNow(ts), ...titleParts];
+      let titleParts = ['Countdown', 'zakj.net'];
+      if (ts && isFuture(ts))
+        titleParts = [formatDistanceToNow(ts), ...titleParts];
       document.title = titleParts.join(' · ');
     });
   });
@@ -56,12 +52,12 @@
   function setTargetFromForm() {
     const d = new Date(value);
     if (isNaN(d.getTime())) return;
-    target.set(d)
+    target.set(d);
     value = '';
   }
 
   function onKeyDown(e: KeyboardEvent) {
-    if ($target && ['Backspace', 'Delete'].includes(e.key) ) target.set(null)
+    if ($target && ['Backspace', 'Delete'].includes(e.key)) target.set(null);
   }
 </script>
 
@@ -69,7 +65,7 @@
 
 <main>
   {#if $target}
-    <TimeDeltaBig ts={$target} />
+    <TimeDelta ts={$target} />
   {:else}
     <form on:submit|preventDefault={setTargetFromForm}>
       <input type="datetime-local" bind:value />
@@ -78,7 +74,6 @@
   {/if}
 </main>
 
-
 <style>
   /* TODO font sizes on mobile especially */
   main {
@@ -86,7 +81,7 @@
     display: grid;
     place-content: center;
     outline: 2px solid orange;
-    padding-bottom: 10vh;  /* position contents slightly above center visually */
+    padding-bottom: 10vh; /* position contents slightly above center visually */
   }
 
   /* TODO duplicated from elsewhere; move to base? */
@@ -98,8 +93,7 @@
   input {
     border-radius: var(--input-radius);
     border: none;
-    box-shadow:
-      color-mix(in srgb, currentColor 2%, transparent) 0 1px 3px,
+    box-shadow: color-mix(in srgb, currentColor 2%, transparent) 0 1px 3px,
       color-mix(in srgb, currentColor 15%, transparent) 0 0 0 1px;
     font: inherit;
     line-height: 1.5;
@@ -111,8 +105,7 @@
   button {
     border-radius: var(--input-radius);
     border: none;
-    box-shadow:
-      color-mix(in srgb, currentColor 2%, transparent) 0 1px 3px,
+    box-shadow: color-mix(in srgb, currentColor 2%, transparent) 0 1px 3px,
       color-mix(in srgb, currentColor 15%, transparent) 0 0 0 1px;
     font: inherit;
     line-height: 1.5;
