@@ -1,4 +1,40 @@
+import type { GetImageResult } from 'astro';
+import type { Action } from 'svelte/action';
 import { writable, type Readable } from 'svelte/store';
+
+// TODO there's probably a better place for this to live, but it needs to be
+// importable between astro and svelte.
+export type Image = {
+  id: string;
+  date: Date;
+  description: string;
+  tags: Set<string>;
+  alt: string;
+  full: GetImageResult;
+  mobile: GetImageResult;
+  thumb: GetImageResult;
+  placeholder: string;
+};
+
+export const DESKTOP_WIDTH = 750;
+export const isBrowser = !import.meta.env.SSR;
+
+// Workaround for https://github.com/sveltejs/svelte/issues/3105
+export const disableScroll: Action<HTMLBodyElement, boolean> = (
+  node,
+  toggled: boolean
+) => {
+  const name = 'no-scroll';
+  node.classList.toggle(name, toggled);
+  return {
+    update(toggled: boolean) {
+      node.classList.toggle(name, toggled);
+    },
+    destroy() {
+      node.classList.remove(name);
+    },
+  };
+};
 
 // Return a random item from the passed-in list.
 export const choice = <T>(xs: T[]) => xs[Math.floor(Math.random() * xs.length)];
@@ -19,6 +55,8 @@ export type Timer = Readable<TimerValue> & {
   cancel: () => void;
   completed: Promise<void>;
 };
+
+// TODO move to store.ts
 
 // Starts a countdown timer and returns a readable store with elapsedMs
 // (integer), progress (0 to 1 as a string for precision clamping) and

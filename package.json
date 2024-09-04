@@ -13,16 +13,14 @@
     "@astrojs/mdx": "^2.0.6",
     "@astrojs/svelte": "^5.0.3",
     "@fontsource-variable/crimson-pro": "^5.0.17",
+    "@lehoczky/postcss-fluid": "^1.0.3",
     "@zakj/no-sleep": "^0.13.5",
     "astro": "^4.2.2",
     "astrojs-service-worker": "^2.0.0",
     "autoprefixer": "^10.4.17",
     "date-fns": "^3.3.1",
+    "exifreader": "^4.23.3",
+    "sharp": "0.32.6",
     "svelte": "^4.2.9"
-  },
-  "devDependencies": {
-    "@lehoczky/postcss-fluid": "^1.0.3",
-    "prettier": "^3.2.4",
-    "sharp": "^0.33.2"
   }
 }

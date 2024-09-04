@@ -1,0 +1,89 @@
+---
+import Photos_ from '$components/Photos.svelte';
+import Base from '$layouts/Base.astro';
+import type { Image } from '$util';
+import { getImage } from 'astro:assets';
+import crypto from 'crypto';
+import type { StringArrayTag, XmpTag } from 'exifreader';
+import ExifReader from 'exifreader';
+import { basename } from 'path';
+import { AstroError } from 'node_modules/astro/dist/core/errors';
+import sharp from 'sharp';
+
+const seenIds = new Set();
+function uniqueId(path: string): string {
+  const hash = crypto.createHash('md5')
+  hash.update(basename(path))
+  const md5 = hash.digest('hex')
+  let len = 8;
+  while (seenIds.has(md5.slice(0, len))) ++len;
+  const uid = md5.slice(0, len)
+  seenIds.add(uid);
+  return uid;
+}
+
+function isStringArrayTag(v: StringArrayTag | XmpTag | undefined): v is StringArrayTag {
+  return typeof v?.value === 'string'
+    || (Array.isArray(v?.value) && typeof v.value[0] === 'string')
+}
+
+function parseExifDate(s: StringArrayTag): Date {
+  const [y, m, d, H, M, S] = s.value[0].split(/[: ]/).map(v => Number(v))
+  return new Date(Date.UTC(y, m, d, H, M, S))
+}
+
+let imageImports: Record<string, any>[] = [];
+try {
+  imageImports = await Astro.glob('$assets/photos/*')
+} catch (e) {
+  if (e instanceof AstroError && e.name === 'AstroGlobNoMatch') {
+    console.warn(e.title)
+  }
+  else throw e
+}
+
+const images: Image[] = await Promise.all(imageImports.map(async (imported) => {
+  const img = imported.default;
+  const path = img.fsPath;
+
+  // DateTimeOriginal: when the photo was first taken (vs when it was digitized)
+  // title: Photos "title"; used for a description
+  // description: Photos "caption"; used for alt attribute content
+  // Keywords: Photos "keywords"; used for tags
+  // PersonInImage: Photos "faces"; supplemental tags
+  const exif = await ExifReader.load(path, {async: true});
+  const dto = exif.DateTimeOriginal;
+  if (!isStringArrayTag(dto)) throw new Error('invalid DateTimeOriginal: ' + path);
+  const date = parseExifDate(dto);
+  const description = exif.title?.description ?? '';
+  const alt = exif.description?.description ?? '';
+  const tags = [
+    ...(Array.isArray(exif.Keywords) ? exif.Keywords.map(v => v.description) : []),
+    ...(Array.isArray(exif.PersonInImage?.value) ? exif.PersonInImage.value.map(v => v.description.toLowerCase()) : []),
+  ]
+
+  const placeholderData = await sharp(path)
+    .webp()
+    .resize({height: 16})
+    .modulate({saturation: 1.2})
+    .flatten()
+    .normalise()
+    .toBuffer()
+
+  return {
+    id: uniqueId(path),
+    date,
+    description,
+    tags: new Set(tags.filter(t => t.match(/^[a-z-]+$/))),
+    alt,
+    full: await getImage({src: img, format: 'webp'}),
+    thumb: await getImage({src: img, format: 'webp', height: 500}),
+    mobile: await getImage({src: img, format: 'webp', width: 1400}),
+    placeholder: `data:image/webp;base64,${placeholderData.toString('base64')}`,
+   }
+}))
+---
+
+<Base title="Photos" description="My local Instagram." >
+  <Photos_ {images} client:idle />
+</Base>
