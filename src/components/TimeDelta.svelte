@@ -175,9 +175,9 @@
 
   @media screen and (max-width: 750px) {
     .container {
-      --height: 40vh;
-      height: var(--height);
-      width: calc(var(--height) / var(--phi));
+      --width: 70vw;
+      height: calc(var(--width) * var(--phi));
+
       grid-template:
         'big big' 1.618fr
         'med small' 1fr
