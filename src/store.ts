@@ -1,5 +1,10 @@
 import { DESKTOP_WIDTH, isBrowser } from '$util';
-import { readable, writable, type Writable } from 'svelte/store';
+import {
+  readable,
+  writable,
+  type Subscriber,
+  type Writable,
+} from 'svelte/store';
 
 // Track whether the current viewport is wider than mobile.
 export const isDesktopMedia = readable<boolean>(false, (set) => {
@@ -11,10 +16,16 @@ export const isDesktopMedia = readable<boolean>(false, (set) => {
   return () => mq.removeEventListener('change', update);
 });
 
-// Tracks and updates the current URL fragment.
+// Track and updates the current URL fragment. Provides a `once` helper to
+// subscribe and immediately unsubscribe, for the common case of responding to
+// the fragment on load but not tracking it afterwards. Ignored in SSR mode.
 // TODO reuse this elsewhere, currently only photos
-export const urlHash: Omit<Writable<string>, 'update'> = (() => {
-  if (!isBrowser) return writable<string>('');
+export const urlHash: Omit<Writable<string>, 'update'> & {
+  once: (run: Subscriber<string>) => void;
+} = (() => {
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  if (!isBrowser) return { ...writable<string>(''), once: () => {} };
+
   const { subscribe, set } = writable<string>('', (set) => {
     const updateValue = () => set(document.location.hash.slice(1));
     updateValue();
@@ -23,6 +34,7 @@ export const urlHash: Omit<Writable<string>, 'update'> = (() => {
   });
 
   return {
+    once: (run: Subscriber<string>) => subscribe(run)(),
     subscribe,
     set: (value: string) => {
       set(value);

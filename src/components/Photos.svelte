@@ -26,7 +26,7 @@
     new Set<string>()
   );
 
-  urlHash.subscribe((value) => {
+  urlHash.once((value) => {
     const params = Object.fromEntries(
       value.split(';').map((kv) => kv.split(':'))
     );

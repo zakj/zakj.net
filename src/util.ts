@@ -65,7 +65,7 @@ export type Timer = Readable<TimerValue> & {
 // successfully completes.
 export function timer(ms: number): Timer {
   const start = performance.now();
-  const { set, subscribe } = writable({
+  const { set, subscribe } = writable<TimerValue>({
     elapsedMs: 0,
     progress: '0',
     remaining: 0,
