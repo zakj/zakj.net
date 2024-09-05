@@ -129,7 +129,7 @@
       'unit' 1fr;
     justify-items: center;
     align-items: flex-end;
-    padding: 0.3em 0;
+    padding: 0.6em 0;
     line-height: 0.7;
   }
 
@@ -183,8 +183,11 @@
         'med small' 1fr
         / 1.618fr 1fr;
     }
+    .card .num {
+      --num-size: 35vw;
+    }
     .card .unit {
-      font-size: 3vw;
+      font-size: 3.5vw;
     }
   }
 </style>
