@@ -1,6 +1,8 @@
 <script lang="ts">
   import { disableScroll, type Image } from '$util';
   import { isDesktopMedia, urlHash } from '$store';
+  import Icon from '$components/Icon.svelte';
+  import iconFilterOff from '$assets/icons/filter-off.svg';
   import ImageGrid from './ImageGrid.svelte';
   import ZoomedImage from './ZoomedImage.svelte';
 
@@ -63,21 +65,30 @@
 
   // TODO rss
   // TODO exclude full images from service worker?
+  // TODO header
+  // TODO tag button fg color is blue on mobile
 </script>
 
 <svelte:body use:disableScroll={!!($isDesktopMedia && selected)} />
 
-<div class="filters">
-  Tags:
-  {#each allTags as tag (tag)}
-    <button
-      class:tag
-      class:selected={filterTags.has(tag)}
-      disabled={!availableTags.has(tag)}
-      on:click={() => toggleTag(tag)}>{tag}</button
-    >&nbsp;
-  {/each}
-</div>
+<header>
+  <h1>Photos</h1>
+  <div class="filters">
+    {#each allTags as tag (tag)}
+      <button
+        class:tag
+        class:selected={filterTags.has(tag)}
+        disabled={!availableTags.has(tag)}
+        on:click={() => toggleTag(tag)}>{tag}</button
+      >
+    {/each}
+    {#if filterTags.size}
+      <button on:click={() => (filterTags = new Set())} class="icon">
+        <Icon src={iconFilterOff} />
+      </button>
+    {/if}
+  </div>
+</header>
 
 <ImageGrid images={filteredImages} on:select={({ detail }) => select(detail)} />
 
@@ -91,17 +102,33 @@
 
 <style>
   /* TODO: style tags/filters */
-  .filters {
+  header {
     margin: 1em;
+  }
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5em;
+    margin: 1em 0;
   }
   button {
     /* TODO: global button styles? */
     border-radius: 4px;
     border: none;
     box-shadow: var(--shadow-card);
-    margin: 0 0.1em;
+    color: var(--color-fg);
+    padding: 0 0.5em;
+  }
+  button:disabled {
+    /* TODO relative colors aren't broadly supported */
+    color: oklch(0.25 0 0 / 0.3);
   }
   button.tag {
+  }
+  button.icon {
+    display: block;
+    padding: 0 0.3em;
+    text-align: center;
   }
   button.tag.selected {
     outline: 2px solid black;

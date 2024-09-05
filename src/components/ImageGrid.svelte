@@ -67,7 +67,6 @@
     display: flex;
     flex-direction: column;
     gap: 6px;
-    padding: 6px;
   }
 
   .img-container {
@@ -77,19 +76,6 @@
     position: relative;
     width: 100%;
   }
-
-  /* TODO do I want a hover state? */
-  /* .img-container:hover {
-    box-shadow: var(--shadow-float);
-    scale: 1.1;
-    z-index: 1;
-    border-radius: 4px;
-  } */
-
-  /* .img-container:hover ~ .img-container,
-  .img-container:has(~ .img-container:hover) {
-    filter: blur(2px);
-  } */
 
   .placeholder {
     background-position: center;
@@ -130,6 +116,7 @@
     .grid {
       flex-direction: row;
       flex-wrap: wrap;
+      padding-inline: 6px;
     }
     .img-container {
       height: 250px;
