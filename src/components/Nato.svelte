@@ -4,12 +4,17 @@
   let value: string = '';
   let output: string[] = [];
   let inputEl: HTMLInputElement;
-  $: output = [...value.trim()].map((c) => alphabet.get(c.toLowerCase()) ?? c);
+  $: output = [...value.trim()]
+    .filter((c) => c !== ' ')
+    .map((c) => alphabet.get(c.toLowerCase()) ?? c);
 
   function onKeyDown(e: KeyboardEvent) {
-    const key = e.key.toLowerCase();
-    if (e.altKey || e.ctrlKey || e.metaKey || !key.match(/^[a-z]$/)) return;
-    inputEl.focus();
+    if (e.altKey || e.ctrlKey || e.metaKey) return;
+    if (e.key === 'Escape') {
+      if (value.length > 0) value = '';
+      else inputEl.blur();
+    }
+    if (e.key.toLowerCase().match(/^[a-z]$/)) inputEl.focus();
   }
 </script>
 
