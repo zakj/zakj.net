@@ -7,10 +7,8 @@
   export let image: Image;
   export let fromNode: Element;
 
-  let loaded = true;
-  let animated = true;
-  let done = false;
-  $: done = loaded && animated;
+  // Animating a full-size image is slow; better to animate the thumb and then switch.
+  let animating = false;
 
   const dispatch = createEventDispatcher<{ close: null }>();
   const close = () => dispatch('close');
@@ -47,12 +45,13 @@
   }
 
   $: if (image) {
-    loaded = false;
-    new Promise<void>(() => {
-      const img = new Image();
-      img.src = image.full.src;
-      img.addEventListener('load', () => (loaded = true));
-    });
+    // We don't show the image while animating, but preloading it helps.
+    const img = new Image();
+    img.src = image.full.src;
+  }
+
+  function bgUrl(hrefs: string[]): string {
+    return hrefs.map((h) => `url(${h})`).join(',');
   }
 </script>
 
@@ -63,12 +62,13 @@
   <div class="backdrop" transition:fade={{ duration: 200 }} />
   <figure
     transition:zoomFromElement={fromNode}
-    on:introstart={() => (animated = false)}
-    on:introend={() => (animated = true)}
+    on:introstart={() => (animating = true)}
+    on:introend={() => (animating = false)}
     style:aspect-ratio={image.full.attributes.width /
       image.full.attributes.height}
-    style:background-image={`${done ? `url(${image.full.src}),` : ''}
-            url(${image.thumb.src})`}
+    style:background-image={animating
+      ? bgUrl([image.thumb.src])
+      : bgUrl([image.full.src, image.thumb.src])}
   >
     <!-- TODO {image.description} -->
   </figure>
