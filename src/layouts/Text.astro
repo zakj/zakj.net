@@ -20,13 +20,14 @@ const props: Props =
   }
 
   body {
-    --bg-gradient-color: rgb(45, 61, 63, 0.2);
+    --color-bg-1: oklch(from var(--color-bg) .98 c h);
+    --color-bg-2: oklch(from var(--color-accent) .2 c h / .1);
+
     background-image: linear-gradient(
       121deg,
-      transparent 60vh,
-      var(--bg-gradient-color)
+      var(--color-bg-1) 60vh,
+      var(--color-bg-2)
     );
-    background-color: #f8f8f8;
     display: grid;
     grid-template-columns:
       [full-start]
@@ -57,9 +58,8 @@ const props: Props =
 
   @media (prefers-color-scheme: dark) {
     body {
-      /* TODO: tune colors */
-      --bg-gradient-color: rgba(44, 130, 81, 0.2);
-      background: #1f1f1f;
+      --color-bg-1: oklch(from var(--color-bg) .24 c h);
+      --color-bg-2: oklch(from var(--color-accent) .5 c h / .1);
     }
   }
 

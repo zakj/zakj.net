@@ -1,0 +1,111 @@
+body.no-scroll {
+  overflow: hidden;
+}
+
+*:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 1px;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-family-display);
+  line-height: 1;
+  text-transform: uppercase;
+  text-wrap: pretty; /* lacks browser support as of 2024 */
+}
+h1 {
+  font-size: fluid(30px, 70px, 390px, 750px);
+}
+h2 {
+  font-size: fluid(25px, 50px, 390px, 750px);
+}
+h3 {
+  font-size: fluid(20px, 35px, 390px, 750px);
+}
+
+a {
+  color: inherit;
+  text-decoration-color: color-mix(in srgb, var(--color-fg) 20%, transparent);
+  text-decoration-thickness: 0.07em;
+  text-underline-position: from-font;
+  transition: text-decoration-color 150ms ease-in-out;
+  &:hover {
+    text-decoration-color: inherit;
+  }
+  body.loading:not(.no-js) & {
+    /* Hide underlines until the font is loaded. */
+    text-decoration-line: none;
+  }
+}
+
+@property --color {
+  syntax: '<color>';
+  initial-value: currentColor;
+  inherits: false;
+}
+
+/* Reset button styles so I can use button elements for interaction. */
+button {
+  background-color: transparent;
+  border: none;
+  color: var(--color-black);
+  cursor: pointer;
+  padding: 0;
+}
+
+button.button {
+  --color: oklch(from var(--color-accent) 0.8 c h);
+
+  background: linear-gradient(
+    155deg,
+    var(--color),
+    oklch(from var(--color-accent) 0.65 c h)
+  );
+  border-radius: var(--radius-s);
+  box-shadow: var(--shadow-border);
+  padding-inline: 0.5em;
+  transition: --color 100ms ease-in;
+
+  &:hover:not(:disabled) {
+    --color: oklch(from var(--color-accent) 0.9 c h);
+  }
+  &:active:not(:disabled) {
+    background: linear-gradient(
+      155deg,
+      oklch(from var(--color-accent) 0.75 c h),
+      oklch(from var(--color-accent) 0.8 c h)
+    );
+  }
+  &:disabled {
+    background: oklch(from var(--color) calc(l * 1.15) 0 h);
+    color: oklch(from var(--color-black) 0.7 c h);
+  }
+}
+
+/* TODO consider line-height: 1.5 for button/input */
+input {
+  border-radius: var(--radius-s);
+  border: none;
+  box-shadow: var(--shadow-border);
+  padding-block: 1px;
+  padding-inline: var(--padding-input);
+}
+
+code,
+pre {
+  background-color: oklch(from var(--color-accent) l c h / 0.1);
+  border-radius: var(--radius-s);
+  box-shadow: var(--shadow-border);
+  font-family: var(--font-family-monospace);
+  font-size: var(--font-size-monospace);
+}
+code {
+  display: inline-block;
+  padding-inline: 0.3em;
+}
+pre {
+  padding: 0.5em 0.8em;
+  white-space: pre-wrap;
+}

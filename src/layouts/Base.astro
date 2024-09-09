@@ -1,7 +1,9 @@
 ---
 import defaultCoverImage from '$assets/og-image.webp';
 import PreloadFont from '$components/PreloadFont.astro';
-import '$reset.css';
+import '$style/reset.css';
+import '$style/base.css';
+import '$style/defaults.css';
 import '@fontsource-variable/crimson-pro';
 import fontCrimsonPro from '@fontsource-variable/crimson-pro/files/crimson-pro-latin-wght-normal.woff2';
 
@@ -66,130 +68,5 @@ const {
       );
     </script>
     <slot />
-
-    <style is:global>
-      /* @font-face {
-        font-display: fallback;
-        font-family: GT Walsheim;
-        font-style: normal;
-        font-weight: normal;
-        src: url(/fonts/GT-Walsheim-Bold.woff2) format('woff2');
-      } */
-
-      @font-face {
-        font-display: fallback;
-        font-family: GT Walsheim;
-        font-style: normal;
-        font-weight: bold;
-        src: url(/fonts/GT-Walsheim-Black.woff2) format('woff2');
-      }
-
-      :root {
-        /* Explicit colors */
-
-        --color-black-h: 0;
-        --color-black-s: 0%;
-        --color-black-l: 13.3%;
-        --color-black: hsl(var(--color-black-h), var(--color-black-s), var(--color-black-l));
-
-        --color-white-h: 0;
-        --color-white-s: 0%;
-        --color-white-l: 100%;
-        --color-white: hsl(var(--color-white-h), var(--color-white-s), var(--color-white-l));
-
-        /* Semantic colors */
-        --color-fg: var(--color-black);
-        --color-bg: var(--color-white);
-        --color-bg-elevate: hsl(var(--color-white-h), var(--color-white-s), calc(var(--color-white-l) - 7%));
-
-        /* Fonts */
-        --font-family-body: Crimson Pro Variable, serif;
-        --font-family-display: GT Walsheim, sans-serif;
-        --font-family-numeric: GT Walsheim, sans-serif;
-        --font-family-monospace: Menlo, monospace;
-        --font-size-body: fluid(17px, 28px, 390px, 750px);
-        --font-size-small: fluid(12px, 14px, 390px, 750px);
-        --font-size-monospace: fluid(12px, 22px, 390px, 750px);
-
-        /* Shadows */
-
-        /* Add an inset glow and light border to handle light/dark colorschemes. */
-        --shadow-border:
-          inset 0 0 0.5px 1px hsla(0, 0%, 100%, 0.075),
-          0 0 0 1px hsla(0, 0%, 0%, 0.05);
-        /* For slightly raised cards. */
-        --shadow-card:
-          var(--shadow-border),
-          hsla(0, 10%, 28%, 0.25) 0px 2px 5px -1px,
-          hsla(0, 0%, 0%, 0.3) 0px 1px 3px -1px;
-        /* For elements that float above their background. */
-        --shadow-float:
-          var(--shadow-border),
-          color-mix(in srgb, var(--color-black) 16%, transparent) 0 10px 36px,
-          /* hsl(var(--color-black-h), var(--color-black-s), calc(var(--color-black-l) * 6)) 0 10px 36px, */
-          /* color-mix(in srgb, currentColor 16%, transparent) 0 10px 36px, */
-          color-mix(in srgb, var(--color-black) 6%, transparent) 0 0 0 1px;
-
-        background: var(--color-bg);
-        color: var(--color-fg);
-        font-family: var(--font-family-body);
-        font-size: var(--font-size-body);
-      }
-
-      code,
-      pre {
-        background-color: color-mix(in srgb, var(--color-fg) 3%, transparent);
-        border-radius: 3px;
-        border: 2px solid color-mix(in srgb, var(--color-fg) 6%, transparent);
-        font-family: var(--font-family-monospace);
-        font-size: var(--font-size-monospace);
-        padding-inline: 0.1em;
-      }
-      pre {
-        padding: 0.5em 0.8em;
-        white-space: pre-wrap;
-      }
-
-      @media (prefers-color-scheme: dark) {
-        :root {
-          --color-fg: var(--color-white);
-          --color-bg: var(--color-black);
-          --color-bg-elevate: hsl(var(--color-black-h), var(--color-black-s), calc(var(--color-black-l) + 7%));
-        }
-      }
-
-      h1,
-      h2,
-      h3 {
-        font-family: var(--font-family-display);
-        font-size: fluid(30px, 70px, 390px, 750px); /* TODO: h2 h3 */
-        line-height: 1;
-        text-transform: uppercase;
-        /* TODO: lacks browser support */
-        text-wrap: pretty;
-      }
-
-      a {
-        color: inherit;
-        text-decoration-color: color-mix(
-          in srgb,
-          var(--color-fg) 20%,
-          transparent
-        );
-        text-decoration-thickness: 0.07em;
-        text-underline-position: from-font;
-        transition: text-decoration-color 150ms ease-in-out;
-      }
-      a:hover {
-        text-decoration-color: inherit;
-      }
-
-      body.loading:not(.no-js) a {
-        text-decoration-line: none;
-      }
-      body.no-scroll {
-        overflow: hidden;
-      }
-    </style>
   </body>
 </html>

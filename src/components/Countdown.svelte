@@ -69,7 +69,7 @@
   {:else}
     <form on:submit|preventDefault={setTargetFromForm}>
       <input type="datetime-local" bind:value />
-      <button type="submit">Countdown!</button>
+      <button class="button" type="submit">Countdown!</button>
     </form>
   {/if}
 </main>
@@ -84,37 +84,9 @@
     padding-bottom: 10vh; /* position contents slightly above center visually */
   }
 
-  /* TODO duplicated from elsewhere; move to base? */
-  :root {
-    --input-radius: 5px;
-    --input-margin: 8px;
-    --input-padding: 0.5em;
-  }
-  input {
-    border-radius: var(--input-radius);
-    border: none;
-    box-shadow: color-mix(in srgb, currentColor 2%, transparent) 0 1px 3px,
-      color-mix(in srgb, currentColor 15%, transparent) 0 0 0 1px;
-    font: inherit;
-    line-height: 1.5;
-    margin: var(--input-margin);
-    padding-inline: var(--input-padding);
-  }
-
-  /* TODO copied from input; need to decide on global styles */
-  button {
-    border-radius: var(--input-radius);
-    border: none;
-    box-shadow: color-mix(in srgb, currentColor 2%, transparent) 0 1px 3px,
-      color-mix(in srgb, currentColor 15%, transparent) 0 0 0 1px;
-    font: inherit;
-    line-height: 1.5;
-    margin: var(--input-margin);
-    padding-inline: var(--input-padding);
-  }
-
   /* Fixes a weird vertical-centering bug when the input is empty on Mobile Safari. */
   form {
     display: flex;
+    gap: 8px;
   }
 </style>

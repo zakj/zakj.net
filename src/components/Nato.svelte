@@ -1,7 +1,7 @@
 <script lang="ts">
   export let alphabet: Map<string, string>;
 
-  let value: string = '';
+  let value = '';
   let output: string[] = [];
   let inputEl: HTMLInputElement;
   $: output = [...value.trim()]
@@ -29,38 +29,28 @@
 
 <style>
   :root {
-    --input-radius: 5px;
-    --input-margin: 8px;
-    --input-padding: 0.5em;
+    --preview-padding: 8px;
   }
 
   .preview {
-    border-radius: calc(var(--input-radius) + var(--input-margin));
+    border-radius: calc(var(--radius-s) + var(--preview-padding));
     display: flex;
     flex-direction: column;
+    gap: var(--preview-padding);
     margin-block: 1em;
-    margin-inline: calc(-1 * var(--input-margin));
+    margin-inline: calc(-1 * var(--preview-padding));
+    padding: var(--preview-padding);
   }
   .preview:has(input:is(:focus, .value)) {
     background-color: var(--color-bg-elevate);
     box-shadow: var(--shadow-float);
   }
 
-  input {
-    border-radius: var(--input-radius);
-    border: none;
-    box-shadow: var(--shadow-border);
-    font: inherit;
-    line-height: 1.5;
-    margin: var(--input-margin);
-    padding-inline: var(--input-padding);
-  }
-  input:focus {
+  input:focus-visible {
     outline: none;
   }
 
-  .preview p {
-    padding-inline: var(--input-padding);
-    margin-block: var(--input-margin);
+  p {
+    margin-inline: var(--padding-input);
   }
 </style>

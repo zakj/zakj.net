@@ -1,8 +1,7 @@
 <script lang="ts">
   import { disableScroll, type Image } from '$util';
   import { isDesktopMedia, urlHash } from '$store';
-  import Icon from '$components/Icon.svelte';
-  import iconFilterOff from '$assets/icons/filter-off.svg';
+  import iconFilterOff from '$assets/icons/filter-off.svg?raw';
   import ImageGrid from './ImageGrid.svelte';
   import ZoomedImage from './ZoomedImage.svelte';
 
@@ -67,6 +66,7 @@
   // TODO exclude full images from service worker?
   // TODO header
   // TODO tag button fg color is blue on mobile
+  // TODO tag buttons are broken fg color on mobile dark mode
 </script>
 
 <svelte:body use:disableScroll={!!($isDesktopMedia && selected)} />
@@ -83,8 +83,12 @@
       >
     {/each}
     {#if filterTags.size}
-      <button on:click={() => (filterTags = new Set())} class="icon">
-        <Icon src={iconFilterOff} />
+      <button
+        on:click={() => (filterTags = new Set())}
+        class="icon"
+        aria-label="Clear filters"
+      >
+        {@html iconFilterOff}
       </button>
     {/if}
   </div>
@@ -111,26 +115,28 @@
     gap: 0.5em;
     margin: 1em 0;
   }
-  button {
-    /* TODO: global button styles? */
+  .tag {
     border-radius: 4px;
     border: none;
     box-shadow: var(--shadow-card);
     color: var(--color-fg);
     padding: 0 0.5em;
+    &.selected {
+      outline: 2px solid var(--color-fg);
+      box-shadow: none;
+    }
+    &:disabled {
+      box-shadow: var(--shadow-border);
+      color: oklch(from var(--color-fg) l c h / 0.4);
+    }
   }
-  button:disabled {
-    /* TODO relative colors aren't broadly supported */
-    color: oklch(0.25 0 0 / 0.3);
-  }
-  button.tag {
-  }
-  button.icon {
+  .icon {
     display: block;
     padding: 0 0.3em;
     text-align: center;
   }
-  button.tag.selected {
-    outline: 2px solid black;
+  .icon :global(svg) {
+    height: fluid(16px, 24px, 390px, 750px);
+    stroke: var(--color-fg);
   }
 </style>

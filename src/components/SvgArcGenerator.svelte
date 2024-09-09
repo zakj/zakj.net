@@ -23,7 +23,7 @@
     y: number,
     r: number,
     startDegrees: number,
-    endDegrees: number,
+    endDegrees: number
   ) {
     const start = polarToCartesian(x, y, r, endDegrees);
     const end = polarToCartesian(x, y, r, startDegrees);
@@ -61,7 +61,7 @@
     <path
       d={path}
       fill="none"
-      stroke="currentColor"
+      stroke="var(--color-accent)"
       stroke-width={r / 4}
       stroke-linecap="round"
     />
@@ -71,12 +71,6 @@
 <pre>{path}</pre>
 
 <style>
-  :root {
-    --input-radius: 5px;
-    --input-margin: 8px;
-    --input-padding: 0.5em;
-  }
-
   form {
     display: flex;
     margin-block: 1em;
@@ -106,26 +100,12 @@
     white-space: nowrap;
   }
   label input {
-    margin: 0;
     font-family: var(--font-family-body);
     font-size: var(--font-size-body);
   }
 
   svg {
     max-width: 40%;
-  }
-
-  /* TODO duplicated from nato; move to base? */
-  input {
-    border-radius: var(--input-radius);
-    border: none;
-    box-shadow:
-      color-mix(in srgb, currentColor 2%, transparent) 0 1px 3px,
-      color-mix(in srgb, currentColor 15%, transparent) 0 0 0 1px;
-    font: inherit;
-    line-height: 1.5;
-    margin: var(--input-margin);
-    padding-inline: var(--input-padding);
   }
 
   input[type='number'] {
@@ -137,8 +117,5 @@
     right: 0;
     top: 0;
     padding-inline: 2px;
-  }
-  input:focus {
-    outline: none;
   }
 </style>

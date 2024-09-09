@@ -1,0 +1,70 @@
+@font-face {
+  font-display: fallback;
+  font-family: GT Walsheim;
+  font-style: normal;
+  font-weight: bold;
+  src: url(/fonts/GT-Walsheim-Black.woff2) format('woff2');
+}
+
+:root {
+  /* Colors */
+  --color-black: oklch(0.25 0 0);
+  --color-white: oklch(1 0 0);
+  --color-shroom: oklch(0.6 0.026 70);
+
+  --color-fg: var(--color-black);
+  --color-bg: var(--color-white);
+  --color-accent: var(--color-shroom);
+  /* TODO mix in some accent? */
+  --color-bg-elevate: oklch(from var(--color-white) calc(l - 0.06) c h);
+
+  /* Fonts */
+  --font-family-body: Crimson Pro Variable, serif;
+  --font-family-display: GT Walsheim, sans-serif;
+  --font-family-numeric: GT Walsheim, sans-serif;
+  --font-family-monospace: Menlo, monospace;
+  --font-size-body: fluid(17px, 28px, 390px, 750px);
+  --font-size-small: fluid(12px, 14px, 390px, 750px);
+  --font-size-monospace: fluid(12px, 20px, 390px, 750px);
+
+  /* TODO maybe just use s/l and no semantics
+  /* Corners */
+  /* --radius-input */
+  --radius-s: 5px;
+  --radius-l: 8px;
+  --radius-card: var(--radius-l);
+
+  /* Padding */
+  --padding-input: 0.25em;
+
+  /* Shadows */
+
+  /* Add an inset glow and light border to handle light/dark colorschemes. */
+  --shadow-border: 0 0 0 0.5px oklch(from var(--color-accent) 0.8 c h / 0.2)
+      inset,
+    0 0 0 0.5px oklch(from var(--color-accent) 0.4 c h / 0.2);
+
+  /* For slightly raised cards. */
+  --shadow-card: var(--shadow-border),
+    0 2px 5px -1px oklch(from var(--color-accent) 0.5 c h / 0.25),
+    0 1px 3px -1px oklch(from var(--color-accent) 0.5 c h / 0.3);
+
+  /* For elements that float above their background. */
+  --shadow-float: var(--shadow-border),
+    0 10px 36px oklch(from var(--color-accent) l c h / 0.3);
+
+  background: var(--color-bg);
+  color: var(--color-fg);
+  font-family: var(--font-family-body);
+  font-size: var(--font-size-body);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-fg: var(--color-white);
+    --color-bg: var(--color-black);
+    /* TODO */
+    /* --color-bg: color-mix(in oklch, var(--color-black), var(--color-accent) 2%); */
+    --color-bg-elevate: oklch(from var(--color-black) calc(l + 0.07) c h);
+  }
+}
