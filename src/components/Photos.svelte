@@ -116,6 +116,7 @@
     margin: 1em 0;
   }
   .tag {
+    background-color: var(--color-bg-elevate);
     border-radius: 4px;
     border: none;
     box-shadow: var(--shadow-card);
@@ -126,6 +127,7 @@
       box-shadow: none;
     }
     &:disabled {
+      background-color: var(--color-bg);
       box-shadow: var(--shadow-border);
       color: oklch(from var(--color-fg) l c h / 0.4);
     }
