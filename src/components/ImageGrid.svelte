@@ -18,7 +18,6 @@
   {#each images as img (img.id)}
     {@const aspectRatio =
       img.full.attributes.width / img.full.attributes.height}
-    <!-- TODO improve aria support -->
     <div
       class="img-container"
       animate:flip={{ duration: 250, easing: quintOut }}
@@ -33,6 +32,7 @@
         : null}
     >
       <div
+        role="img"
         class="placeholder"
         style:background-image={`url(${img.placeholder})`}
       />
@@ -75,6 +75,7 @@
     place-content: center;
     position: relative;
     width: 100%;
+    /* TODO use smolcss grid stack? */
   }
 
   .placeholder {
@@ -95,13 +96,12 @@
     width: 100%;
   }
 
-  /* TODO: re-evaluate this */
   p {
-    background: rgba(0, 0, 0, 0.3);
-    border-radius: 5px;
+    background: oklch(from var(--color-black) l c h / 0.3);
+    text-shadow: 0px 0px 2px var(--color-black);
+    border-radius: var(--radius-s);
     bottom: 0;
     color: #fff;
-    font-feature-settings: 'lnum' 1;
     font-size: 16px;
     line-height: 1;
     margin: 0.5em;

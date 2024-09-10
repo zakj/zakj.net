@@ -156,9 +156,8 @@
 
 <style>
   .page {
-    --color-green: #1d7c87;
     --padding: 24px;
-    background-color: var(--color-green);
+    background-color: var(--color-accent);
     color: var(--color-black);
     display: flex;
     flex-direction: column;
@@ -236,7 +235,7 @@
     top: var(--progress-margin);
   }
   .progress-item {
-    background: var(--color-green);
+    background: var(--color-accent);
     flex: 1;
     height: 3px;
     margin-left: var(--progress-margin);

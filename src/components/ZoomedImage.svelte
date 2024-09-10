@@ -55,9 +55,10 @@
   }
 </script>
 
-<svelte:window on:keydown={(e) => e.key === 'Escape' && close()} />
+<svelte:window
+  on:keydown|preventDefault={(e) => ['Escape', ' '].includes(e.key) && close()}
+/>
 
-<!-- TODO: evaluate how to properly use role here; this is a container that should be clickable -->
 <div role="button" tabindex="0" on:click={close} on:keydown={close}>
   <div class="backdrop" transition:fade={{ duration: 200 }} />
   <figure
@@ -70,7 +71,7 @@
       ? bgUrl([image.thumb.src])
       : bgUrl([image.full.src, image.thumb.src])}
   >
-    <!-- TODO {image.description} -->
+    <!-- TODO (maybe) {image.description} -->
   </figure>
 </div>
 
@@ -90,8 +91,6 @@
     }
 
     .backdrop {
-      /* TODO: evaluate this style */
-      /* backdrop-filter: blur(1px); */
       background: rgba(0, 0, 0, 0.8);
       height: 100%;
       position: absolute;

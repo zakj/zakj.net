@@ -51,8 +51,11 @@ button {
   background-color: transparent;
   border: none;
   color: var(--color-black);
-  cursor: pointer;
   padding: 0;
+}
+button,
+[role='button'] {
+  cursor: pointer;
 }
 
 button.button {
