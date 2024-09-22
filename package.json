@@ -10,16 +10,16 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@astrojs/mdx": "^3.1.5",
-    "@astrojs/svelte": "^5.7.0",
-    "@fontsource-variable/crimson-pro": "^5.0.20",
+    "@astrojs/mdx": "^3.1.7",
+    "@astrojs/svelte": "^5.7.1",
+    "@fontsource-variable/crimson-pro": "^5.1.0",
     "@lehoczky/postcss-fluid": "^1.0.3",
     "@zakj/no-sleep": "^0.13.5",
-    "astro": "^4.15.2",
+    "astro": "^4.15.8",
     "astrojs-service-worker": "^2.0.0",
     "autoprefixer": "^10.4.20",
-    "date-fns": "^3.6.0",
-    "exifreader": "^4.23.3",
+    "date-fns": "^4.1.0",
+    "exifreader": "^4.23.5",
     "sharp": "0.32.6",
     "svelte": "^4.2.19"
   },
