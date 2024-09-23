@@ -21,6 +21,7 @@
     "date-fns": "^4.1.0",
     "exifreader": "^4.23.5",
     "sharp": "0.32.6",
+    "smartcrop-sharp": "^2.0.8",
     "svelte": "^4.2.19"
   },
   "devDependencies": {

@@ -1,6 +1,6 @@
 <script lang="ts">
   import { disableScroll, type Image } from '$util';
-  import { isDesktopMedia, urlHash } from '$store';
+  import { urlHash } from '$store';
   import iconFilterOff from '$assets/icons/filter-off.svg?raw';
   import ImageGrid from './ImageGrid.svelte';
   import ZoomedImage from './ZoomedImage.svelte';
@@ -24,12 +24,12 @@
   ].toSorted();
   $: availableTags = filteredImages.reduce(
     (acc, img) => acc.union(img.tags),
-    new Set<string>()
+    new Set<string>(),
   );
 
   urlHash.once((value) => {
     const params = Object.fromEntries(
-      value.split(';').map((kv) => kv.split(':'))
+      value.split(';').map((kv) => kv.split(':')),
     );
     if ('tags' in params) filterTags = new Set(params.tags.split(','));
     if ('id' in params) {
@@ -59,7 +59,7 @@
   }
 
   function select(value?: Selected) {
-    selected = $isDesktopMedia ? value : undefined;
+    selected = value;
   }
 
   // TODO rss
@@ -69,7 +69,7 @@
   // TODO tag buttons are broken fg color on mobile dark mode
 </script>
 
-<svelte:body use:disableScroll={!!($isDesktopMedia && selected)} />
+<svelte:body use:disableScroll={!!selected} />
 
 <header>
   <h1>Photos</h1>
@@ -96,7 +96,7 @@
 
 <ImageGrid images={filteredImages} on:select={({ detail }) => select(detail)} />
 
-{#if $isDesktopMedia && selected}
+{#if selected}
   <ZoomedImage
     image={selected.image}
     fromNode={selected.node}

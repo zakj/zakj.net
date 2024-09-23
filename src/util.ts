@@ -11,7 +11,7 @@ export type Image = {
   tags: Set<string>;
   alt: string;
   full: GetImageResult;
-  mobile: GetImageResult;
+  crop: string;
   thumb: GetImageResult;
   placeholder: string;
 };
@@ -22,7 +22,7 @@ export const isBrowser = !import.meta.env.SSR;
 // Workaround for https://github.com/sveltejs/svelte/issues/3105
 export const disableScroll: Action<HTMLBodyElement, boolean> = (
   node,
-  toggled: boolean
+  toggled: boolean,
 ) => {
   const name = 'no-scroll';
   node.classList.toggle(name, toggled);

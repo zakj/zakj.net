@@ -9,6 +9,7 @@ import ExifReader from 'exifreader';
 import { basename } from 'path';
 import { AstroError } from 'node_modules/astro/dist/core/errors';
 import sharp from 'sharp';
+import smartcrop from 'smartcrop-sharp';
 
 const seenIds = new Set();
 function uniqueId(path: string): string {
@@ -49,6 +50,10 @@ const images: Image[] = await Promise.all(
   imageImports.map(async (imported) => {
     const img = imported.default;
     const path = img.fsPath;
+    const sharpImage = sharp(path).webp();
+    const metadata = await sharpImage.metadata();
+    if (!(metadata.height && metadata.width))
+      throw new Error('unknown image size: ' + path);
 
     // DateTimeOriginal: when the photo was first taken (vs when it was digitized)
     // title: Photos "title"; used for a description
@@ -71,13 +76,23 @@ const images: Image[] = await Promise.all(
         : []),
     ];
 
-    const placeholderData = await sharp(path)
-      .webp()
+    const placeholderData = await sharpImage
+      .clone()
       .resize({ height: 16 })
       .modulate({ saturation: 1.2 })
       .flatten()
       .normalise()
       .toBuffer();
+
+    const size = Math.max(metadata.height, metadata.width);
+    const topCrop = (await smartcrop.crop(path, { height: size, width: size }))
+      .topCrop;
+    const pct = (a: number, b: number): string =>
+      `${Math.round((a / b) * 100)}%`;
+    const crop = [
+      pct(topCrop.x, topCrop.width),
+      pct(topCrop.y, topCrop.height),
+    ].join(' ');
 
     return {
       id: uniqueId(path),
@@ -87,7 +102,7 @@ const images: Image[] = await Promise.all(
       alt,
       full: await getImage({ src: img, format: 'webp' }),
       thumb: await getImage({ src: img, format: 'webp', height: 500 }),
-      mobile: await getImage({ src: img, format: 'webp', width: 1400 }),
+      crop,
       placeholder: `data:image/webp;base64,${placeholderData.toString('base64')}`,
     };
   }),
