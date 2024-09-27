@@ -1,0 +1,50 @@
+---
+import Base from '$layouts/Base.astro';
+---
+
+<Base title="Debug">
+  <button class="button" id="lock">Enable wakeLock</button>
+  <button class="button" id="unlock">Disable wakeLock</button>
+
+  <div id="log"></div>
+
+  <button class="button" id="reload">Reload</button>
+</Base>
+
+<script>
+  async function lock() {
+    try {
+      log('attempting');
+      const wakeLock = await navigator.wakeLock?.request('screen');
+      log('locked', wakeLock.toString());
+    } catch (e) {
+      log(e.toString());
+    }
+  }
+  document.querySelector('#lock').addEventListener('click', lock);
+
+  const logEl = document.querySelector('#log');
+  function log(...msgs) {
+    for (const msg of msgs) {
+      logEl.innerHTML += msg.toString() + '<br>';
+    }
+  }
+
+  const reloadButtonEl = document.querySelector('#reload');
+  if ('standalone' in navigator) {
+    reloadButtonEl?.addEventListener('click', () => {
+      window.location.reload();
+    });
+  } else {
+    reloadButtonEl.disabled = true;
+  }
+</script>
+
+<style>
+  body {
+    margin: 1em;
+  }
+  #log {
+    margin-block: 1em;
+  }
+</style>
