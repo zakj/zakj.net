@@ -10,16 +10,16 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@astrojs/mdx": "^3.1.7",
+    "@astrojs/mdx": "^3.1.8",
     "@astrojs/svelte": "^5.7.1",
     "@fontsource-variable/crimson-pro": "^5.1.0",
     "@lehoczky/postcss-fluid": "^1.0.3",
     "@zakj/no-sleep": "^0.13.5",
-    "astro": "^4.15.8",
+    "astro": "^4.16.7",
     "astrojs-service-worker": "^2.0.0",
     "autoprefixer": "^10.4.20",
     "date-fns": "^4.1.0",
-    "exifreader": "^4.23.5",
+    "exifreader": "^4.24.0",
     "sharp": "0.32.6",
     "smartcrop-sharp": "^2.0.8",
     "svelte": "^4.2.19"
@@ -28,7 +28,7 @@
     "@zakj/prettier-config": "^2.0.0",
     "prettier": "^3.3.3",
     "prettier-plugin-astro": "^0.14.1",
-    "prettier-plugin-svelte": "^3.2.6"
+    "prettier-plugin-svelte": "^3.2.7"
   },
   "prettier": "@zakj/prettier-config"
 }
