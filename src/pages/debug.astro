@@ -12,26 +12,36 @@ import Base from '$layouts/Base.astro';
 </Base>
 
 <script>
-  async function lock() {
+  let wakeLock: WakeLockSentinel | null;
+
+  document.querySelector('#lock')?.addEventListener('click', async function () {
     try {
       log('attempting');
-      const wakeLock = await navigator.wakeLock?.request('screen');
+      wakeLock = await navigator.wakeLock?.request('screen');
       log('locked', wakeLock.toString());
-    } catch (e) {
+    } catch (e: any) {
       log(e.toString());
     }
-  }
-  document.querySelector('#lock').addEventListener('click', lock);
+  });
 
-  const logEl = document.querySelector('#log');
-  function log(...msgs) {
+  document.querySelector('#unlock')?.addEventListener('click', function () {
+    if (!wakeLock) {
+      log('releasing: not locked');
+      return;
+    }
+    wakeLock.release();
+    wakeLock = null;
+  });
+
+  const logEl: HTMLDivElement = document.querySelector('#log')!;
+  function log(...msgs: any[]) {
     for (const msg of msgs) {
       logEl.innerHTML += msg.toString() + '<br>';
     }
   }
 
-  const reloadButtonEl = document.querySelector('#reload');
-  if ('standalone' in navigator) {
+  const reloadButtonEl: HTMLButtonElement = document.querySelector('#reload')!;
+  if ('standalone' in navigator && navigator.standalone) {
     reloadButtonEl?.addEventListener('click', () => {
       window.location.reload();
     });
