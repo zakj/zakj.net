@@ -13,7 +13,7 @@
   function Exercise(
     name: string,
     duration: number,
-    description?: string
+    description?: string,
   ): Exercise {
     return { name, duration, description };
   }
@@ -80,7 +80,7 @@
   function drawCanvas(
     canvas: HTMLCanvasElement,
     elapsed: number,
-    duration: number
+    duration: number,
   ) {
     const ctx = canvas?.getContext('2d');
     if (!(canvas && ctx)) return;
@@ -101,7 +101,7 @@
   $: drawCanvas(
     canvas,
     $currentTimer?.elapsedMs ?? 0,
-    exercise.duration * 1000
+    exercise.duration * 1000,
   );
 
   onDestroy(() => {
@@ -157,7 +157,7 @@
 <style>
   .page {
     --padding: 24px;
-    background-color: var(--color-accent);
+    background-color: oklch(from var(--color-accent) calc(l * 0.9) c h);
     color: var(--color-black);
     display: flex;
     flex-direction: column;
