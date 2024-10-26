@@ -6,5 +6,6 @@
       "$*": ["src/*"]
     },
     "skipLibCheck": true
-  }
+  },
+  "exclude": ["node_modules"]
 }
