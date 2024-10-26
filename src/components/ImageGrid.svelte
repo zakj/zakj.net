@@ -2,6 +2,7 @@
   import type { Image } from '$util';
   import { createEventDispatcher } from 'svelte';
   import { flip } from 'svelte/animate';
+  import { scale } from 'svelte/transition';
   import { quintOut } from 'svelte/easing';
 
   export let images: Image[];
@@ -27,6 +28,7 @@
       role="button"
       tabindex="0"
       data-id={img.id}
+      transition:scale={{ duration: 250, easing: quintOut }}
       animate:flip={{ duration: 250, easing: quintOut }}
       on:click={(e) => select(img, e.currentTarget)}
       on:keydown={(e) => e.key === 'Enter' && select(img, e.currentTarget)}
