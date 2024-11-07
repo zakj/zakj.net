@@ -34,7 +34,7 @@ function isStringArrayTag(
 
 function parseExifDate(s: StringArrayTag): Date {
   const [y, m, d, H, M, S] = s.value[0].split(/[: ]/).map((v) => Number(v));
-  return new Date(Date.UTC(y, m, d, H, M, S));
+  return new Date(Date.UTC(y, m - 1, d, H, M, S));
 }
 
 let imageImports: Record<string, any>[] = [];
