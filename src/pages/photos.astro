@@ -1,114 +1,14 @@
 ---
 import Photos_ from '$components/Photos.svelte';
 import Base from '$layouts/Base.astro';
-import type { Image } from '$util';
-import { getImage } from 'astro:assets';
-import crypto from 'crypto';
-import type { StringArrayTag, XmpTag } from 'exifreader';
-import ExifReader from 'exifreader';
-import { basename } from 'path';
-import { AstroError } from 'node_modules/astro/dist/core/errors';
-import sharp from 'sharp';
-import smartcrop from 'smartcrop-sharp';
+import { getCollection } from 'astro:content';
 
-const seenIds = new Set();
-function uniqueId(path: string): string {
-  const hash = crypto.createHash('md5');
-  hash.update(basename(path));
-  const md5 = hash.digest('hex');
-  let len = 8;
-  while (seenIds.has(md5.slice(0, len))) ++len;
-  const uid = md5.slice(0, len);
-  seenIds.add(uid);
-  return uid;
-}
-
-function isStringArrayTag(
-  v: StringArrayTag | XmpTag | undefined,
-): v is StringArrayTag {
-  return (
-    typeof v?.value === 'string' ||
-    (Array.isArray(v?.value) && typeof v.value[0] === 'string')
-  );
-}
-
-function parseExifDate(s: StringArrayTag): Date {
-  const [y, m, d, H, M, S] = s.value[0].split(/[: ]/).map((v) => Number(v));
-  return new Date(Date.UTC(y, m - 1, d, H, M, S));
-}
-
-let imageImports: Record<string, any>[] = [];
-try {
-  imageImports = await Astro.glob('$assets/photos/*');
-} catch (e) {
-  if (e instanceof AstroError && e.name === 'AstroGlobNoMatch') {
-    console.warn(e.title);
-  } else throw e;
-}
-
-const images: Image[] = await Promise.all(
-  imageImports.map(async (imported) => {
-    const img = imported.default;
-    const path = img.fsPath;
-    const sharpImage = sharp(path).webp();
-    const metadata = await sharpImage.metadata();
-    if (!(metadata.height && metadata.width))
-      throw new Error('unknown image size: ' + path);
-
-    // DateTimeOriginal: when the photo was first taken (vs when it was digitized)
-    // title: Photos "title"; used for a description
-    // description: Photos "caption"; used for alt attribute content
-    // Keywords: Photos "keywords"; used for tags
-    // PersonInImage: Photos "faces"; supplemental tags
-    const exif = await ExifReader.load(path, { async: true });
-    const dto = exif.DateTimeOriginal;
-    if (!isStringArrayTag(dto))
-      throw new Error('invalid DateTimeOriginal: ' + path);
-    const date = parseExifDate(dto);
-    const description = exif.title?.description ?? '';
-    const alt = exif.description?.description ?? '';
-    const tags = [
-      ...(Array.isArray(exif.Keywords)
-        ? exif.Keywords.map((v) => v.description)
-        : []),
-      ...(Array.isArray(exif.PersonInImage?.value)
-        ? exif.PersonInImage.value.map((v) => v.description.toLowerCase())
-        : []),
-    ];
-
-    const placeholderData = await sharpImage
-      .clone()
-      .resize({ height: 16 })
-      .modulate({ saturation: 1.2 })
-      .flatten()
-      .normalise()
-      .toBuffer();
-
-    const size = Math.max(metadata.height, metadata.width);
-    const topCrop = (await smartcrop.crop(path, { height: size, width: size }))
-      .topCrop;
-    const pct = (a: number, b: number): string =>
-      `${Math.round((a / b) * 100)}%`;
-    const crop = [
-      pct(topCrop.x, topCrop.width),
-      pct(topCrop.y, topCrop.height),
-    ].join(' ');
-
-    return {
-      id: uniqueId(path),
-      date,
-      description,
-      tags: new Set(tags.filter((t) => t.match(/^[a-z-]+$/))),
-      alt,
-      full: await getImage({ src: img, format: 'webp' }),
-      thumb: await getImage({ src: img, format: 'webp', height: 500 }),
-      crop,
-      placeholder: `data:image/webp;base64,${placeholderData.toString('base64')}`,
-    };
-  }),
-);
+const photos = (await getCollection('photos')).map((entry) => ({
+  ...entry.data,
+  tags: new Set(entry.data.tags),
+}));
 ---
 
 <Base title="Photos" description="My local Instagram.">
-  <Photos_ {images} client:idle />
+  <Photos_ images={photos} client:idle />
 </Base>

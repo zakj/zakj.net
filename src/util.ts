@@ -1,20 +1,9 @@
-import type { GetImageResult } from 'astro';
 import type { Action } from 'svelte/action';
 import { writable, type Readable } from 'svelte/store';
+import type { CollectionEntry } from 'astro:content';
 
-// TODO there's probably a better place for this to live, but it needs to be
-// importable between astro and svelte.
-export type Image = {
-  id: string;
-  date: Date;
-  description: string;
-  tags: Set<string>;
-  alt: string;
-  full: GetImageResult;
-  crop: string;
-  thumb: GetImageResult;
-  placeholder: string;
-};
+// TODO is this still a useful alias?
+export type Image = CollectionEntry<'photos'>['data'];
 
 export const DESKTOP_WIDTH = 750;
 export const isBrowser = !import.meta.env.SSR;
@@ -37,7 +26,8 @@ export const disableScroll: Action<HTMLBodyElement, boolean> = (
 };
 
 // Return a random item from the passed-in list.
-export const choice = <T>(xs: T[]) => xs[Math.floor(Math.random() * xs.length)];
+export const choice = <T,>(xs: T[]) =>
+  xs[Math.floor(Math.random() * xs.length)];
 
 // Playing a sound muted (from a user-interaction handler) allows us to play it
 // later without a user interaction on mobile Safari.

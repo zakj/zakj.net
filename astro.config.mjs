@@ -1,11 +1,18 @@
 import mdx from '@astrojs/mdx';
 import svelte from '@astrojs/svelte';
-import { defineConfig } from 'astro/config';
+import { defineConfig,envField } from 'astro/config';
 import serviceWorker from 'astrojs-service-worker';
 
 // https://astro.build/config
 export default defineConfig({
   site: 'https://zakj.net',
   build: { format: 'file' },
+  env: {
+    schema: {
+      IK_ENDPOINT: envField.string({context: 'server', access: 'public', default: "https://ik.imagekit.io/zakj"}),
+      IK_PUBLIC_KEY: envField.string({context: 'server', access: 'public', default: "public_m7kE8hVO/UV2d0fQfRn+EfrVwkA="}),
+      IK_PRIVATE_KEY: envField.string({context: 'server', access: 'secret'})
+    }
+  },
   integrations: [svelte(), serviceWorker(), mdx()],
 });

@@ -32,17 +32,16 @@
       animate:flip={{ duration: 250, easing: quintOut }}
       on:click={(e) => select(img, e.currentTarget)}
       on:keydown={(e) => e.key === 'Enter' && select(img, e.currentTarget)}
-      style:--aspect-ratio={img.full.attributes.width /
-        img.full.attributes.height}
+      style:--aspect-ratio={img.width / img.height}
       style:--crop={img.crop}
       style:--placeholder={`url(${img.placeholder})`}
     >
       <figure>
         <img
           src={img.thumb.src}
-          width={img.thumb.attributes.width}
-          height={img.thumb.attributes.height}
           alt={img.alt}
+          width={img.thumb.width}
+          height={img.thumb.height}
           loading="lazy"
           decoding="async"
         />

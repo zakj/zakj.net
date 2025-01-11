@@ -65,8 +65,7 @@
     transition:zoomFromElement={fromNode}
     on:introstart={() => (animating = true)}
     on:introend={() => (animating = false)}
-    style:aspect-ratio={image.full.attributes.width /
-      image.full.attributes.height}
+    style:aspect-ratio={image.width / image.height}
     style:background-image={animating
       ? bgUrl([image.thumb.src])
       : bgUrl([image.full.src, image.thumb.src])}
