@@ -1,0 +1,37 @@
+---
+import { getCollection, getEntry } from 'astro:content';
+import ImageKit from 'imagekit';
+import { IK_ENDPOINT, IK_PUBLIC_KEY, IK_PRIVATE_KEY } from 'astro:env/server';
+
+export async function getStaticPaths() {
+  const photos = await getCollection('photos');
+  return photos.map((entry) => ({ params: { id: entry.id } }));
+}
+
+const { id } = Astro.params;
+const entry = await getEntry('photos', id);
+if (!entry) throw new Error();
+
+const ik = new ImageKit({
+  publicKey: IK_PUBLIC_KEY,
+  privateKey: IK_PRIVATE_KEY,
+  urlEndpoint: IK_ENDPOINT,
+});
+
+const ogImage = ik.url({
+  src: entry.data.full.src,
+  transformation: [{ width: 1200, height: 630, focus: 'auto' }],
+});
+---
+
+<meta charset="utf-8" />
+<meta property="og:image" content={ogImage} />
+<meta property="og:title" content="Photos" />
+<!-- TODO does this work? -->
+<link rel="preload" as="image" href={entry.data.full.src} />
+
+<script define:vars={{ id }}>
+  // TODO use query params instead for easier parsing?
+  document.location = `/photos#id:${id}`;
+</script>
+<a href=`/photos#id:${id}`>→</a>
