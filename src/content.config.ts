@@ -79,9 +79,11 @@ async function imagekitLoader() {
 
       return {
         id: file.fileId,
+        path: file.filePath,
         date: new Date(
           (file.embeddedMetadata?.DateTimeOriginal as string) ?? file.createdAt,
         ),
+        focus: file.customCoordinates ? 'custom' : 'auto',
         width: file.width,
         height: file.height,
         tags,
@@ -109,7 +111,9 @@ export const collections = {
     loader: imagekitLoader,
     schema: z.object({
       id: z.string(),
+      path: z.string(),
       date: z.date().min(new Date('1980-01-01')).max(new Date()),
+      focus: z.enum(['custom', 'auto']),
       width: z.number().positive().int(),
       height: z.number().positive().int(),
       tags: z.string().array(),

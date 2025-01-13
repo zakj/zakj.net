@@ -19,16 +19,14 @@ const ik = new ImageKit({
 });
 
 const ogImage = ik.url({
-  src: entry.data.full.src,
-  transformation: [{ width: 1200, height: 630, focus: 'auto' }],
+  path: entry.data.path,
+  transformation: [{ width: 1200, height: 630, focus: entry.data.focus }],
 });
 ---
 
 <meta charset="utf-8" />
 <meta property="og:image" content={ogImage} />
 <meta property="og:title" content="Photos" />
-<!-- TODO does this work? -->
-<link rel="preload" as="image" href={entry.data.full.src} />
 
 <script define:vars={{ id }}>
   // TODO use query params instead for easier parsing?
