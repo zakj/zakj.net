@@ -16,11 +16,11 @@ export const isDesktopMedia = readable<boolean>(false, (set) => {
   return () => mq.removeEventListener('change', update);
 });
 
-// Track and updates the current URL fragment. Provides a `once` helper to
-// subscribe and immediately unsubscribe, for the common case of responding to
-// the fragment on load but not tracking it afterwards. Ignored in SSR mode.
+// Track and updates the current URL. Provides a `once` helper to subscribe and
+// immediately unsubscribe, for the common case of responding to the fragment on
+// load but not tracking it afterwards. Ignored in SSR mode.
 // TODO reuse this elsewhere, currently only photos
-export const urlHash: Omit<Writable<string>, 'update'> & {
+export const url: Omit<Writable<string>, 'update'> & {
   once: (run: Subscriber<string>) => void;
 } = (() => {
   // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -38,11 +38,10 @@ export const urlHash: Omit<Writable<string>, 'update'> & {
     subscribe,
     set: (value: string) => {
       set(value);
-      const url = new URL(document.location.href);
-      url.hash = value;
+      const oldUrl = new URL(document.location.href);
+      const newUrl = new URL(value, oldUrl);
       // TODO: consider pushState instead if I want back/forward
-      if (url.hash !== document.location.hash)
-        history.replaceState({}, '', url.toString());
+      if (oldUrl.href != newUrl.href) history.replaceState({}, '', newUrl);
     },
   };
 })();

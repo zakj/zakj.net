@@ -1,6 +1,6 @@
 <script lang="ts">
   import { disableScroll, type Image } from '$util';
-  import { urlHash } from '$store';
+  import { url } from '$store';
   import iconFilterOff from '$assets/icons/filter-off.svg?raw';
   import ImageGrid from './ImageGrid.svelte';
   import ZoomedImage from './ZoomedImage.svelte';
@@ -27,7 +27,7 @@
     new Set<string>(),
   );
 
-  urlHash.once((value) => {
+  url.once((value) => {
     const params = Object.fromEntries(
       value.split(';').map((kv) => kv.split(':')),
     );
@@ -42,15 +42,13 @@
     }
   });
 
-  function serializeHash(tags?: Set<string>, id?: string): string {
-    const params = new Map<string, string>();
-    if (tags?.size) params.set('tags', [...tags].join(','));
-    if (id) params.set('id', id);
-    return [...params.entries()]
-      .map((kv) => kv.map(encodeURI).join(':'))
-      .join(';');
+  function serializeUrl(tags?: Set<string>, id?: string): string {
+    let url = '/photos';
+    if (id) url += `/${id}`;
+    if (tags?.size) url += '#' + [...tags].join(',');
+    return url;
   }
-  $: urlHash.set(serializeHash(filterTags, selected?.image.id));
+  $: url.set(serializeUrl(filterTags, selected?.image.id));
 
   function toggleTag(tag: string) {
     if (filterTags.has(tag)) filterTags.delete(tag);
