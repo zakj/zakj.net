@@ -41,7 +41,7 @@
         node.scrollIntoView({ behavior: 'instant', block: 'center' });
         selected = { image, node };
       }
-    } else {
+    } else if (value) {
       filterTags = new Set(value.split(','));
     }
   });
