@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@astrojs/mdx": "^4.0.4",
+    "@astrojs/rss": "^4.0.11",
     "@astrojs/svelte": "^5.7.1",
     "@fontsource-variable/crimson-pro": "^5.1.0",
     "@lehoczky/postcss-fluid": "^1.0.3",
