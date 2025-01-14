@@ -3,10 +3,7 @@ import Photos_ from '$components/Photos.svelte';
 import Base from '$layouts/Base.astro';
 import { getCollection } from 'astro:content';
 
-const photos = (await getCollection('photos')).map((entry) => ({
-  ...entry.data,
-  tags: new Set(entry.data.tags),
-}));
+const photos = (await getCollection('photos')).map((entry) => entry.data);
 ---
 
 <Base title="Photos" description="My local Instagram.">

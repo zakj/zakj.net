@@ -16,29 +16,33 @@
 
   $: {
     filteredImages = images
-      .filter((i) => filterTags.size === 0 || filterTags.isSubsetOf(i.tags))
+      .filter(
+        (i) => filterTags.size === 0 || filterTags.isSubsetOf(new Set(i.tags)),
+      )
       .toSorted((a, b) => b.date.getTime() - a.date.getTime());
   }
   $: allTags = [
-    ...images.reduce((acc, img) => acc.union(img.tags), new Set<string>()),
+    ...images.reduce(
+      (acc, img) => acc.union(new Set(img.tags)),
+      new Set<string>(),
+    ),
   ].toSorted();
   $: availableTags = filteredImages.reduce(
-    (acc, img) => acc.union(img.tags),
+    (acc, img) => acc.union(new Set(img.tags)),
     new Set<string>(),
   );
 
   url.once((value) => {
-    const params = Object.fromEntries(
-      value.split(';').map((kv) => kv.split(':')),
-    );
-    if ('tags' in params) filterTags = new Set(params.tags.split(','));
-    if ('id' in params) {
-      const image = images.find((image) => image.id === params.id);
-      const node = document.querySelector(`[data-id="${params.id}"]`);
+    if (value.startsWith('id:')) {
+      const id = value.split(':')[1];
+      const image = images.find((image) => image.id === id);
+      const node = document.querySelector(`[data-id="${id}"]`);
       if (image && node) {
         node.scrollIntoView({ behavior: 'instant', block: 'center' });
         selected = { image, node };
       }
+    } else {
+      filterTags = new Set(value.split(','));
     }
   });
 
