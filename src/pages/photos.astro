@@ -7,5 +7,13 @@ const photos = (await getCollection('photos')).map((entry) => entry.data);
 ---
 
 <Base title="Photos" description="My local Instagram.">
+  <Fragment slot="extra-head">
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title="Photos · zakj.net"
+      href={new URL('/photos/feed.xml', Astro.site)}
+    />
+  </Fragment>
   <Photos_ images={photos} client:idle />
 </Base>
