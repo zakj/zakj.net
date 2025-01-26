@@ -9,6 +9,12 @@
     "preview": "astro preview",
     "astro": "astro"
   },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuilt",
+      "sharp"
+    ]
+  },
   "dependencies": {
     "@astrojs/mdx": "^4.0.4",
     "@astrojs/rss": "^4.0.11",
