@@ -7,10 +7,14 @@
     type Locale,
   } from 'date-fns';
   import { enUS } from 'date-fns/locale';
-  import { writable, type Subscriber } from 'svelte/store';
+  import { onMount } from 'svelte';
 
-  export let ts: Date;
-  export let label = '';
+  interface Props {
+    ts: Date;
+    label: string;
+  }
+  type OrderedDuration = [keyof Duration, number][];
+  type Remaining = { ordered: OrderedDuration; label: string };
 
   const timeFormat = 'h:mmaaa';
   const formatRelativeLocale = {
@@ -26,7 +30,26 @@
     formatRelative: (token) => formatRelativeLocale[token],
   };
 
-  type OrderedDuration = [keyof Duration, number][];
+  const { ts, label }: Props = $props();
+  let now = $state(new Date());
+  const remaining = $derived.by(() => {
+    const duration = intervalToDuration(
+      ts >= now ? { start: now, end: ts } : { start: ts, end: now },
+    );
+    duration.seconds = 0; // we don't update with enough granularity to show this
+    return durationToOrdered(duration);
+  });
+  const remainingLabel = $derived(
+    [
+      isFuture(ts) ? 'until' : 'since',
+      formatRelative(ts, now, { locale }),
+    ].join(' '),
+  );
+
+  onMount(() => {
+    const interval = setInterval(() => (now = new Date()), 10_000);
+    return () => clearInterval(interval);
+  });
 
   function durationToOrdered(duration: Duration): OrderedDuration {
     const units: (keyof Duration)[] = [
@@ -43,43 +66,9 @@
         (acc.length > 0 && acc.length < 3)
           ? [...acc, [unit, duration[unit] ?? 0]]
           : acc,
-      []
+      [],
     );
   }
-
-  // A countdown store.
-  type Remaining = { ordered: OrderedDuration; label: string };
-  const remaining = ((end: Date) => {
-    const { subscribe, set } = writable<Remaining>();
-    const update = () => {
-      const now = new Date();
-      const duration = intervalToDuration(
-        end >= now ? { start: now, end } : { start: end, end: now }
-      );
-      duration.seconds = 0; // we don't update with enough granularity to show this
-
-      set({
-        ordered: durationToOrdered(duration),
-        label: [
-          isFuture(end) ? 'until' : 'since',
-          formatRelative(ts, now, { locale }),
-        ].join(' '),
-      });
-    };
-    return {
-      subscribe: (fn: Subscriber<Remaining>) => {
-        subscribe(fn);
-        const interval = setInterval(update, 10_000);
-        return () => clearInterval(interval);
-      },
-      setEnd: (newEnd: Date) => {
-        end = newEnd;
-        update();
-      },
-    };
-  })(ts);
-  // Ensure we update immediately when `ts` changes.
-  $: remaining.setEnd(ts);
 
   function singular(word: string, n: number): string {
     return n === 1 ? word.replace(/s$/, '') : word;
@@ -88,7 +77,7 @@
 
 <section>
   <div class="container">
-    {#each $remaining.ordered as [units, n]}
+    {#each remaining as [units, n]}
       <div class="card">
         <span class="num">{n}</span>
         <span class="unit">{singular(units, n)}</span>
@@ -100,7 +89,7 @@
       </div>
     {/each}
   </div>
-  <footer>{label || $remaining.label}</footer>
+  <footer>{label || remainingLabel}</footer>
 </section>
 
 <style>

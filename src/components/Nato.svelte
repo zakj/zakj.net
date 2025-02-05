@@ -1,12 +1,16 @@
 <script lang="ts">
-  export let alphabet: Map<string, string>;
+  interface Props {
+    alphabet: Map<string, string>;
+  }
+  const { alphabet }: Props = $props();
 
-  let value = '';
-  let output: string[] = [];
+  let value = $state('');
   let inputEl: HTMLInputElement;
-  $: output = [...value.trim()]
-    .filter((c) => c !== ' ')
-    .map((c) => alphabet.get(c.toLowerCase()) ?? c);
+  const output = $derived(
+    [...value.trim()]
+      .filter((c) => c !== ' ')
+      .map((c) => alphabet.get(c.toLowerCase()) ?? c),
+  );
 
   function onKeyDown(e: KeyboardEvent) {
     if (e.altKey || e.ctrlKey || e.metaKey) return;
