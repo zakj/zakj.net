@@ -60,7 +60,7 @@
 />
 
 <div role="button" tabindex="0" on:click={close} on:keydown={close}>
-  <div class="backdrop" transition:fade={{ duration: 200 }} />
+  <div class="backdrop" transition:fade={{ duration: 200 }}></div>
   <figure
     transition:zoomFromElement={fromNode}
     on:introstart={() => (animating = true)}

@@ -1,6 +1,6 @@
 import mdx from '@astrojs/mdx';
 import svelte from '@astrojs/svelte';
-import { defineConfig,envField } from 'astro/config';
+import { defineConfig, envField } from 'astro/config';
 import serviceWorker from 'astrojs-service-worker';
 
 // https://astro.build/config
@@ -9,10 +9,22 @@ export default defineConfig({
   build: { format: 'file' },
   env: {
     schema: {
-      IK_ENDPOINT: envField.string({context: 'server', access: 'public', default: "https://ik.imagekit.io/zakj"}),
-      IK_PUBLIC_KEY: envField.string({context: 'server', access: 'public', default: "public_m7kE8hVO/UV2d0fQfRn+EfrVwkA="}),
-      IK_PRIVATE_KEY: envField.string({context: 'server', access: 'secret'})
-    }
+      IK_ENDPOINT: envField.string({
+        context: 'server',
+        access: 'public',
+        default: 'https://ik.imagekit.io/zakj',
+      }),
+      IK_PUBLIC_KEY: envField.string({
+        context: 'server',
+        access: 'public',
+        default: 'public_m7kE8hVO/UV2d0fQfRn+EfrVwkA=',
+      }),
+      IK_PRIVATE_KEY: envField.string({ context: 'server', access: 'secret' }),
+    },
+  },
+  vite: {
+    // To enable puma-dev in preview/dev mode.
+    server: { allowedHosts: true },
   },
   integrations: [svelte(), serviceWorker(), mdx()],
 });

@@ -4,6 +4,7 @@
   import iconFilterOff from '$assets/icons/filter-off.svg?raw';
   import ImageGrid from './ImageGrid.svelte';
   import ZoomedImage from './ZoomedImage.svelte';
+  import { onMount } from 'svelte';
 
   type Selected = { image: Image; node: Element };
 
@@ -42,7 +43,9 @@
         selected = { image, node };
       }
     } else if (value) {
-      filterTags = new Set(value.split(','));
+      onMount(() => {
+        filterTags = new Set(value.split(','));
+      });
     }
   });
 

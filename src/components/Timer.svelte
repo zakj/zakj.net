@@ -91,7 +91,7 @@
   >
     {#if overallTimer}
       {secondsToMinutes($overallTimer.remaining)}
-      <progress max="1" value={$overallTimer.progress} />
+      <progress max="1" value={$overallTimer.progress}></progress>
     {:else if showingOverallForm}
       <form on:submit|preventDefault={startOverallTimer}>
         <input
@@ -203,7 +203,8 @@
     background: var(--color-white);
     border-radius: 60px;
     border: none;
-    box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px,
+    box-shadow:
+      rgba(50, 50, 93, 0.25) 0px 2px 5px -1px,
       rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
     color: var(--color-black);
     cursor: pointer;

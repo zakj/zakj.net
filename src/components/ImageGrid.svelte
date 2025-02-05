@@ -49,7 +49,7 @@
       </figure>
     </div>
   {/each}
-  <div style:flex="10" />
+  <div style:flex="10"></div>
 </div>
 
 <style>

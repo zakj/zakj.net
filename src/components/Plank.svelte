@@ -10,7 +10,7 @@
     description?: string;
   };
 
-  function Exercise(
+  function newExercise(
     name: string,
     duration: number,
     description?: string,
@@ -19,25 +19,27 @@
   }
 
   const EXERCISES: Exercise[] = [
-    Exercise('Basic plank', 60),
-    Exercise('Forearm plank', 30),
-    Exercise('Forearm plank (right leg lifted)', 30),
-    Exercise('Forearm plank (left leg lifted)', 30),
-    Exercise('Side plank (left hand base)', 30),
-    Exercise('Side plank (right hand base)', 30),
-    Exercise('Basic plank', 30),
-    Exercise('Forearm plank', 60),
+    newExercise('Basic plank', 60),
+    newExercise('Forearm plank', 30),
+    newExercise('Forearm plank (right leg lifted)', 30),
+    newExercise('Forearm plank (left leg lifted)', 30),
+    newExercise('Side plank (left hand base)', 30),
+    newExercise('Side plank (right hand base)', 30),
+    newExercise('Basic plank', 30),
+    newExercise('Forearm plank', 60),
   ];
   const BREAK_TIME = 2000;
 
-  enum State {
-    Idle,
-    Exercise,
-    Done,
-    Break,
-  }
+  const State = {
+    Idle: 'Idle',
+    Exercise: 'Exercise',
+    Done: 'Done',
+    Break: 'Break',
+  } as const;
+  // TODO: Svelte prevents types and values to share a name: <https://github.com/sveltejs/svelte/issues/11416>
+  type TState = keyof typeof State;
 
-  let state = State.Idle;
+  let state: TState = State.Idle;
   let currentTimer: Timer;
   let index = 0;
   let canvas: HTMLCanvasElement;
@@ -112,7 +114,7 @@
 <div class="page">
   <main>
     {#if state === State.Exercise}
-      <canvas width="1000" height="1000" bind:this={canvas} />
+      <canvas width="1000" height="1000" bind:this={canvas}></canvas>
     {/if}
     <button
       class="circle"
@@ -135,10 +137,10 @@
     </button>
   </main>
   <footer>
-    {#if [State.Break, State.Exercise].includes(state)}
+    {#if state == State.Break || state == State.Exercise}
       <div class="progress">
-        {#each EXERCISES as x, i}
-          <div class="progress-item" class:done={i <= index} />
+        {#each EXERCISES as _, i}
+          <div class="progress-item" class:done={i <= index}></div>
         {/each}
       </div>
     {/if}
