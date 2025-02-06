@@ -1,20 +1,5 @@
-import { DESKTOP_WIDTH, isBrowser } from '$util';
-import {
-  readable,
-  writable,
-  type Subscriber,
-  type Writable,
-} from 'svelte/store';
-
-// Track whether the current viewport is wider than mobile.
-export const isDesktopMedia = readable<boolean>(false, (set) => {
-  if (!isBrowser) return;
-  const mq = matchMedia(`(min-width: ${DESKTOP_WIDTH}px)`);
-  set(mq.matches);
-  const update = (value: MediaQueryListEvent) => set(value.matches);
-  mq.addEventListener('change', update);
-  return () => mq.removeEventListener('change', update);
-});
+import { isBrowser } from '$util';
+import { writable, type Subscriber, type Writable } from 'svelte/store';
 
 // Track and updates the current URL. Provides a `once` helper to subscribe and
 // immediately unsubscribe, for the common case of responding to the fragment on
