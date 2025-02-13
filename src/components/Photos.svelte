@@ -103,8 +103,8 @@
 
 {#if selected}
   <ZoomedImage
-    image={selected.image}
-    fromNode={selected.node}
+    image={selected?.image}
+    fromNode={selected?.node}
     on:close={() => select()}
   />
 {/if}

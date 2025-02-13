@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { Image } from '$util';
-  import { createEventDispatcher } from 'svelte';
+  import { createEventDispatcher, onMount } from 'svelte';
   import { fade, type TransitionConfig } from 'svelte/transition';
   import { cubicInOut } from 'svelte/easing';
 
@@ -9,6 +9,10 @@
 
   // Animating a full-size image is slow; better to animate the thumb and then switch.
   let animating = false;
+  let savedFromNode: Element;
+
+  // fromNode will be null when we de-select; we need to keep a reference.
+  onMount(() => (savedFromNode = fromNode));
 
   const dispatch = createEventDispatcher<{ close: null }>();
   const close = () => dispatch('close');
@@ -62,7 +66,7 @@
 <div role="button" tabindex="0" on:click={close} on:keydown={close}>
   <div class="backdrop" transition:fade={{ duration: 200 }}></div>
   <figure
-    transition:zoomFromElement={fromNode}
+    transition:zoomFromElement={fromNode || savedFromNode}
     on:introstart={() => (animating = true)}
     on:introend={() => (animating = false)}
     style:aspect-ratio={image.width / image.height}
