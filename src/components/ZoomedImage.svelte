@@ -1,29 +1,26 @@
 <script lang="ts">
   import type { Image } from '$util';
-  import { createEventDispatcher, onMount } from 'svelte';
   import { fade, type TransitionConfig } from 'svelte/transition';
   import { cubicInOut } from 'svelte/easing';
 
-  export let image: Image;
-  export let fromNode: Element;
+  interface Props {
+    image: Image;
+    fromNode: Element;
+    close: () => void;
+  }
+
+  const { image, fromNode, close }: Props = $props();
 
   // Animating a full-size image is slow; better to animate the thumb and then switch.
-  let animating = false;
-  let savedFromNode: Element;
-
-  // fromNode will be null when we de-select; we need to keep a reference.
-  onMount(() => (savedFromNode = fromNode));
-
-  const dispatch = createEventDispatcher<{ close: null }>();
-  const close = () => dispatch('close');
+  let animating = $state(false);
+  let fromRect = fromNode.getBoundingClientRect();
 
   // TODO utils?
   // Stolen from https://github.com/sveltejs/svelte/blob/master/src/runtime/transition/index.ts
   export function zoomFromElement(
     node: Element,
-    fromNode: Element,
+    from: DOMRect,
   ): TransitionConfig {
-    const from = fromNode.getBoundingClientRect();
     const to = node.getBoundingClientRect();
 
     const dx = from.x - to.x;
@@ -48,27 +45,32 @@
     };
   }
 
-  $: if (image) {
+  $effect(() => {
     // We don't show the image while animating, but preloading it helps.
     const img = new Image();
     img.src = image.full.src;
-  }
+  });
 
   function bgUrl(hrefs: string[]): string {
     return hrefs.map((h) => `url(${h})`).join(',');
   }
+
+  function closeOnEscOrSpace(e: KeyboardEvent) {
+    if (['Escape', ' '].includes(e.key)) {
+      e.preventDefault();
+      close();
+    }
+  }
 </script>
 
-<svelte:window
-  on:keydown|preventDefault={(e) => ['Escape', ' '].includes(e.key) && close()}
-/>
+<svelte:window onkeydown={closeOnEscOrSpace} />
 
-<div role="button" tabindex="0" on:click={close} on:keydown={close}>
+<div role="button" tabindex="0" onclick={close} onkeydown={close}>
   <div class="backdrop" transition:fade={{ duration: 200 }}></div>
   <figure
-    transition:zoomFromElement={fromNode || savedFromNode}
-    on:introstart={() => (animating = true)}
-    on:introend={() => (animating = false)}
+    transition:zoomFromElement={fromRect}
+    onintrostart={() => (animating = true)}
+    onintroend={() => (animating = false)}
     style:aspect-ratio={image.width / image.height}
     style:background-image={animating
       ? bgUrl([image.thumb.src])
