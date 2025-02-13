@@ -1,17 +1,15 @@
 <script lang="ts">
   import type { Image } from '$util';
-  import { createEventDispatcher } from 'svelte';
   import { flip } from 'svelte/animate';
   import { scale } from 'svelte/transition';
   import { quintOut } from 'svelte/easing';
 
-  export let images: Image[];
+  interface Props {
+    images: Image[];
+    select: (image: Image, node: Element) => void;
+  }
 
-  type SelectEvent = { image: Image; node: Element };
-  const dispatch = createEventDispatcher<{ select: SelectEvent }>();
-
-  const select = (image: Image, node: Element) =>
-    dispatch('select', { image, node });
+  const { images, select }: Props = $props();
 
   function formatDate(d: Date): string {
     return d.toLocaleDateString('en-US', {
@@ -30,8 +28,8 @@
       data-id={img.id}
       transition:scale={{ duration: 250, easing: quintOut }}
       animate:flip={{ duration: 250, easing: quintOut }}
-      on:click={(e) => select(img, e.currentTarget)}
-      on:keydown={(e) => e.key === 'Enter' && select(img, e.currentTarget)}
+      onclick={(e) => select(img, e.currentTarget)}
+      onkeydown={(e) => e.key === 'Enter' && select(img, e.currentTarget)}
       style:--aspect-ratio={img.width / img.height}
       style:--crop={img.crop}
       style:--placeholder={`url(${img.placeholder})`}

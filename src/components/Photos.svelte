@@ -99,7 +99,10 @@
   </div>
 </header>
 
-<ImageGrid images={filteredImages} on:select={({ detail }) => select(detail)} />
+<ImageGrid
+  images={filteredImages}
+  select={(image, node) => select({ image, node })}
+/>
 
 {#if selected}
   <ZoomedImage
