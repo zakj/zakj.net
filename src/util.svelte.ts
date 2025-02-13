@@ -1,5 +1,4 @@
 import type { Action } from 'svelte/action';
-import { writable, type Readable } from 'svelte/store';
 import type { CollectionEntry } from 'astro:content';
 
 // TODO is this still a useful alias?
@@ -40,47 +39,37 @@ export function prePlayAudio(s: HTMLAudioElement) {
   s.addEventListener('ended', () => s.load());
 }
 
-type TimerValue = { elapsedMs: number; progress: string; remaining: number };
-export type Timer = Readable<TimerValue> & {
+export type Timer = {
+  elapsedMs: number;
+  progress: string;
+  remaining: number;
   cancel: () => void;
   completed: Promise<void>;
 };
 
-// TODO move to store.ts
-
-// Starts a countdown timer and returns a readable store with elapsedMs
-// (integer), progress (0 to 1 as a string for precision clamping) and
-// remaining seconds (integer) values. The store also exposes a cancel method
-// to stop the timer, and a promise that resolves when the countdown
-// successfully completes.
+// Starts a countdown timer and returns a state with elapsedMs (integer),
+// progress (0 to 1 as a string for precision clamping) and remaining seconds
+// (integer) values. We also expose a cancel method to stop the timer, and a
+// promise that resolves when the countdown successfully completes.
 export function timer(ms: number): Timer {
-  const start = performance.now();
-  const { set, subscribe } = writable<TimerValue>({
+  let requestId: number;
+  const ctx = $state({
     elapsedMs: 0,
     progress: '0',
-    remaining: 0,
+    remaining: Math.ceil(ms / 1000),
+    cancel: () => cancelAnimationFrame(requestId),
   });
-  let requestId: number;
-
-  const completed = new Promise<void>((resolve) => {
-    function tick() {
-      const elapsedMs = performance.now() - start;
-      set({
-        elapsedMs,
-        progress: Math.max(0, Math.min(1, elapsedMs / ms)).toFixed(4),
-        remaining: Math.max(0, Math.ceil((ms - elapsedMs) / 1000)),
-      });
-      if (elapsedMs >= ms) resolve();
-      else requestId = requestAnimationFrame(tick);
-    }
-    tick();
+  return Object.assign(ctx, {
+    completed: new Promise<void>((resolve) => {
+      const start = performance.now();
+      const tick = () => {
+        ctx.elapsedMs = performance.now() - start;
+        ctx.progress = Math.max(0, Math.min(1, ctx.elapsedMs / ms)).toFixed(4);
+        ctx.remaining = Math.max(0, Math.ceil((ms - ctx.elapsedMs) / 1000));
+        if (ctx.elapsedMs < ms) requestId = requestAnimationFrame(tick);
+        else resolve();
+      };
+      tick();
+    }),
   });
-
-  return {
-    cancel() {
-      cancelAnimationFrame(requestId);
-    },
-    completed,
-    subscribe,
-  };
 }

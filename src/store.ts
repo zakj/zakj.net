@@ -1,4 +1,4 @@
-import { isBrowser } from '$util';
+import { isBrowser } from '$util.svelte';
 import { writable, type Subscriber, type Writable } from 'svelte/store';
 
 // Track and updates the current URL. Provides a `once` helper to subscribe and

@@ -2,7 +2,7 @@
   import pingHiSrc from '$assets/audio/ping-hi.mp3';
   import pingLoSrc from '$assets/audio/ping-lo.mp3';
   import cancelIcon from '$assets/icons/alarm-off.svg';
-  import { prePlayAudio, timer, type Timer } from '$util';
+  import { prePlayAudio, timer, type Timer } from '$util.svelte';
   import NoSleep from '@zakj/no-sleep';
   import { onDestroy, tick } from 'svelte';
 
@@ -39,20 +39,21 @@
     return `${minutes}:${seconds.toString().padStart(2, '0')}`;
   }
 
-  let showingOverallForm = false;
-  let overallInput: HTMLInputElement;
-  let overallValue: number;
-  let overallTimer: Timer;
-  let phase: Phase | null;
-  let currentTimer: Timer;
+  let showingOverallForm = $state(false);
+  let overallInput: HTMLInputElement | undefined = $state();
+  let overallValue: number = $state(0);
+  let overallTimer: Timer | undefined = $state();
+  let phase: Phase | undefined = $state();
+  let currentTimer: Timer | undefined = $state();
 
   async function showOverallForm() {
     showingOverallForm = true;
     await tick();
-    overallInput.focus();
+    overallInput?.focus();
   }
 
-  function startOverallTimer() {
+  function startOverallTimer(e: SubmitEvent) {
+    e.preventDefault();
     overallTimer = timer(overallValue * 60 * 1000);
   }
 
@@ -75,7 +76,7 @@
   function stopInterval() {
     currentTimer?.cancel();
     noSleep.disable();
-    phase = null;
+    phase = undefined;
   }
 
   onDestroy(() => {
@@ -86,14 +87,14 @@
 
 <div class="wrapper">
   <header
-    class:countdown={$overallTimer}
-    style:--progress={$overallTimer?.progress}
+    class:countdown={overallTimer}
+    style:--progress={overallTimer?.progress}
   >
     {#if overallTimer}
-      {secondsToMinutes($overallTimer.remaining)}
-      <progress max="1" value={$overallTimer.progress}></progress>
+      {secondsToMinutes(overallTimer.remaining)}
+      <progress max="1" value={overallTimer.progress}></progress>
     {:else if showingOverallForm}
-      <form on:submit|preventDefault={startOverallTimer}>
+      <form onsubmit={startOverallTimer}>
         <input
           type="number"
           inputmode="numeric"
@@ -105,21 +106,21 @@
         <button type="submit">Start</button>
       </form>
     {:else}
-      <button on:click={showOverallForm}>Start class timer</button>
+      <button onclick={showOverallForm}>Start class timer</button>
     {/if}
   </header>
 
   <main class={phase?.label}>
-    {#if phase}{$currentTimer.remaining}{/if}
+    {#if phase}{currentTimer?.remaining}{/if}
   </main>
 
   <footer>
     {#each timers as timer}
-      <button on:click={() => selectInterval(timer)}>
+      <button onclick={() => selectInterval(timer)}>
         {timer.map((t) => t.seconds).join('/')}
       </button>
     {/each}
-    <button class="stop" disabled={!phase} on:click={stopInterval}>
+    <button class="stop" disabled={!phase} onclick={stopInterval}>
       <img
         src={cancelIcon.src}
         alt="Cancel"

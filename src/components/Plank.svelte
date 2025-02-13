@@ -1,32 +1,29 @@
 <script lang="ts">
   import boopSrc from '$assets/audio/boop.mp3';
-  import { choice, prePlayAudio, timer, type Timer } from '$util';
+  import {
+    choice,
+    isBrowser,
+    prePlayAudio,
+    timer,
+    type Timer,
+  } from '$util.svelte';
   import NoSleep, { type INoSleep } from '@zakj/no-sleep';
   import { onDestroy } from 'svelte';
 
   type Exercise = {
     name: string;
     duration: number;
-    description?: string;
   };
 
-  function newExercise(
-    name: string,
-    duration: number,
-    description?: string,
-  ): Exercise {
-    return { name, duration, description };
-  }
-
   const EXERCISES: Exercise[] = [
-    newExercise('Basic plank', 60),
-    newExercise('Forearm plank', 30),
-    newExercise('Forearm plank (right leg lifted)', 30),
-    newExercise('Forearm plank (left leg lifted)', 30),
-    newExercise('Side plank (left hand base)', 30),
-    newExercise('Side plank (right hand base)', 30),
-    newExercise('Basic plank', 30),
-    newExercise('Forearm plank', 60),
+    { name: 'Basic plank', duration: 60 },
+    { name: 'Forearm plank', duration: 30 },
+    { name: 'Forearm plank (right leg lifted)', duration: 30 },
+    { name: 'Forearm plank (left leg lifted)', duration: 30 },
+    { name: 'Side plank (left hand base)', duration: 30 },
+    { name: 'Side plank (right hand base)', duration: 30 },
+    { name: 'Basic plank', duration: 30 },
+    { name: 'Forearm plank', duration: 60 },
   ];
   const BREAK_TIME = 2000;
 
@@ -39,15 +36,15 @@
   // TODO: Svelte prevents types and values to share a name: <https://github.com/sveltejs/svelte/issues/11416>
   type TState = keyof typeof State;
 
-  let state: TState = State.Idle;
-  let currentTimer: Timer;
-  let index = 0;
-  let canvas: HTMLCanvasElement;
-  $: exercise = EXERCISES[index];
+  let curState: TState = $state(State.Idle);
+  let curTimer: Timer | undefined = $state();
+  let index = $state(0);
+  let canvas: HTMLCanvasElement | undefined = $state();
+  const exercise = $derived(EXERCISES[index]);
 
   let noSleep: INoSleep;
   let boop: HTMLAudioElement;
-  if (typeof document !== 'undefined') {
+  if (isBrowser) {
     noSleep = new NoSleep();
     boop = new Audio(boopSrc);
   }
@@ -55,25 +52,25 @@
   function handlePlay() {
     prePlayAudio(boop);
     noSleep.enable();
-    state = State.Break;
-    currentTimer = timer(500);
-    currentTimer.completed.then(handleTimerComplete);
+    curState = State.Break;
+    curTimer = timer(500);
+    curTimer.completed.then(handleTimerComplete);
   }
 
   function handleTimerComplete() {
-    if (state === State.Break) {
-      state = State.Exercise;
-      currentTimer = timer(exercise.duration * 1000);
-      currentTimer.completed.then(handleTimerComplete);
-    } else if (state === State.Exercise) {
+    if (curState === State.Break) {
+      curState = State.Exercise;
+      curTimer = timer(exercise.duration * 1000);
+      curTimer.completed.then(handleTimerComplete);
+    } else if (curState === State.Exercise) {
       boop.play();
       if (index + 1 < EXERCISES.length) {
         index++;
-        state = State.Break;
-        currentTimer = timer(BREAK_TIME);
-        currentTimer.completed.then(handleTimerComplete);
+        curState = State.Break;
+        curTimer = timer(BREAK_TIME);
+        curTimer.completed.then(handleTimerComplete);
       } else {
-        state = State.Done;
+        curState = State.Done;
         noSleep.disable();
       }
     }
@@ -84,8 +81,8 @@
     elapsed: number,
     duration: number,
   ) {
-    const ctx = canvas?.getContext('2d');
-    if (!(canvas && ctx)) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
     const c = canvas.width / 2;
     const r = canvas.width;
     const startAngle = 1.5;
@@ -100,57 +97,56 @@
     ctx.fill();
   }
 
-  $: drawCanvas(
-    canvas,
-    $currentTimer?.elapsedMs ?? 0,
-    exercise.duration * 1000,
-  );
+  $effect(() => {
+    if (!canvas) return;
+    drawCanvas(canvas, curTimer?.elapsedMs ?? 0, exercise.duration * 1000);
+  });
 
   onDestroy(() => {
-    currentTimer?.cancel();
+    curTimer?.cancel();
   });
 </script>
 
 <div class="page">
   <main>
-    {#if state === State.Exercise}
+    {#if curState === State.Exercise}
       <canvas width="1000" height="1000" bind:this={canvas}></canvas>
     {/if}
     <button
       class="circle"
-      class:clickable={state === State.Idle}
-      on:click={() => (state === State.Idle ? handlePlay() : null)}
+      class:clickable={curState === State.Idle}
+      onclick={() => (curState === State.Idle ? handlePlay() : null)}
     >
-      {#if state === State.Idle}
+      {#if curState === State.Idle}
         <svg viewBox="0 0 100 100">
           <path
             d="M78.627,47.203L24.873,16.167c-1.082-0.625-2.227-0.625-3.311,0C20.478,16.793,20,17.948,20,19.199V81.27 c0,1.25,0.478,2.406,1.561,3.031c0.542,0.313,1.051,0.469,1.656,0.469c0.604,0,1.161-0.156,1.703-0.469l53.731-31.035 c1.083-0.625,1.738-1.781,1.738-3.031C80.389,48.984,79.71,47.829,78.627,47.203z"
           />
         </svg>
-      {:else if state === State.Break}
+      {:else if curState === State.Break}
         {exercise.duration}
-      {:else if state === State.Exercise}
-        {$currentTimer.remaining}
-      {:else if state === State.Done}
+      {:else if curState === State.Exercise}
+        {curTimer?.remaining}
+      {:else if curState === State.Done}
         {choice(['🙌', '🎉'])}
       {/if}
     </button>
   </main>
   <footer>
-    {#if state == State.Break || state == State.Exercise}
+    {#if curState == State.Break || curState == State.Exercise}
       <div class="progress">
         {#each EXERCISES as _, i}
           <div class="progress-item" class:done={i <= index}></div>
         {/each}
       </div>
     {/if}
-    {#if state === State.Idle}
+    {#if curState === State.Idle}
       <h1>Plank!</h1>
-    {:else if state === State.Break}
+    {:else if curState === State.Break}
       <div class="exercise break">{exercise.name}</div>
-    {:else if state === State.Exercise}
+    {:else if curState === State.Exercise}
       <div class="exercise">{exercise.name}</div>
-    {:else if state === State.Done}
+    {:else if curState === State.Done}
       <h1>Nice work!</h1>
     {/if}
   </footer>

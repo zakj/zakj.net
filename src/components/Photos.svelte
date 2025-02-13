@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { disableScroll, type Image } from '$util';
+  import { disableScroll, type Image } from '$util.svelte';
   import { url } from '$store';
   import iconFilterOff from '$assets/icons/filter-off.svg?raw';
   import ImageGrid from './ImageGrid.svelte';

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { Image } from '$util';
+  import type { Image } from '$util.svelte';
   import { flip } from 'svelte/animate';
   import { scale } from 'svelte/transition';
   import { quintOut } from 'svelte/easing';

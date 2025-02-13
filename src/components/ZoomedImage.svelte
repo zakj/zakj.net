@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { Image } from '$util';
+  import type { Image } from '$util.svelte';
   import { fade, type TransitionConfig } from 'svelte/transition';
   import { cubicInOut } from 'svelte/easing';
 
