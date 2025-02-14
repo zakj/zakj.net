@@ -5,32 +5,38 @@
   import ImageGrid from './ImageGrid.svelte';
   import ZoomedImage from './ZoomedImage.svelte';
   import { onMount } from 'svelte';
+  import { SvelteSet } from 'svelte/reactivity';
 
   type Selected = { image: Image; node: Element };
 
-  export let images: Image[];
-  let allTags: string[] = [];
-  let availableTags = new Set<string>();
-  let filterTags = new Set<string>();
-  let filteredImages: Image[] = [];
-  let selected: Selected | undefined;
+  interface Props {
+    images: Image[];
+  }
+  const { images }: Props = $props();
 
-  $: {
-    filteredImages = images
+  let selected: Selected | undefined = $state();
+  const filterTags = new SvelteSet<string>();
+
+  const allTags: string[] = $derived(
+    [
+      ...images.reduce(
+        (acc, img) => acc.union(new Set(img.tags)),
+        new Set<string>(),
+      ),
+    ].toSorted(),
+  );
+  const filteredImages = $derived(
+    images
       .filter(
         (i) => filterTags.size === 0 || filterTags.isSubsetOf(new Set(i.tags)),
       )
-      .toSorted((a, b) => b.date.getTime() - a.date.getTime());
-  }
-  $: allTags = [
-    ...images.reduce(
+      .toSorted((a, b) => b.date.getTime() - a.date.getTime()),
+  );
+  const availableTags = $derived(
+    filteredImages.reduce(
       (acc, img) => acc.union(new Set(img.tags)),
       new Set<string>(),
     ),
-  ].toSorted();
-  $: availableTags = filteredImages.reduce(
-    (acc, img) => acc.union(new Set(img.tags)),
-    new Set<string>(),
   );
 
   url.once((value) => {
@@ -44,7 +50,7 @@
       }
     } else if (value) {
       onMount(() => {
-        filterTags = new Set(value.split(','));
+        value.split(',').forEach((t) => filterTags.add(t));
       });
     }
   });
@@ -55,19 +61,18 @@
     if (tags?.size) url += '#' + [...tags].join(',');
     return url;
   }
-  $: url.set(serializeUrl(filterTags, selected?.image.id));
+
+  $effect(() => url.set(serializeUrl(filterTags, selected?.image.id)));
 
   function toggleTag(tag: string) {
     if (filterTags.has(tag)) filterTags.delete(tag);
     else filterTags.add(tag);
-    filterTags = filterTags; // tell svelte it changed
   }
 
   function select(value?: Selected) {
     selected = value;
   }
 
-  // TODO rss
   // TODO exclude full images from service worker?
   // TODO header
   // TODO tag button fg color is blue on mobile
@@ -84,12 +89,12 @@
         class:tag
         class:selected={filterTags.has(tag)}
         disabled={!availableTags.has(tag)}
-        on:click={() => toggleTag(tag)}>{tag}</button
+        onclick={() => toggleTag(tag)}>{tag}</button
       >
     {/each}
     {#if filterTags.size}
       <button
-        on:click={() => (filterTags = new Set())}
+        onclick={() => filterTags.clear()}
         class="icon"
         aria-label="Clear filters"
       >
