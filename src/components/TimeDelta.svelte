@@ -14,7 +14,6 @@
     label: string;
   }
   type OrderedDuration = [keyof Duration, number][];
-  type Remaining = { ordered: OrderedDuration; label: string };
 
   const timeFormat = 'h:mmaaa';
   const formatRelativeLocale = {
