@@ -1,17 +1,17 @@
 <script lang="ts">
-  let boxSize = 100;
-  let x = boxSize / 2;
-  let y = boxSize / 2;
-  let r = (boxSize / 2) * 0.8;
-  let startDegrees = 90;
-  let endDegrees = 220;
+  const initialBoxSize = 100;
+  let boxSize = $state(initialBoxSize);
+  let startDegrees = $state(90);
+  let endDegrees = $state(220);
+  let x = $state(initialBoxSize / 2);
+  let y = $state(initialBoxSize / 2);
+  let r = $state((initialBoxSize / 2) * 0.8);
+  const path = $derived(describeArc(x, y, r, startDegrees, endDegrees));
 
-  // Allow for wrapping past 0 and 360 in both directions.
-  $: startDegrees = ((startDegrees % 360) + 360) % 360;
-  $: endDegrees = ((endDegrees % 360) + 360) % 360;
-
-  let path: string;
-  $: path = describeArc(x, y, r, startDegrees, endDegrees);
+  // Clamp to [0, 360), handling negatives.
+  function clamp(v: number): number {
+    return ((v % 360) + 360) % 360;
+  }
 
   function polarToCartesian(x: number, y: number, r: number, degrees: number) {
     const radians = ((degrees - 90) * Math.PI) / 180;
@@ -23,7 +23,7 @@
     y: number,
     r: number,
     startDegrees: number,
-    endDegrees: number
+    endDegrees: number,
   ) {
     const start = polarToCartesian(x, y, r, endDegrees);
     const end = polarToCartesian(x, y, r, startDegrees);
@@ -40,12 +40,20 @@
 <form>
   <div class="inputs">
     <div class="input-group">
-      <label>Start° <input type="number" bind:value={startDegrees} /></label>
+      <label
+        >Start° <input
+          type="number"
+          bind:value={() => startDegrees, (v) => (startDegrees = clamp(v))}
+        /></label
+      >
       <div>&rarr;</div>
-      <label>End° <input type="number" bind:value={endDegrees} /></label>
+      <label
+        >End° <input
+          type="number"
+          bind:value={() => endDegrees, (v) => (endDegrees = clamp(v))}
+        /></label
+      >
     </div>
-    <!-- <details>
-      <summary>Additional fields</summary> -->
     <div class="input-group">
       <label>Radius: <input type="number" bind:value={r} /></label>
       <label>Center x: <input type="number" bind:value={x} /></label>
@@ -54,7 +62,6 @@
     <div class="input-group">
       <label>viewBox size: <input type="number" bind:value={boxSize} /></label>
     </div>
-    <!-- </details> -->
   </div>
 
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {boxSize} {boxSize}">
