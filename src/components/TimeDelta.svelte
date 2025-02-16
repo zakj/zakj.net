@@ -11,7 +11,7 @@
 
   interface Props {
     ts: Date;
-    label: string;
+    label?: string;
   }
   type OrderedDuration = [keyof Duration, number][];
 

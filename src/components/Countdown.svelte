@@ -1,73 +1,71 @@
 <script lang="ts">
   import { formatDistanceToNow, isFuture } from 'date-fns';
-  import { writable, type Subscriber } from 'svelte/store';
   import TimeDelta from './TimeDelta.svelte';
+  import { onDestroy, onMount } from 'svelte';
 
-  // A store to sync timer state with URL hash.
-  const target = (() => {
-    const { subscribe, set } = writable<Date | null>();
+  let target: Date | undefined = $state();
+  let value = $state('');
+  let now = $state(new Date());
 
-    function updateTs() {
-      const hash = document.location.hash.slice(1);
-      if (hash) set(new Date(Number(hash) * 1000));
-    }
+  const interval = setInterval(() => (now = new Date()), 10_000);
+  onDestroy(() => clearInterval(interval));
 
-    updateTs();
-    addEventListener('hashchange', updateTs);
-
-    subscribe((ts) => {
-      const url = new URL(document.location.href);
-      url.hash = ts ? (ts.getTime() / 1000).toString() : '';
-      if (url.hash !== document.location.hash)
-        history.pushState({}, '', url.toString());
-    });
-
-    return { subscribe, set };
-  })();
-
-  // Put the timer in the document title.
-  const now = (() => {
-    const { subscribe, set } = writable<Date>();
-    const update = () => set(new Date());
-    return {
-      subscribe: (fn: Subscriber<Date>) => {
-        update();
-        subscribe(fn);
-        const interval = setInterval(update, 10_000);
-        return () => clearInterval(interval);
-      },
-    };
-  })();
-  now.subscribe(() => {
-    target.subscribe((ts) => {
-      let titleParts = ['Countdown', 'zakj.net'];
-      if (ts && isFuture(ts))
-        titleParts = [formatDistanceToNow(ts), ...titleParts];
-      document.title = titleParts.join(' · ');
-    });
+  const title = $derived.by(() => {
+    now; // trigger periodic updates
+    let parts = ['Countdown', 'zakj.net'];
+    if (target && isFuture(target))
+      parts = [formatDistanceToNow(target), ...parts];
+    return parts.join(' · ');
   });
 
-  let value: string;
+  function updateTargetFromHash() {
+    const hash = document.location.hash.slice(1);
+    if (hash && !isNaN(Number(hash))) target = new Date(Number(hash) * 1000);
+    else target = undefined;
+  }
 
-  function setTargetFromForm() {
+  // Update target on load and browser back/forward.
+  onMount(() => {
+    updateTargetFromHash();
+    addEventListener('hashchange', updateTargetFromHash);
+  });
+  onDestroy(() => {
+    removeEventListener('hashchange', updateTargetFromHash);
+  });
+
+  // Update URL fragment on target change.
+  $effect(() => {
+    const url = new URL(document.location.href);
+    url.hash = target ? (target.getTime() / 1000).toString() : '';
+    if (url.hash !== document.location.hash)
+      history.pushState({}, '', url.toString());
+  });
+
+  // Put the timer in the document title.
+  $effect(() => {
+    document.title = title;
+  });
+
+  function onsubmit(e: SubmitEvent) {
+    e.preventDefault();
     const d = new Date(value);
     if (isNaN(d.getTime())) return;
-    target.set(d);
+    target = d;
     value = '';
   }
 
-  function onKeyDown(e: KeyboardEvent) {
-    if ($target && ['Backspace', 'Delete'].includes(e.key)) target.set(null);
+  function onkeydown(e: KeyboardEvent) {
+    if (target && ['Backspace', 'Delete'].includes(e.key)) target = undefined;
   }
 </script>
 
-<svelte:window on:keydown={onKeyDown} />
+<svelte:window {onkeydown} />
 
 <main>
-  {#if $target}
-    <TimeDelta ts={$target} />
+  {#if target}
+    <TimeDelta ts={target} />
   {:else}
-    <form on:submit|preventDefault={setTargetFromForm}>
+    <form {onsubmit}>
       <input type="datetime-local" bind:value />
       <button class="button" type="submit">Countdown!</button>
     </form>
