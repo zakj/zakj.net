@@ -1,21 +1,19 @@
 <script lang="ts">
-  import { disableScroll, type Image } from '$util.svelte';
-  import { url } from '$store';
+  import { disableScroll, UrlState, type Image } from '$util.svelte';
   import iconFilterOff from '$assets/icons/filter-off.svg?raw';
   import ImageGrid from './ImageGrid.svelte';
   import ZoomedImage from './ZoomedImage.svelte';
-  import { onMount } from 'svelte';
   import { SvelteSet } from 'svelte/reactivity';
-
-  type Selected = { image: Image; node: Element };
 
   interface Props {
     images: Image[];
   }
   const { images }: Props = $props();
 
+  type Selected = { image: Image; node: Element };
   let selected: Selected | undefined = $state();
   const filterTags = new SvelteSet<string>();
+  const url = new UrlState();
 
   const allTags: string[] = $derived(
     [
@@ -39,21 +37,26 @@
     ),
   );
 
-  url.once((value) => {
-    if (value.startsWith('id:')) {
-      const id = value.split(':')[1];
+  function urlToState(loc?: Location) {
+    const hash = loc?.hash.slice(1);
+    if (!hash) {
+      selected = undefined;
+      filterTags.clear();
+      return;
+    }
+    if (hash.startsWith('id:')) {
+      const id = hash.split(':')[1];
       const image = images.find((image) => image.id === id);
       const node = document.querySelector(`[data-id="${id}"]`);
       if (image && node) {
         node.scrollIntoView({ behavior: 'instant', block: 'center' });
         selected = { image, node };
       }
-    } else if (value) {
-      onMount(() => {
-        value.split(',').forEach((t) => filterTags.add(t));
-      });
+    } else {
+      filterTags.clear();
+      hash.split(',').forEach((t) => filterTags.add(t));
     }
-  });
+  }
 
   function serializeUrl(tags?: Set<string>, id?: string): string {
     let url = '/photos';
@@ -62,7 +65,8 @@
     return url;
   }
 
-  $effect(() => url.set(serializeUrl(filterTags, selected?.image.id)));
+  $effect(() => urlToState(url.current));
+  $effect(() => url.replace(serializeUrl(filterTags, selected?.image.id)));
 
   function toggleTag(tag: string) {
     if (filterTags.has(tag)) filterTags.delete(tag);

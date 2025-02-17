@@ -1,5 +1,6 @@
 import type { Action } from 'svelte/action';
 import type { CollectionEntry } from 'astro:content';
+import { createSubscriber } from 'svelte/reactivity';
 
 // TODO is this still a useful alias?
 export type Image = CollectionEntry<'photos'>['data'];
@@ -72,4 +73,41 @@ export function timer(ms: number): Timer {
       tick();
     }),
   });
+}
+
+// A reactive view into the current page URL.
+export class UrlState {
+  private subscribe: () => void;
+
+  constructor() {
+    this.subscribe = createSubscriber((update) => {
+      addEventListener('hashchange', update);
+      addEventListener('popstate', update);
+      return () => {
+        removeEventListener('hashchange', update);
+        removeEventListener('popstate', update);
+      };
+    });
+  }
+
+  get current(): Location | undefined {
+    this.subscribe();
+    return isBrowser ? document.location : undefined;
+  }
+
+  private newUrl(value: string): URL | false {
+    const oldUrl = new URL(document.location.href);
+    const newUrl = new URL(value, oldUrl);
+    return oldUrl.href !== newUrl.href ? newUrl : false;
+  }
+
+  push(value: string): void {
+    const newUrl = this.newUrl(value);
+    if (newUrl) history.pushState({}, '', newUrl);
+  }
+
+  replace(value: string): void {
+    const newUrl = this.newUrl(value);
+    if (newUrl) history.replaceState({}, '', newUrl);
+  }
 }

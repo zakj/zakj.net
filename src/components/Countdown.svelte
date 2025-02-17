@@ -2,10 +2,12 @@
   import { formatDistanceToNow, isFuture } from 'date-fns';
   import TimeDelta from './TimeDelta.svelte';
   import { onDestroy, onMount } from 'svelte';
+  import { UrlState } from '$util.svelte';
 
   let target: Date | undefined = $state();
   let value = $state('');
   let now = $state(new Date());
+  const url = new UrlState();
 
   const interval = setInterval(() => (now = new Date()), 10_000);
   onDestroy(() => clearInterval(interval));
@@ -18,29 +20,15 @@
     return parts.join(' · ');
   });
 
-  function updateTargetFromHash() {
-    const hash = document.location.hash.slice(1);
-    if (hash && !isNaN(Number(hash))) target = new Date(Number(hash) * 1000);
-    else target = undefined;
+  function urlToState(loc?: Location) {
+    const hash = loc?.hash.slice(1);
+    target =
+      hash && !isNaN(Number(hash)) ? new Date(Number(hash) * 1000) : undefined;
   }
 
-  // Update target on load and browser back/forward.
-  onMount(() => {
-    updateTargetFromHash();
-    addEventListener('hashchange', updateTargetFromHash);
-  });
-  onDestroy(() => {
-    removeEventListener('hashchange', updateTargetFromHash);
-  });
-
-  // Update URL fragment on target change.
-  $effect(() => {
-    const url = new URL(document.location.href);
-    url.hash = target ? (target.getTime() / 1000).toString() : '';
-    if (url.hash !== document.location.hash)
-      history.pushState({}, '', url.toString());
-  });
-
+  // Keep state and URL in sync.
+  $effect(() => urlToState(url.current));
+  $effect(() => url.push(target ? `#${target.getTime() / 1000}` : ''));
   // Put the timer in the document title.
   $effect(() => {
     document.title = title;
