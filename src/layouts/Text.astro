@@ -20,8 +20,8 @@ const props: Props =
   }
 
   body {
-    --color-bg-1: oklch(from var(--color-bg) .98 c h);
-    --color-bg-2: oklch(from var(--color-accent) .2 c h / .1);
+    --color-bg-1: oklch(from var(--color-bg) 0.98 c h);
+    --color-bg-2: oklch(from var(--color-accent) 0.2 c h / 0.1);
 
     background-image: linear-gradient(
       121deg,
@@ -42,13 +42,16 @@ const props: Props =
       [full-end];
     min-height: 100dvh;
     padding-top: max(env(safe-area-inset-top), var(--page-padding));
+    padding-bottom: max(env(safe-area-inset-bottom), var(--page-padding));
   }
 
   main {
     grid-column: content;
   }
 
-  main > * + * {
+  main > * + *,
+  main p,
+  main h2 {
     margin-top: 0.7rem;
   }
 
@@ -58,8 +61,8 @@ const props: Props =
 
   @media (prefers-color-scheme: dark) {
     body {
-      --color-bg-1: oklch(from var(--color-bg) .24 c h);
-      --color-bg-2: oklch(from var(--color-accent) .5 c h / .1);
+      --color-bg-1: oklch(from var(--color-bg) 0.24 c h);
+      --color-bg-2: oklch(from var(--color-accent) 0.5 c h / 0.1);
     }
   }
 
