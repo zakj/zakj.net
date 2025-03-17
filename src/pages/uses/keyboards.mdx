@@ -1,0 +1,36 @@
+---
+layout: $layouts/Text.astro
+title: Keyboards
+---
+import KeyboardScroller from '$components/KeyboardScroller.svelte'
+
+# Keyboards
+
+Here is some intro text that will appear before the keyboard diagram. Maybe some
+real world photos of the keyboard and general thoughts.
+
+
+<KeyboardScroller client:idle>
+Here is some content that will be **markdown enabled**!
+
+But need to handle margins on paragraphs, since the Text layout only looks for top-level.
+
+<scroll-member attr="base">
+the first scroll member, base
+</scroll-member>
+
+<scroll-member attr="base 16 19">
+the second scroll member
+</scroll-member>
+
+
+</KeyboardScroller>
+
+<some-scroll-container>
+
+<scroll-member attr="key name or names">
+</scroll-member>
+
+</some-scroll-container>
+
+
