@@ -9,28 +9,23 @@ import KeyboardScroller from '$components/KeyboardScroller.svelte'
 Here is some intro text that will appear before the keyboard diagram. Maybe some
 real world photos of the keyboard and general thoughts.
 
-
 <KeyboardScroller client:idle>
-Here is some content that will be **markdown enabled**!
 
-But need to handle margins on paragraphs, since the Text layout only looks for top-level.
+<section data-active="base">
+here's some intro about the base layer
+</section>
 
-<scroll-member attr="base">
-the first scroll member, base
-</scroll-member>
+<section data-active="base 12 24 35 36 37 41">
+talk about mods in general
+</section>
 
-<scroll-member attr="base 16 19">
-the second scroll member
-</scroll-member>
+<section data-active="base 12 24 35 36 37 41" data-combos>
+talk about mods with combos
+</section>
 
+<section data-active="num 0 30">
+here is some highlighted keys on a different layer
+</section>
 
 </KeyboardScroller>
-
-<some-scroll-container>
-
-<scroll-member attr="key name or names">
-</scroll-member>
-
-</some-scroll-container>
-
 
