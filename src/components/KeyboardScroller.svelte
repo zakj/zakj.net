@@ -1,7 +1,11 @@
 <script lang="ts">
   import { onMount, type Snippet } from 'svelte';
-  import KeyboardDiagram from '$components/KeyboardDiagram.svelte';
   import { SvelteMap } from 'svelte/reactivity';
+  import KeyboardDiagram from '$components/KeyboardDiagram.svelte';
+
+  // TODO show the currently-highlighted section
+  // TODO topmost section with at least .5 intersection ratio
+  // or centermost? these are going to be kind of short sections
 
   interface Props {
     children: Snippet;
@@ -9,32 +13,55 @@
   const { children }: Props = $props();
 
   let container: HTMLDivElement;
-  let showCombos = $state(false);
 
-  const intersections: Map<string, number> = new SvelteMap();
+  interface Intersection {
+    el: HTMLElement;
+    active: string;
+    combos: boolean;
+    ratio: number;
+  }
+  const intersections: Map<string, Intersection> = new SvelteMap();
   const bestIntersection = $derived(
-    [...intersections.entries()]
-      .sort((a, b) => b[1] - a[1])
-      .map((e) => e[0])[0],
+    [...intersections.values()].sort((a, b) => b.ratio - a.ratio)[0],
   );
-  const activeLayer = $derived(bestIntersection?.split(' ')[0] ?? 'base');
+  const activeLayer = $derived(
+    bestIntersection?.active.split(' ')[0] ?? 'base',
+  );
   const activeKeys = $derived(
-    bestIntersection?.split(' ').slice(1).map(Number) ?? [],
+    bestIntersection?.active.split(' ').slice(1).map(Number) ?? [],
   );
+  const showCombos = $derived(bestIntersection?.combos);
+
+  $effect(() => {
+    container.querySelectorAll('section').forEach((el) => {
+      console.log(el, bestIntersection?.el);
+      el.classList.toggle('active', bestIntersection?.el === el);
+    });
+  });
 
   function observerCallback(entries: IntersectionObserverEntry[]) {
     entries.forEach((e) => {
-      const active = (e.target as HTMLElement).dataset['active'];
-      if (active) intersections.set(active, e.intersectionRatio);
+      const el = e.target as HTMLElement;
+      const dataset = el.dataset;
+      if (!dataset.index?.length) return;
+      intersections.set(dataset.index, {
+        el,
+        active: dataset.active ?? 'base',
+        combos: 'combos' in dataset,
+        ratio: e.intersectionRatio,
+      });
     });
   }
 
   onMount(() => {
     const observer = new IntersectionObserver(observerCallback, {
-      rootMargin: '-100px 0px 0px 0px',
+      rootMargin: '-150px 0px 0px 0px',
       threshold: [...Array(11).keys()].map((n) => n / 10),
     });
-    container.querySelectorAll('section').forEach((el) => observer.observe(el));
+    container.querySelectorAll('section').forEach((el, i) => {
+      el.dataset.index = `${i}`;
+      observer.observe(el);
+    });
   });
 </script>
 
@@ -54,20 +81,57 @@
 </p>
 -->
 
-<div class="diagram">
-  <KeyboardDiagram layer={activeLayer} keys={activeKeys} {showCombos} />
-</div>
-
 <div bind:this={container}>
   {@render children()}
+  <div class="diagram">
+    <KeyboardDiagram layer={activeLayer} keys={activeKeys} {showCombos} />
+  </div>
 </div>
 
 <style>
   .diagram {
+    bottom: 0;
     position: sticky;
-    top: calc(var(--page-padding) / 2);
+    padding-top: 1em;
+    padding-bottom: var(--page-padding);
+  }
+  .diagram::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+
+    mask: linear-gradient(to bottom, transparent, black 3em);
+    padding-inline: 1em;
+    margin-inline: -1em;
+    backdrop-filter: blur(12px);
+
+    margin-top: -1em;
+    padding-top: 1em;
+
+    /*
+    margin-inline: -1em;
+    padding-inline: 1em;
+    margin-top: -2em;
+    inset: 0;
+    z-index: -1;
+    mask: linear-gradient(to bottom, transparent 15%, black);
+    backdrop-filter: blur(12px);
+    height: 110%;
+    */
   }
   :global(section) {
-    min-height: 30vh;
+    min-height: 50vh;
+  }
+  :global(section p) {
+    border-left: 3px solid transparent;
+    margin-left: -1em;
+    padding-left: 1em;
+  }
+  :global(section.active p) {
+    border-color: black;
+  }
+  :global(section:last-of-type) {
+    min-height: 50vh;
   }
 </style>

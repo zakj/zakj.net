@@ -49,8 +49,6 @@
 
 <style>
   div {
-    margin-block: 1em;
-
     /* Hide layer names and footer text. */
     :global(svg > g > text:first-child),
     :global(text.footer) {

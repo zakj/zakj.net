@@ -6,25 +6,164 @@ import KeyboardScroller from '$components/KeyboardScroller.svelte'
 
 # Keyboards
 
-Here is some intro text that will appear before the keyboard diagram. Maybe some
+TODO Here is some intro text that will appear before the keyboard diagram. Maybe some
 real world photos of the keyboard and general thoughts.
+
+If you are just looking for a good standard keyboard recommendation and don't
+want to go down the rabbit hole of custom layout design, I highly recommend the
+[Keychron K7][]. It's affordable, high-quality, and programmable. Otherwise,
+read on!
+
+[Keychron K7]: https://www.keychron.com/products/keychron-k7-max-qmk-via-wireless-custom-mechanical-keyboard?variant=40808058290265
+
+
+## Philosophy
+
+1. All keys are at most one key distant from the home row.
+1. Where possible, minimize differences from a familiar row-staggered `qwerty`
+layout. There will of course be a learning curve with fewer keys and the
+addition of layers, but I've got decades of muscle memory that it would be nice
+to build on.
+1. Maintain the ability to do common keyboard shortcuts with a single hand, to
+reduce movements between mouse and keyboard.
+
 
 <KeyboardScroller client:idle>
 
 <section data-active="base">
-here's some intro about the base layer
+
+## Base layer
+
+The "base" layer is the default: how the keyboard reacts when no other layers
+are activated. It should look pretty similar to a normal layout, with the
+exceptions of missing function-key and number rows, repurposing of `caps lock`,
+and the six thumb keys.
+
 </section>
 
+<section data-active="base 37 40">
+
+My thumbs rest on the center key of each thumb cluster, with `shift` on the left
+thumb and `space` on the right. I have a habit of pressing `space` with my right
+thumb exclusively, so this reduced my learning curve. Having `shift` under a thumb
+means less pinky stretching, and never having to switch from one pinky-shift to
+the other to reach across the keyboard.
+
+I never use `caps lock`, but occasionally it's useful to write a word or two
+in all caps. Double-tapping the thumb `shift` key activates ZMK's "caps word"
+behavior, which causes the keyboard to act as if `shift` is continually held
+until a "stop key" (whitespace or punctuation) is pressed.
+
+</section>
+
+<section data-active="base 12">
+
+I have been using [Hammerspoon][] for years to replace the nearly-useless `caps
+lock` key with a combination of `control` and `escape`. When held, the key acts
+as the `control` modifier. When tapped/pressed, it emits `escape`. Very handy
+to have these keys more accessible, particularly in modal editors. Here we
+replicate that behavior in firmware.
+
+[Hammerspoon]: https://www.hammerspoon.org/
+
+</section>
+
+
 <section data-active="base 12 24 35 36 37 41">
-talk about mods in general
+
+I use a lot of keyboard shortcuts on the Mac, so it was important to me to have
+easy access (and, where possible, easy one-handed access) to modifiers. We've
+talked about `control`, but `command` and `option` also get dedicated thumb
+keys, and I keep redundant `shift` keys in the usual-ish positions in the bottom
+corners since otherwise `command+shift` combinations can be awkward.
+
+Some folks swear by "home row modifiers," where keys on the home row are dual
+purposed similarly to my `control`/`escape` key, but I found this to interfere
+with fast typing.
+
 </section>
 
 <section data-active="base 12 24 35 36 37 41" data-combos>
-talk about mods with combos
+
+I'll talk a bit more about layers later, but because not every key appears on
+the base layer (e.g., numbers, symbols, arrows, etc.) it would be tricky to
+use those keys in `command`-based keyboard shortcuts. I've added something a
+little bit like home row mods: home row mod combos. That is, pressing `d` and
+`f` together (within ~20ms) acts as `command`; `s` and `d` act as `option`,
+and all three keys at once works as `command+option`. This is mirrored on the
+right hand.
+
+Because some tools (looking at you, Figma) cause the mouse to behave differently
+when the `space` bar is held, I also needed a way to hold `space` with my
+left hand. I use a thumb+pinky combo on the two left-hand `shift` keys for
+this, which is surprisingly easy to do intentionally and impossible to do
+unintentionally.
+
 </section>
 
-<section data-active="num 0 30">
-here is some highlighted keys on a different layer
+<section data-active="num">
+## Number/symbol layer
+
+Almost every layout for a keyboard of this size has a number and/or symbol
+layer—this one is mine. While the left thumb's inner-most key is held, this
+layer is active instead of the base layer. In line with the rest of the
+layout, I went for a mixture of familiarity and expediency. The thumb keys are
+"transparent": they work just the same as on the base layer, and the outer pinky
+columns are mostly similar with two exceptions.
+
+</section>
+
+<section data-active="num 1 2 3 4 5 6 7 8 9 10">
+
+Obviously numbers are pressed with their usual fingers, just one row lower than
+usual. I at first experimented with numpad-style numbers (all numbers on one
+hand), which is somewhat popular in the small-keyboard community, but I found
+this uncomfortable in practice.
+
+</section>
+
+<section data-active="num 26 27 28 29 30 31 32">
+
+Less-frequently-used symbols are also pressed with their usual fingers, but one
+row *below* the home row, and there's no need to hold shift—they're available
+directly on this layer.
+
+</section>
+
+<section data-active="num 14 15 16 17 18 19 20 21 22">
+
+The homerow gets symbols that are more common for text and/or programming:
+dash, underscore, and all the various brackets. I've also duplicated `:` on this
+layer, which makes for very comfortable neighboring-finger "rolls" for ascii
+smiley/frowny faces and things like python's `def (...):`.
+
+</section>
+
+<section data-active="num 13 23 25 33 34">
+
+The remaining symbols fit in positions that made some sense to me. `!` is on
+the same position as `.` on the base layer. `\` corresponds to `/` on the base
+layer. `=` and `+` are near each other, with `=` on the home row because it's so
+common in programming.
+
+</section>
+
+## Function/navigation layer
+
+<section data-active="fn">
+
+The third layer is accessed via the right thumb's inner key, and is generally
+reserved for "special" keys (that is, keys that perform some action vs emitting
+a character). The right hand has arrow keys in a vi-like orientation, which
+allows for easy one-handed operation. It's nice to have access to `home`, `page
+up`/`down`, and `end` occasionally. I also have single-key shortcuts for tab
+navigation (`command+shift+]` or `[`), since those are somewhat frequently used
+and a bit awkward to hit.
+
+This layer also has keys for screen brightness, volume, and media navigation.
+Backspace on this layer is replaced with (forward) `delete`, and `escape` gets
+its own key for the few applications that require holding it down.
+
 </section>
 
 </KeyboardScroller>
