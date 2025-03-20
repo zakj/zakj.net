@@ -1,0 +1,122 @@
+---
+import Text from '$layouts/Text.astro';
+import Mark from '$components/Mark.svelte';
+import PMark from '$components/PMark.svelte';
+---
+
+<Text title="Mark explorations">
+  <PMark width="50" height="150" gap="10" descender="100" client:idle />
+  <div class="wrapper">
+    <Mark desc="z block split apart">
+      <polygon points="0,0 50,0 0,150"></polygon>
+      <polygon points="50,0 50,150 0,150" transform="translate(5,0)"></polygon>
+
+      <polygon points="0,0 50,0 50,150 0,250" transform="translate(65,0)"
+      ></polygon>
+    </Mark>
+
+    <Mark desc="same triangles">
+      <polygon points="0,0 50,0 0,150"></polygon>
+      <polygon points="50,0 50,150 0,150" transform="translate(5,0)"></polygon>
+
+      <polygon points="0,0 50,0 50,100 0,250" transform="translate(60,0)"
+      ></polygon>
+    </Mark>
+
+    <Mark desc="z block sliced through">
+      <polygon points="0,0 45,0 0,150"></polygon>
+      <polygon points="50,0 50,150 5,150" transform="translate(0,0)"></polygon>
+
+      <polygon points="0,0 50,0 50,150 0,250" transform="translate(60,0)"
+      ></polygon>
+    </Mark>
+
+    <Mark desc="slice angle">
+      <polygon points="0,0 50,0 0,135"></polygon>
+      <polygon points="50,15 50,150 0,150" transform="translate(0,0)"></polygon>
+
+      <polygon points="0,0 50,0 50,150 0,250" transform="translate(60,0)"
+      ></polygon>
+    </Mark>
+
+    <Mark desc="normalize line width">
+      <polygon points="0,0 50,0 0,135"></polygon>
+      <polygon points="50,15 50,150 0,150" transform="translate(0,0)"></polygon>
+
+      <polygon points="0,0 50,0 50,150 0,250" transform="translate(55,0)"
+      ></polygon>
+    </Mark>
+
+    <Mark desc="wider line width">
+      <polygon points="0,0 50,0 0,125"></polygon>
+      <polygon points="50,25 50,150 0,150" transform="translate(0,0)"></polygon>
+
+      <polygon points="0,0 50,0 50,150 0,250" transform="translate(60,0)"
+      ></polygon>
+    </Mark>
+
+    <Mark desc="shorter z block">
+      <polygon points="0,50 50,50 0,135"></polygon>
+      <polygon points="50,65 50,150 0,150" transform="translate(0,0)"></polygon>
+
+      <polygon points="0,0 50,0 50,150 0,250" transform="translate(60,0)"
+      ></polygon>
+    </Mark>
+
+    <Mark desc="dotted j">
+      <polygon points="0,50 50,50 0,135"></polygon>
+      <polygon points="50,65 50,150 0,150" transform="translate(0,0)"></polygon>
+
+      <g transform="translate(60,0)">
+        <rect x="0" y="0" width="50" height="50"></rect>
+        <polygon points="0,60 50,60 50,150 0,250"></polygon>
+      </g>
+    </Mark>
+
+    <Mark desc="shorter descender">
+      <polygon points="0,50 50,50 0,135"></polygon>
+      <polygon points="50,65 50,150 0,150" transform="translate(0,0)"></polygon>
+
+      <g transform="translate(60,0)">
+        <rect x="0" y="0" width="50" height="50"></rect>
+        <polygon points="0,60 50,60 50,150 0,225"></polygon>
+      </g>
+    </Mark>
+
+    <Mark desc="realigned j top">
+      <polygon points="0,50 50,50 0,135"></polygon>
+      <polygon points="50,65 50,150 0,150" transform="translate(0,0)"></polygon>
+
+      <g transform="translate(60,0)">
+        <rect x="0" y="0" width="50" height="40"></rect>
+        <polygon points="0,50 50,50 50,150 0,225"></polygon>
+      </g>
+    </Mark>
+
+    <Mark desc="tweak negative space">
+      <polygon points="0,50 50,50 0,132.5"></polygon>
+      <polygon points="50,67.5 50,150 0,150" transform="translate(0,0)"
+      ></polygon>
+
+      <g transform="translate(60,0)">
+        <rect x="0" y="0" width="50" height="40"></rect>
+        <polygon points="0,50 50,50 50,150 0,225"></polygon>
+      </g>
+    </Mark>
+
+    <Mark desc="squareish">
+      <polygon points="0,0 50,0 0,80"></polygon>
+      <polygon points="50,20 50,100 0,100" transform="translate(0,0)"></polygon>
+
+      <polygon points="0,0 50,0 50,100 0,175" transform="translate(60,0)"
+      ></polygon>
+    </Mark>
+  </div>
+</Text>
+
+<style>
+  .wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+</style>
