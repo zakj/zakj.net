@@ -34,6 +34,11 @@ const vars = {
 </Text>
 
 <style is:global define:vars={vars}>
+  body {
+    /* Override page padding from Text, since the footer handles it. */
+    padding-bottom: 0;
+  }
+
   footer {
     --color-fg: var(--color-white);
     align-items: flex-end;
