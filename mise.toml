@@ -1,2 +1,14 @@
 [tools]
 pnpm = "latest"
+
+[tasks.deploy]
+tools.xh = "latest"
+env = { _.file = ".env" }
+run = """
+if [ -z "$NETLIFY_HOOK_URL" ]; then
+  echo No hook url configured. Set one up here and add it to .env:
+  echo https://app.netlify.com/projects/zakj/configuration/deploys#build-hooks
+else
+  xh post "$NETLIFY_HOOK_URL"
+fi
+"""
