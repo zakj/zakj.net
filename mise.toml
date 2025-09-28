@@ -1,9 +1,13 @@
 [tools]
 pnpm = "latest"
 
+[env]
+_.file = ".env"
+
 [tasks.deploy]
+# Useful when I've added some photos to imagekit but not made code changes.
+description = "Force a deploy from latest main without pushing."
 tools.xh = "latest"
-env = { _.file = ".env" }
 run = """
 if [ -z "$NETLIFY_HOOK_URL" ]; then
   echo No hook url configured. Set one up here and add it to .env:
