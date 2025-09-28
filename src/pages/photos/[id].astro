@@ -3,6 +3,9 @@ import { getCollection, getEntry } from 'astro:content';
 import ImageKit from 'imagekit';
 import { IK_ENDPOINT, IK_PUBLIC_KEY, IK_PRIVATE_KEY } from 'astro:env/server';
 
+import Photos_ from '$components/Photos.svelte';
+import Base from '$layouts/Base.astro';
+
 export async function getStaticPaths() {
   const photos = await getCollection('photos');
   return photos.map((entry) => ({ params: { id: entry.id } }));
@@ -11,6 +14,7 @@ export async function getStaticPaths() {
 const { id } = Astro.params;
 const entry = await getEntry('photos', id);
 if (!entry) throw new Error();
+const photos = (await getCollection('photos')).map((entry) => entry.data);
 
 const ik = new ImageKit({
   publicKey: IK_PUBLIC_KEY,
@@ -24,12 +28,14 @@ const ogImage = ik.url({
 });
 ---
 
-<meta charset="utf-8" />
-<meta property="og:image" content={ogImage} />
-<meta property="og:title" content="Photos" />
-
-<script define:vars={{ id }}>
-  // TODO use query params instead for easier parsing?
-  document.location = `/photos#id:${id}`;
-</script>
-<a href=`/photos#id:${id}`>→</a>
+<Base title="Photos" description="My local Instagram." coverImage={ogImage}>
+  <Fragment slot="extra-head">
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title="Photos · zakj.net"
+      href={new URL('/photos/feed.xml', Astro.site)}
+    />
+  </Fragment>
+  <Photos_ images={photos} selectedId={id} client:idle />
+</Base>

@@ -7,8 +7,9 @@
 
   interface Props {
     images: Image[];
+    selectedId: string | undefined;
   }
-  const { images }: Props = $props();
+  const { images, selectedId }: Props = $props();
 
   type Selected = { image: Image; node: Element };
   let selected: Selected | undefined = $state();
@@ -37,25 +38,11 @@
     ),
   );
 
-  function urlToState(loc?: Location) {
+  function urlHashToState(loc?: Location) {
     const hash = loc?.hash.slice(1);
-    if (!hash) {
-      selected = undefined;
-      filterTags.clear();
-      return;
-    }
-    if (hash.startsWith('id:')) {
-      const id = hash.split(':')[1];
-      const image = images.find((image) => image.id === id);
-      const node = document.querySelector(`[data-id="${id}"]`);
-      if (image && node) {
-        node.scrollIntoView({ behavior: 'instant', block: 'center' });
-        selected = { image, node };
-      }
-    } else {
-      filterTags.clear();
-      hash.split(',').forEach((t) => filterTags.add(t));
-    }
+    filterTags.clear();
+    if (!hash) return;
+    hash.split(',').forEach((t) => filterTags.add(t));
   }
 
   function serializeUrl(tags?: Set<string>, id?: string): string {
@@ -65,7 +52,17 @@
     return url;
   }
 
-  $effect(() => urlToState(url.current));
+  $effect(() => {
+    if (selectedId) {
+      const image = images.find((image) => image.id === selectedId);
+      const node = document.querySelector(`[data-id="${selectedId}"]`);
+      if (image && node) {
+        node.scrollIntoView({ behavior: 'instant', block: 'center' });
+        selected = { image, node };
+      }
+    }
+  });
+  $effect(() => urlHashToState(url.current));
   $effect(() => url.replace(serializeUrl(filterTags, selected?.image.id)));
 
   function toggleTag(tag: string) {
