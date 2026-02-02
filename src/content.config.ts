@@ -1,8 +1,8 @@
 import { defineCollection, z } from 'astro:content';
-import ImageKit from 'imagekit';
-import type { FileObject, Transformation } from 'imagekit/dist/libs/interfaces';
+import ImageKit from '@imagekit/nodejs';
+import type { File, Transformation } from '@imagekit/nodejs/resources';
 import smartcrop from 'smartcrop-sharp';
-import { IK_ENDPOINT, IK_PUBLIC_KEY, IK_PRIVATE_KEY } from 'astro:env/server';
+import { IK_ENDPOINT, IK_PRIVATE_KEY } from 'astro:env/server';
 
 // TODO .env loading is broken in Astro 5.1.3 through at least 5.1.5; hopefully fixed in next
 // https://github.com/withastro/astro/issues/12952
@@ -17,28 +17,32 @@ can use conditional transformations based on ar
 */
 
 function arrayOrItem(xs: unknown): string[] {
-  return Array.isArray(xs) ? xs : xs ? [xs] : [];
+  if (Array.isArray(xs)) return xs;
+  if (typeof xs === 'string') return [xs];
+  if (xs == null) return [];
+  throw new Error(`Unexpected type ${typeof xs}`);
 }
 
 async function imagekitLoader() {
-  const ik = new ImageKit({
-    publicKey: IK_PUBLIC_KEY,
-    privateKey: IK_PRIVATE_KEY,
-    urlEndpoint: IK_ENDPOINT,
-  });
+  const ik = new ImageKit({ privateKey: IK_PRIVATE_KEY });
 
-  const files = await ik.listFiles({
+  const files = await ik.assets.list({
     type: 'file',
     fileType: 'image',
     path: 'photos',
   });
 
+  // urlEndpoint: IK_ENDPOINT,
   function url(
-    file: FileObject,
+    file: File,
     transformation: Transformation | Transformation[] = [],
   ): string {
     if (!Array.isArray(transformation)) transformation = [transformation];
-    return ik.url({ path: file.filePath, transformation });
+    return ik.helper.buildSrc({
+      urlEndpoint: IK_ENDPOINT,
+      src: file.filePath!,
+      transformation,
+    });
   }
 
   async function fetchBuffer(url: string): Promise<Buffer> {
@@ -51,7 +55,7 @@ async function imagekitLoader() {
       if (file.type !== 'file' || file.fileType !== 'image') throw new Error();
 
       const placeholderData = await fetchBuffer(
-        url(file, { height: 16, effectContrast: true, format: 'webp' }),
+        url(file, { height: 16, contrastStretch: true, format: 'webp' }),
       );
 
       const cropSize = 500;
@@ -68,6 +72,7 @@ async function imagekitLoader() {
         pct(topCrop.y, topCrop.height),
       ].join(' ');
 
+      // @ts-expect-error: embeddedMetadata exists in the response but isn't documented in the SDK.
       const exif = file.embeddedMetadata;
       const tags = [
         ...arrayOrItem(exif?.Keywords),
@@ -78,11 +83,9 @@ async function imagekitLoader() {
         .filter((t) => !['gram', '4 star', 'photo stream'].includes(t));
 
       return {
-        id: file.fileId,
+        id: file.fileId!,
         path: file.filePath,
-        date: new Date(
-          (file.embeddedMetadata?.DateTimeOriginal as string) ?? file.createdAt,
-        ),
+        date: new Date((exif?.DateTimeOriginal as string) ?? file.createdAt),
         focus: file.customCoordinates ? 'custom' : 'auto',
         width: file.width,
         height: file.height,
@@ -98,7 +101,7 @@ async function imagekitLoader() {
         thumb: {
           src: url(file, { height: 500 }),
           height: 500,
-          width: Math.floor(500 * (file.width / file.height)),
+          width: Math.floor(500 * (file.width! / file.height!)),
         },
         crop,
       };

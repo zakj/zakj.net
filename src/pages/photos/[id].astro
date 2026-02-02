@@ -1,7 +1,7 @@
 ---
 import { getCollection, getEntry } from 'astro:content';
-import ImageKit from 'imagekit';
-import { IK_ENDPOINT, IK_PUBLIC_KEY, IK_PRIVATE_KEY } from 'astro:env/server';
+import ImageKit from '@imagekit/nodejs';
+import { IK_ENDPOINT, IK_PRIVATE_KEY } from 'astro:env/server';
 
 import Photos_ from '$components/Photos.svelte';
 import Base from '$layouts/Base.astro';
@@ -16,14 +16,11 @@ const entry = await getEntry('photos', id);
 if (!entry) throw new Error();
 const photos = (await getCollection('photos')).map((entry) => entry.data);
 
-const ik = new ImageKit({
-  publicKey: IK_PUBLIC_KEY,
-  privateKey: IK_PRIVATE_KEY,
-  urlEndpoint: IK_ENDPOINT,
-});
+const ik = new ImageKit({ privateKey: IK_PRIVATE_KEY });
 
-const ogImage = ik.url({
-  path: entry.data.path,
+const ogImage = ik.helper.buildSrc({
+  urlEndpoint: IK_ENDPOINT,
+  src: entry.data.path,
   transformation: [{ width: 1200, height: 630, focus: entry.data.focus }],
 });
 ---

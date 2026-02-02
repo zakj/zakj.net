@@ -14,11 +14,6 @@ export default defineConfig({
         access: 'public',
         default: 'https://ik.imagekit.io/zakj',
       }),
-      IK_PUBLIC_KEY: envField.string({
-        context: 'server',
-        access: 'public',
-        default: 'public_m7kE8hVO/UV2d0fQfRn+EfrVwkA=',
-      }),
       IK_PRIVATE_KEY: envField.string({ context: 'server', access: 'secret' }),
     },
   },
