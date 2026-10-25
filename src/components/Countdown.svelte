@@ -66,7 +66,6 @@
     min-height: 100dvh;
     display: grid;
     place-content: center;
-    outline: 2px solid orange;
     padding-bottom: 10vh; /* position contents slightly above center visually */
   }
 

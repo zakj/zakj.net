@@ -5,7 +5,6 @@ import { createSubscriber } from 'svelte/reactivity';
 // TODO is this still a useful alias?
 export type Image = CollectionEntry<'photos'>['data'];
 
-export const DESKTOP_WIDTH = 750;
 export const isBrowser = !import.meta.env.SSR;
 
 // Workaround for https://github.com/sveltejs/svelte/issues/3105

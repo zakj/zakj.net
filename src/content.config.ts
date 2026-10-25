@@ -4,9 +4,6 @@ import type { File, Transformation } from '@imagekit/nodejs/resources';
 import smartcrop from 'smartcrop-sharp';
 import { IK_ENDPOINT, IK_PRIVATE_KEY } from 'astro:env/server';
 
-// TODO .env loading is broken in Astro 5.1.3 through at least 5.1.5; hopefully fixed in next
-// https://github.com/withastro/astro/issues/12952
-
 /*
 TODO could we reduce the amount of css silliness now that we have access to easier resizing?
 rows are 250px high
