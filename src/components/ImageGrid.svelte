@@ -1,4 +1,5 @@
 <script lang="ts">
+  import PhotoDate from '$components/PhotoDate.svelte';
   import type { Image } from '$util.svelte';
   import { flip } from 'svelte/animate';
   import { scale } from 'svelte/transition';
@@ -10,13 +11,6 @@
   }
 
   const { images, select }: Props = $props();
-
-  function formatDate(d: Date): string {
-    return d.toLocaleDateString('en-US', {
-      month: 'long',
-      year: 'numeric',
-    });
-  }
 </script>
 
 <div class="grid">
@@ -43,7 +37,7 @@
           loading="lazy"
           decoding="async"
         />
-        <p>{formatDate(img.date)}</p>
+        <PhotoDate date={img.date} />
       </figure>
     </div>
   {/each}
@@ -90,22 +84,6 @@
     height: 100%;
   }
 
-  p {
-    background: oklch(from var(--color-black) l c h / 0.3);
-    text-shadow: 0px 0px 2px var(--color-black);
-    border-radius: var(--radius-s);
-    bottom: 0;
-    color: #fff;
-    font-size: 16px;
-    line-height: 1;
-    margin: 0.5em;
-    opacity: 0;
-    padding: 0.5em 0.75em;
-    position: absolute;
-    right: 0;
-    transition: opacity 150ms ease-in;
-  }
-
   @media screen and (min-width: 750px) {
     .grid {
       display: flex;
@@ -121,9 +99,6 @@
     figure::before {
       filter: blur(10px);
       scale: 1.05;
-    }
-    :hover > p {
-      opacity: 1;
     }
   }
 </style>

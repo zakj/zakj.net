@@ -1,5 +1,12 @@
 ---
 import Base from '$layouts/Base.astro';
+import PhotoDate from '$components/PhotoDate.svelte';
+import { getCollection } from 'astro:content';
+
+const photos = (await getCollection('photos'))
+  .map((entry) => entry.data)
+  .sort((a, b) => b.date.getTime() - a.date.getTime())
+  .slice(0, 3);
 
 type Link = { href: string; title: string; desc: string };
 const props: { title: string; tagline: string; links: Link[] } =
@@ -40,19 +47,41 @@ const props: { title: string; tagline: string; links: Link[] } =
       </ul>
     </nav>
   </main>
+  <section class="photos">
+    {photos.map((photo) => (
+      <a
+        href={`/photos/${photo.id}`}
+        style={{
+          '--aspect-ratio': photo.width / photo.height,
+          '--placeholder': `url(${photo.placeholder})`,
+        }}
+      >
+        <img
+          src={photo.thumb.src}
+          alt={photo.alt ?? ''}
+          width={photo.thumb.width}
+          height={photo.thumb.height}
+          loading="lazy"
+          decoding="async"
+        />
+        <PhotoDate date={photo.date} />
+      </a>
+    ))}
+  </section>
   <footer>
     <a href="/colophon">Colophon</a>
   </footer>
   {/* Inline so the order is set during parsing, before fonts load and the fade-in starts. */}
   <script is:inline>
     document
-      .querySelectorAll('header, .bio > *, nav, footer')
+      .querySelectorAll('header, .bio > *, nav, .photos, footer')
       .forEach((el, i) => el.style.setProperty('--animate-order', i + 1));
   </script>
 </Base>
 
 <style is:global>
   :root {
+    --gap: 2rem;
     --page-padding: 1.5rem;
     --color-muted: color-mix(in oklch, var(--color-fg) 60%, var(--color-bg));
     --max-width: 1550px;
@@ -63,7 +92,7 @@ const props: { title: string; tagline: string; links: Link[] } =
 
     display: flex;
     flex-direction: column;
-    gap: 2rem;
+    gap: var(--gap);
     margin-inline: auto;
     max-width: var(--max-width);
     min-height: 100dvh;
@@ -138,10 +167,30 @@ const props: { title: string; tagline: string; links: Link[] } =
     }
   }
 
+  .photos {
+    display: flex;
+    gap: 6px;
+    margin-top: auto;
+
+    a {
+      aspect-ratio: var(--aspect-ratio);
+      background: var(--placeholder) center / cover;
+      flex: var(--aspect-ratio) 1 0%;
+      min-width: 0;
+      position: relative;
+    }
+    img {
+      height: 100%;
+      object-fit: cover;
+      width: 100%;
+    }
+  }
+
   footer {
     color: var(--color-muted);
-    font-size: var(--font-size-small);
-    margin-top: auto;
+    font-size: 0.8em;
+    margin-top: calc(0.75rem - var(--gap));
+    text-align: right;
   }
 
   @media (prefers-color-scheme: dark) {
@@ -159,15 +208,13 @@ const props: { title: string; tagline: string; links: Link[] } =
 
   @media screen and (min-width: 750px) and (min-height: 350px) {
     :root {
+      --gap: 3rem;
       --page-padding: 3rem;
-    }
-    body {
-      gap: 3rem;
     }
   }
 
   @media screen and (prefers-reduced-motion: no-preference) {
-    :is(header, .bio > *, nav, footer) {
+    :is(header, .bio > *, nav, .photos, footer) {
       animation-delay: calc(var(--animate-order) * 75ms);
       animation-duration: 500ms;
       animation-fill-mode: forwards;
@@ -175,13 +222,14 @@ const props: { title: string; tagline: string; links: Link[] } =
       opacity: 0;
     }
     body:is(.no-js, .loading, .seen-animation)
-      :is(header, .bio > *, nav, footer) {
+      :is(header, .bio > *, nav, .photos, footer) {
       animation-name: none;
     }
-    body.loading:not(.no-js) :is(header, .bio > *, nav, footer) {
+    body.loading:not(.no-js) :is(header, .bio > *, nav, .photos, footer) {
       opacity: 0;
     }
-    body:is(.no-js, .seen-animation) :is(header, .bio > *, nav, footer) {
+    body:is(.no-js, .seen-animation)
+      :is(header, .bio > *, nav, .photos, footer) {
       opacity: 1;
     }
 
