@@ -3,4 +3,4 @@ command = "pnpm run build"
 publish = "dist/"
 
 [build.environment]
-NODE_VERSION = "22.7.0"
+NODE_VERSION = "26"

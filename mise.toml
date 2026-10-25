@@ -1,4 +1,6 @@
 [tools]
+# Keep in sync with NODE_VERSION in netlify.toml.
+node = "26"
 pnpm = "latest"
 
 [env]
