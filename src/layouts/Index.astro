@@ -1,7 +1,9 @@
 ---
 import Base from '$layouts/Base.astro';
 
-const props = Astro.props.frontmatter;
+type Link = { href: string; title: string; desc: string };
+const props: { title: string; tagline: string; links: Link[] } =
+  Astro.props.frontmatter;
 ---
 
 <script>
@@ -24,7 +26,19 @@ const props = Astro.props.frontmatter;
     <p>{props.tagline}</p>
   </header>
   <main>
-    <slot />
+    <div class="bio">
+      <slot />
+    </div>
+    <nav>
+      <ul>
+        {props.links.map(({ href, title, desc }) => (
+          <li>
+            <a href={href}>{title}</a>
+            <p>{desc}</p>
+          </li>
+        ))}
+      </ul>
+    </nav>
   </main>
   <footer>
     <a href="/colophon">Colophon</a>
@@ -32,7 +46,7 @@ const props = Astro.props.frontmatter;
   {/* Inline so the order is set during parsing, before fonts load and the fade-in starts. */}
   <script is:inline>
     document
-      .querySelectorAll('header, main > *, footer')
+      .querySelectorAll('header, .bio > *, nav, footer')
       .forEach((el, i) => el.style.setProperty('--animate-order', i + 1));
   </script>
 </Base>
@@ -85,11 +99,33 @@ const props = Astro.props.frontmatter;
   }
 
   main {
-    max-width: 30em;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem 5rem;
     text-wrap: pretty;
+  }
+
+  .bio {
+    flex: 1 1 20em;
+    max-width: 30em;
 
     p + p {
       margin-top: 0.7rem;
+    }
+  }
+
+  nav {
+    flex: 0 1 auto;
+
+    ul {
+      display: grid;
+      gap: 0.7rem;
+      list-style: none;
+      padding: 0;
+    }
+    p {
+      color: var(--color-muted);
+      font-size: 0.8em;
     }
   }
 
@@ -131,20 +167,21 @@ const props = Astro.props.frontmatter;
   }
 
   @media screen and (prefers-reduced-motion: no-preference) {
-    :is(header, main > *, footer) {
+    :is(header, .bio > *, nav, footer) {
       animation-delay: calc(var(--animate-order) * 75ms);
       animation-duration: 500ms;
       animation-fill-mode: forwards;
       animation-name: fade-in-text;
       opacity: 0;
     }
-    body:is(.no-js, .loading, .seen-animation) :is(header, main > *, footer) {
+    body:is(.no-js, .loading, .seen-animation)
+      :is(header, .bio > *, nav, footer) {
       animation-name: none;
     }
-    body.loading:not(.no-js) :is(header, main > *, footer) {
+    body.loading:not(.no-js) :is(header, .bio > *, nav, footer) {
       opacity: 0;
     }
-    body:is(.no-js, .seen-animation) :is(header, main > *, footer) {
+    body:is(.no-js, .seen-animation) :is(header, .bio > *, nav, footer) {
       opacity: 1;
     }
 

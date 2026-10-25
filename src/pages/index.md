@@ -2,6 +2,22 @@
 layout: ../layouts/Index.astro
 title: Zak Johnson
 tagline: Whiskey ginger & a dash of bitters.
+links:
+  - href: /photos
+    title: Photos
+    desc: My local Instagram.
+  - href: /nato
+    title: NATO Alphabet
+    desc: M as in Mancy.
+  - href: /svg-arc
+    title: SVG arc paths
+    desc: For the dozens of us who write SVG by hand.
+  - href: /plank
+    title: Plank
+    desc: Five minutes of daily regret.
+  - href: /countdown
+    title: Countdown
+    desc: Time until the thing.
 ---
 
 Hello! I'm Zak, a design-minded engineer in Oakland, CA. I currently work at
