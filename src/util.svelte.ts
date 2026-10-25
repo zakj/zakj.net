@@ -25,8 +25,7 @@ export const disableScroll: Action<HTMLBodyElement, boolean> = (
 };
 
 // Return a random item from the passed-in list.
-export const choice = <T,>(xs: T[]) =>
-  xs[Math.floor(Math.random() * xs.length)];
+export const choice = <T>(xs: T[]) => xs[Math.floor(Math.random() * xs.length)];
 
 // Playing a sound muted (from a user-interaction handler) allows us to play it
 // later without a user interaction on mobile Safari.

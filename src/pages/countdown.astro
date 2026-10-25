@@ -6,6 +6,10 @@ import Base from '$layouts/Base.astro';
 // TODO: Astro doesn't allow importing a component with the same name as the current file?
 ---
 
-<Base title="Countdown" description="A simple countdown timer." favicon={hourglassIcon.src}>
+<Base
+  title="Countdown"
+  description="A simple countdown timer."
+  favicon={hourglassIcon.src}
+>
   <Countdown_ client:only="svelte" />
 </Base>

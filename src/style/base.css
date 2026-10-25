@@ -40,17 +40,19 @@
   /* Shadows */
 
   /* Add an inset glow and light border to handle light/dark colorschemes. */
-  --shadow-border: 0 0 0 0.5px oklch(from var(--color-accent) 0.8 c h / 0.2)
-      inset,
+  --shadow-border:
+    0 0 0 0.5px oklch(from var(--color-accent) 0.8 c h / 0.2) inset,
     0 0 0 0.5px oklch(from var(--color-accent) 0.4 c h / 0.2);
 
   /* For slightly raised cards. */
-  --shadow-card: var(--shadow-border),
+  --shadow-card:
+    var(--shadow-border),
     0 2px 5px -1px oklch(from var(--color-accent) 0.5 c h / 0.25),
     0 1px 3px -1px oklch(from var(--color-accent) 0.5 c h / 0.3);
 
   /* For elements that float above their background. */
-  --shadow-float: var(--shadow-border),
+  --shadow-float:
+    var(--shadow-border),
     0 10px 36px oklch(from var(--color-accent) l c h / 0.3);
 
   background: var(--color-bg);
