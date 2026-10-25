@@ -1,9 +1,8 @@
 ---
 layout: ../layouts/Index.astro
 title: Zak Johnson
+tagline: Whiskey ginger & a dash of bitters.
 ---
-
-# Whiskey<br>ginger &<br>a dash of<br>bitters.
 
 Hello! I'm Zak, a design-minded engineer in Oakland, CA. I currently work at
 [Propel][], where we build modern, respectful technology that helps low-income
