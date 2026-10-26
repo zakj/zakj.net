@@ -16,7 +16,7 @@ export type Props = {
 
 const {
   title = 'Zak Johnson',
-  description = 'Whiskey, ginger, & a dash of bitters.',
+  description = 'Whiskey ginger & a dash of bitters.',
   favicon = '/favicon.svg',
   coverImage = defaultCoverImage.src,
 }: Props = Astro.props;
@@ -35,9 +35,16 @@ const {
     />
 
     <meta property="og:title" content={`${title} · zakj.net`} />
-    <meta property="og:type" content="webpage" />
-    <meta property="og:url" content={Astro.url} />
-    {coverImage ? <meta property="og:image" content={coverImage} /> : ''}
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    {coverImage ? (
+      <meta
+        property="og:image"
+        content={new URL(coverImage, Astro.site).href}
+      />
+    ) : (
+      ''
+    )}
 
     <link rel="icon" href={favicon} type="image/svg+xml" />
     <!-- <link rel="apple-touch-icon" href="icon.png" /> -->
