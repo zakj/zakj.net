@@ -27,6 +27,7 @@
   --font-size-body: fluid(17px, 28px, 390px, 750px);
   --font-size-small: fluid(12px, 14px, 390px, 750px);
   --font-size-monospace: fluid(12px, 20px, 390px, 750px);
+  --font-size-h1: fluid(30px, 70px, 390px, 750px);
 
   /* TODO maybe just use s/l and no semantics
   /* Corners */

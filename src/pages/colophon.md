@@ -3,8 +3,6 @@ layout: $layouts/Text.astro
 title: Colophon
 ---
 
-# Colophon
-
 Things I used:
 
 - [Astro][], [Svelte][], and [TypeScript][]

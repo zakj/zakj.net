@@ -1,5 +1,6 @@
 ---
 import Base, { type Props as BaseProps } from '$layouts/Base.astro';
+import Mark from '$components/Mark.astro';
 import type { MarkdownLayoutProps } from 'astro';
 
 type Props = BaseProps | MarkdownLayoutProps<BaseProps>;
@@ -10,13 +11,26 @@ const props: Props =
 
 <Base {...props}>
   <main>
+    <header>
+      <Mark />
+      <h1>{props.title}</h1>
+    </header>
     <slot />
   </main>
   <slot name="footer" />
 </Base>
 
 <style is:global>
+  /* Registered so 50ch resolves against the body font, then inherits as a length. */
+  @property --column-width {
+    syntax: '<length>';
+    inherits: true;
+    initial-value: 0px;
+  }
+
   body {
+    --column-width: 50ch;
+
     --color-bg-1: oklch(from var(--color-bg) 0.98 c h);
     --color-bg-2: oklch(from var(--color-accent) 0.2 c h / 0.1);
 
@@ -33,10 +47,11 @@ const props: Props =
         1fr
       )
       [content-start]
-      minmax(auto, 50ch)
+      minmax(auto, var(--column-width))
       [content-end]
       minmax(max(env(safe-area-inset-right), var(--page-padding)), 1fr)
       [full-end];
+    container-type: inline-size;
     min-height: 100dvh;
     padding-top: max(env(safe-area-inset-top), var(--page-padding));
     padding-bottom: max(env(safe-area-inset-bottom), var(--page-padding));
@@ -44,6 +59,29 @@ const props: Props =
 
   main {
     grid-column: content;
+
+    > header {
+      align-items: baseline;
+      display: flex;
+      font-size: var(--font-size-h1);
+      gap: 0.25em;
+
+      /* The slash (0.64em) and gap hang into the left margin as far as the margin allows. */
+      .mark {
+        margin-left: calc(
+          -1 *
+            clamp(
+              0px,
+              (100cqi - var(--column-width)) / 2 - var(--page-padding),
+              0.89em
+            )
+        );
+      }
+      h1 {
+        font-size: inherit;
+        text-transform: none;
+      }
+    }
   }
 
   main > * + *,

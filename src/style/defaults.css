@@ -16,7 +16,7 @@ h3 {
   text-wrap: pretty; /* lacks browser support as of 2024 */
 }
 h1 {
-  font-size: fluid(30px, 70px, 390px, 750px);
+  font-size: var(--font-size-h1);
 }
 h2 {
   font-size: fluid(25px, 50px, 390px, 750px);

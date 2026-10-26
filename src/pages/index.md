@@ -7,7 +7,7 @@ links:
     title: Photos
     desc: My local Instagram.
   - href: /nato
-    title: NATO Alphabet
+    title: NATO alphabet
     desc: M as in Mancy.
   - href: /svg-arc
     title: SVG arc paths
