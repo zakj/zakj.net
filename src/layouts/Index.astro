@@ -82,8 +82,6 @@ const props: { title: string; tagline: string; links: Link[] } =
 <style is:global>
   :root {
     --gap: 2rem;
-    --page-padding: 1.5rem;
-    --color-muted: color-mix(in oklch, var(--color-fg) 60%, var(--color-bg));
     --max-width: 1550px;
   }
 
@@ -209,7 +207,6 @@ const props: { title: string; tagline: string; links: Link[] } =
   @media screen and (min-width: 750px) and (min-height: 350px) {
     :root {
       --gap: 3rem;
-      --page-padding: 3rem;
     }
   }
 

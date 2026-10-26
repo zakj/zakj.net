@@ -15,6 +15,7 @@
   --color-fg: var(--color-black);
   --color-bg: var(--color-white);
   --color-accent: var(--color-shroom);
+  --color-muted: color-mix(in oklch, var(--color-fg) 60%, var(--color-bg));
   /* TODO mix in some accent? */
   --color-bg-elevate: oklch(from var(--color-white) calc(l - 0.06) c h);
 
@@ -36,6 +37,7 @@
 
   /* Padding */
   --padding-input: 0.25em;
+  --page-padding: 1.5rem;
 
   /* Shadows */
 
@@ -68,5 +70,11 @@
     /* TODO */
     /* --color-bg: color-mix(in oklch, var(--color-black), var(--color-accent) 2%); */
     --color-bg-elevate: oklch(from var(--color-black) calc(l + 0.07) c h);
+  }
+}
+
+@media screen and (min-width: 750px) and (min-height: 350px) {
+  :root {
+    --page-padding: 3rem;
   }
 }

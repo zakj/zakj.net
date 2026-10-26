@@ -16,11 +16,6 @@ const props: Props =
 </Base>
 
 <style is:global>
-  :root {
-    /* TODO: move to base? */
-    --page-padding: 1.5rem;
-  }
-
   body {
     --color-bg-1: oklch(from var(--color-bg) 0.98 c h);
     --color-bg-2: oklch(from var(--color-accent) 0.2 c h / 0.1);
@@ -65,12 +60,6 @@ const props: Props =
     body {
       --color-bg-1: oklch(from var(--color-bg) 0.24 c h);
       --color-bg-2: oklch(from var(--color-accent) 0.5 c h / 0.1);
-    }
-  }
-
-  @media screen and (min-width: 750px) and (min-height: 350px) {
-    :root {
-      --page-padding: 3rem;
     }
   }
 </style>
