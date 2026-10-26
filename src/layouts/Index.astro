@@ -1,6 +1,7 @@
 ---
 import Base from '$layouts/Base.astro';
 import PhotoDate from '$components/PhotoDate.svelte';
+import '$style/corner-light.css';
 import { getCollection } from 'astro:content';
 
 const photos = (await getCollection('photos'))
@@ -98,20 +99,6 @@ const props: { title: string; tagline: string; links: Link[] } =
       max(env(safe-area-inset-bottom), var(--page-padding));
     padding-inline: max(env(safe-area-inset-left), var(--page-padding))
       max(env(safe-area-inset-right), var(--page-padding));
-
-    /* Faint light falling from the top left of the column, behind the name. */
-    &::before {
-      background: radial-gradient(
-        circle at var(--light-x) 0,
-        transparent 20%,
-        rgb(0 0 0 / 0.045) 90%
-      );
-      content: '';
-      inset: 0;
-      pointer-events: none;
-      position: fixed;
-      z-index: -1;
-    }
   }
 
   header {
@@ -134,7 +121,7 @@ const props: { title: string; tagline: string; links: Link[] } =
 
   .bio {
     flex: 1 1 20em;
-    max-width: 30em;
+    max-width: var(--measure);
 
     p + p {
       margin-top: 0.7rem;
@@ -153,15 +140,6 @@ const props: { title: string; tagline: string; links: Link[] } =
     p {
       color: var(--color-muted);
       font-size: 0.8em;
-    }
-  }
-
-  a {
-    text-decoration-color: oklch(from var(--color-accent) l c h / 0.4);
-    @media (hover: hover) {
-      &:hover {
-        text-decoration-color: var(--color-accent);
-      }
     }
   }
 
@@ -189,19 +167,6 @@ const props: { title: string; tagline: string; links: Link[] } =
     font-size: 0.8em;
     margin-top: calc(0.75rem - var(--gap));
     text-align: right;
-  }
-
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --color-accent: oklch(from var(--color-shroom) 0.65 c h);
-    }
-    body::before {
-      background: radial-gradient(
-        circle at var(--light-x) 0,
-        rgb(255 255 255 / 0.045) 10%,
-        transparent 80%
-      );
-    }
   }
 
   @media screen and (min-width: 750px) and (min-height: 350px) {

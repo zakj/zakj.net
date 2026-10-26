@@ -2,6 +2,10 @@ body.no-scroll {
   overflow: hidden;
 }
 
+::selection {
+  background: oklch(from var(--color-link) l c h / 0.35);
+}
+
 *:focus-visible {
   outline: 2px solid var(--color-accent);
   outline-offset: 1px;
@@ -27,12 +31,14 @@ h3 {
 
 a {
   color: inherit;
-  text-decoration-color: color-mix(in srgb, var(--color-fg) 20%, transparent);
+  text-decoration-color: oklch(from var(--color-link) l c h / 0.4);
   text-decoration-thickness: 0.07em;
   text-underline-position: from-font;
   transition: text-decoration-color 150ms ease-in-out;
-  &:hover {
-    text-decoration-color: inherit;
+  @media (hover: hover) {
+    &:hover {
+      text-decoration-color: var(--color-link);
+    }
   }
   body.loading:not(.no-js) & {
     /* Hide underlines until the font is loaded. */
