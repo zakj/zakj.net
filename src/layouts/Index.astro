@@ -1,5 +1,6 @@
 ---
 import Base from '$layouts/Base.astro';
+import Mark from '$components/Mark.astro';
 import PhotoDate from '$components/PhotoDate.svelte';
 import '$style/corner-light.css';
 import { getCollection } from 'astro:content';
@@ -30,7 +31,10 @@ const props: { title: string; tagline: string; links: Link[] } =
 
 <Base {...props}>
   <header>
-    <h1>{props.title}</h1>
+    <h1>
+      <Mark z />
+      {props.title.slice(1)}
+    </h1>
     <p>{props.tagline}</p>
   </header>
   <main>
@@ -77,6 +81,10 @@ const props: { title: string; tagline: string; links: Link[] } =
     document
       .querySelectorAll('header, .bio > *, nav, .photos, footer')
       .forEach((el, i) => el.style.setProperty('--animate-order', i + 1));
+    // Arriving via a view transition, skip the fade-in so it doesn't fight the mark moving in.
+    addEventListener('pagereveal', (e) => {
+      if (e.viewTransition) document.body.classList.add('seen-animation');
+    });
   </script>
 </Base>
 

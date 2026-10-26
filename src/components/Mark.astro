@@ -1,16 +1,22 @@
 ---
+interface Props {
+  /** The Z in the homepage name: bars shown, not a link, and it carries the letter for screen readers. */
+  z?: boolean;
+}
+
+const { z = false } = Astro.props;
+const Tag = z ? 'span' : 'a';
+const attrs = z ? {} : { href: '/', 'aria-label': 'Home' };
 ---
 
-<a class="mark" href="/" aria-label="Home">
+<Tag class:list={['mark', { z }]} {...attrs}>
   <svg viewBox="7 0 640 700" aria-hidden="true">
-    <polygon class="bar top" points="50,0 465.68,0 364,170 50,170"></polygon>
-    <polygon
-      class="bar bottom"
-      points="292,530 625,530 625,700 190.96,700"
-    ></polygon>
-    <polygon points="7,700 230.96,700 647,0 425.68,0"></polygon>
+    <polygon class="bar top" points="50,0 465.68,0 364,170 50,170" />
+    <polygon class="bar bottom" points="292,530 625,530 625,700 190.96,700" />
+    <polygon points="7,700 230.96,700 647,0 425.68,0" />
   </svg>
-</a>
+  {z && <span class="visually-hidden">Z</span>}
+</Tag>
 
 <style>
   /* At rest the mark is a "/", the site root; it finishes into a Z on hover, focus, or press. */
@@ -25,7 +31,14 @@
     display: inline;
     fill: currentColor;
     height: 0.7em;
+    view-transition-name: mark;
     width: auto;
+  }
+
+  /* Standing in for the font's Z: its side bearings, less the "Za" kerning. */
+  .z svg {
+    margin-left: 0.007em;
+    margin-right: -0.004em;
   }
 
   .bar {
@@ -41,19 +54,31 @@
   .bottom {
     transform-origin: 0% 50%;
   }
+  .z .bar {
+    transform: none;
+  }
+
+  .visually-hidden {
+    clip-path: inset(50%);
+    height: 1px;
+    overflow: hidden;
+    position: absolute;
+    white-space: nowrap;
+    width: 1px;
+  }
 
   @media (hover: hover) {
-    .mark:hover .bar {
+    a.mark:hover .bar {
       transform: none;
     }
-    .mark:hover .top {
+    a.mark:hover .top {
       transition-delay: 0ms;
     }
-    .mark:hover .bottom {
+    a.mark:hover .bottom {
       transition-delay: 70ms;
     }
   }
-  .mark:is(:focus-visible, :active) {
+  a.mark:is(:focus-visible, :active) {
     .bar {
       transform: none;
     }
@@ -65,9 +90,96 @@
     }
   }
 
+  /* Between pages the mark moves with the view transition and turns from a Z into a slash, or back. */
+  .mark:is(.vt-retract, .vt-extend) .bar {
+    animation-duration: 150ms;
+    animation-fill-mode: both;
+    animation-timing-function: cubic-bezier(0.25, 1, 0.5, 1);
+  }
+  .mark.vt-retract .bar {
+    animation-name: retract;
+  }
+  .mark.vt-extend .bar {
+    animation-name: extend;
+  }
+  .mark.vt-retract .top,
+  .mark.vt-extend .bottom {
+    animation-delay: 50ms;
+  }
+  @keyframes retract {
+    from {
+      transform: none;
+    }
+    to {
+      transform: scaleX(0);
+    }
+  }
+  @keyframes extend {
+    from {
+      transform: scaleX(0);
+    }
+    to {
+      transform: none;
+    }
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .bar {
       transition: none;
     }
   }
 </style>
+
+<style is:global>
+  @view-transition {
+    navigation: auto;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    @view-transition {
+      navigation: none;
+    }
+  }
+
+  /* Only the mark moves; the pages themselves swap instantly. */
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none;
+  }
+  /* The live mark on the new page animates its own shape, so the old snapshot isn't needed. */
+  ::view-transition-old(mark) {
+    display: none;
+  }
+  ::view-transition-new(mark) {
+    animation: none;
+  }
+  ::view-transition-group(mark) {
+    animation-duration: 200ms;
+  }
+</style>
+
+<script is:inline>
+  // The leaving page records which shape its mark shows; the arriving page animates from it.
+  (() => {
+    const shape = () => {
+      const mark = document.querySelector('.mark');
+      if (!mark) return '';
+      // A hovered, focused, or pressed slash is showing its Z.
+      return mark.matches('.z, :hover, :focus-visible, :active')
+        ? 'z'
+        : 'slash';
+    };
+    addEventListener('pageswap', (e) => {
+      if (e.viewTransition) sessionStorage.setItem('mark-shape', shape());
+    });
+    addEventListener('pagereveal', (e) => {
+      const from = sessionStorage.getItem('mark-shape');
+      sessionStorage.removeItem('mark-shape');
+      const to = shape();
+      if (!e.viewTransition || !from || !to || from === to) return;
+      const mark = document.querySelector('.mark');
+      const change = to === 'slash' ? 'vt-retract' : 'vt-extend';
+      mark.classList.add(change);
+      e.viewTransition.finished.then(() => mark.classList.remove(change));
+    });
+  })();
+</script>
