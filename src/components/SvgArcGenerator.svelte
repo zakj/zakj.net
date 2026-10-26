@@ -99,11 +99,10 @@
   }
 
   label {
+    color: var(--color-muted);
     display: flex;
     flex-direction: column;
-    font-size: var(--font-size-small);
-    text-transform: uppercase;
-    font-family: var(--font-family-display);
+    font-size: 0.8em;
     white-space: nowrap;
   }
   label input {
