@@ -62,12 +62,32 @@ async function imagekitLoader() {
       const topCrop = (
         await smartcrop.crop(buffer, { height: cropSize, width: cropSize })
       ).topCrop;
-      const pct = (a: number, b: number): string =>
-        `${Math.round((a / b) * 100)}%`;
-      const crop = [
-        pct(topCrop.x, topCrop.width),
-        pct(topCrop.y, topCrop.height),
-      ].join(' ');
+      const scale = cropSize / Math.min(file.width!, file.height!);
+      const bufferWidth = file.width! * scale;
+      const bufferHeight = file.height! * scale;
+
+      // A focus rectangle set by hand in ImageKit wins over smartcrop's guess.
+      const [cx, cy, cw, ch] = (file.customCoordinates ?? '')
+        .split(',')
+        .map(Number);
+      const focal = file.customCoordinates
+        ? { x: (cx + cw / 2) / file.width!, y: (cy + ch / 2) / file.height! }
+        : {
+            x: (topCrop.x + topCrop.width / 2) / bufferWidth,
+            y: (topCrop.y + topCrop.height / 2) / bufferHeight,
+          };
+
+      // The square crop closest to centered on the focal point, as object-position
+      // percentages, which are a share of the overflow, not of the image.
+      const side = Math.min(file.width!, file.height!);
+      const pct = (f: number, size: number): string => {
+        if (size === side) return '50%';
+        const offset = (f * size - side / 2) / (size - side);
+        return `${Math.round(Math.min(1, Math.max(0, offset)) * 100)}%`;
+      };
+      const crop = [pct(focal.x, file.width!), pct(focal.y, file.height!)].join(
+        ' ',
+      );
 
       const thumbs = [500, 1000, 1500].map((height) => ({
         src: url(file, { height }),
@@ -106,6 +126,7 @@ async function imagekitLoader() {
           srcset: thumbs.map((t) => `${t.src} ${t.width}w`).join(', '),
         },
         crop,
+        focal,
       };
     }),
   );
@@ -137,6 +158,10 @@ export const collections = {
         srcset: z.string(),
       }),
       crop: z.string(),
+      focal: z.object({
+        x: z.number().min(0).max(1),
+        y: z.number().min(0).max(1),
+      }),
     }),
   }),
 };
