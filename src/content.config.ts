@@ -51,31 +51,35 @@ async function imagekitLoader() {
     files.map(async (file) => {
       if (file.type !== 'file' || file.fileType !== 'image') throw new Error();
 
-      const placeholderData = await fetchBuffer(
-        url(file, { height: 16, contrastStretch: true, format: 'webp' }),
-      );
-
-      const cropSize = 500;
-      const buffer = await fetchBuffer(
-        url(file, { height: cropSize, width: cropSize, crop: 'at_least' }),
-      );
-      const topCrop = (
-        await smartcrop.crop(buffer, { height: cropSize, width: cropSize })
-      ).topCrop;
-      const scale = cropSize / Math.min(file.width!, file.height!);
-      const bufferWidth = file.width! * scale;
-      const bufferHeight = file.height! * scale;
+      async function smartFocal(): Promise<{ x: number; y: number }> {
+        const cropSize = 500;
+        const buffer = await fetchBuffer(
+          url(file, { height: cropSize, width: cropSize, crop: 'at_least' }),
+        );
+        const { topCrop } = await smartcrop.crop(buffer, {
+          height: cropSize,
+          width: cropSize,
+        });
+        const scale = cropSize / Math.min(file.width!, file.height!);
+        return {
+          x: (topCrop.x + topCrop.width / 2) / (file.width! * scale),
+          y: (topCrop.y + topCrop.height / 2) / (file.height! * scale),
+        };
+      }
 
       // A focus rectangle set by hand in ImageKit wins over smartcrop's guess.
-      const [cx, cy, cw, ch] = (file.customCoordinates ?? '')
-        .split(',')
-        .map(Number);
-      const focal = file.customCoordinates
-        ? { x: (cx + cw / 2) / file.width!, y: (cy + ch / 2) / file.height! }
-        : {
-            x: (topCrop.x + topCrop.width / 2) / bufferWidth,
-            y: (topCrop.y + topCrop.height / 2) / bufferHeight,
-          };
+      const custom = file.customCoordinates?.split(',').map(Number);
+      const [placeholderData, focal] = await Promise.all([
+        fetchBuffer(
+          url(file, { height: 16, contrastStretch: true, format: 'webp' }),
+        ),
+        custom
+          ? {
+              x: (custom[0] + custom[2] / 2) / file.width!,
+              y: (custom[1] + custom[3] / 2) / file.height!,
+            }
+          : smartFocal(),
+      ]);
 
       // The square crop closest to centered on the focal point, as object-position
       // percentages, which are a share of the overflow, not of the image.
