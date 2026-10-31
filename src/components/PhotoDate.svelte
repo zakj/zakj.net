@@ -7,7 +7,7 @@
 >
 
 <style>
-  /* Shown on hover over the photo it sits in; the parent must be positioned. */
+  /* Shown on hover over or focus on the photo it sits in; the parent must be positioned. */
   time {
     background: oklch(from var(--color-black) l c h / 0.3);
     text-shadow: 0px 0px 2px var(--color-black);
@@ -22,6 +22,10 @@
     position: absolute;
     right: 0;
     transition: opacity 150ms ease-in;
+  }
+
+  :global(:focus-visible) time {
+    opacity: 1;
   }
 
   @media screen and (min-width: 750px) {

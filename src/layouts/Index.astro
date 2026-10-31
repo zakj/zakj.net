@@ -10,6 +10,8 @@ const photos = (await getCollection('photos'))
   .sort((a, b) => b.date.getTime() - a.date.getTime())
   .slice(0, 3);
 const ratioSum = photos.reduce((sum, p) => sum + p.width / p.height, 0);
+// The mark's slash runs this far across for every 1 up (Mark.astro's polygon).
+const slant = 0.598;
 
 type Link = { href: string; title: string; desc: string };
 const props: { title: string; tagline: string; links: Link[] } =
@@ -53,19 +55,28 @@ const props: { title: string; tagline: string; links: Link[] } =
       </ul>
     </nav>
   </main>
-  <section class="photos">
+  <section
+    class="photos"
+    style={{
+      '--ratio-sum': ratioSum,
+      '--seams': photos.length - 1,
+      '--slant': slant,
+    }}
+  >
     {photos.map((photo) => (
       <a
         href={`/photos/${photo.id}`}
         style={{
           '--aspect-ratio': photo.width / photo.height,
           '--placeholder': `url(${photo.placeholder})`,
+          '--focal-x': photo.focal.x,
+          '--focal-y': photo.focal.y,
         }}
       >
         <img
           src={photo.thumb.src}
           srcset={photo.thumb.srcset}
-          sizes={`calc(min(100vw, 1550px) * ${photo.width / photo.height / ratioSum})`}
+          sizes={`calc(min(100vw, 1550px) * ${(photo.width / photo.height + slant) / ratioSum})`}
           alt={photo.alt ?? ''}
           width={photo.thumb.width}
           height={photo.thumb.height}
@@ -100,6 +111,7 @@ const props: { title: string; tagline: string; links: Link[] } =
   body {
     --light-x: max(0px, 50% - var(--max-width) / 2);
 
+    container-type: inline-size;
     display: flex;
     flex-direction: column;
     gap: var(--gap);
@@ -154,21 +166,107 @@ const props: { title: string; tagline: string; links: Link[] } =
     }
   }
 
+  /* Registered so it resolves against the page width here, not each photo's own container below. */
+  @property --run {
+    syntax: '<length>';
+    inherits: true;
+    initial-value: 0px;
+  }
+
+  /* Seams run at the mark's slash angle. Each photo is widened by what the slant
+     clips off, so its visible area keeps its aspect ratio. */
   .photos {
+    --seam: 6px;
+    --height: calc((100cqi - var(--seam) * var(--seams)) / var(--ratio-sum));
+    --run: calc(var(--height) * var(--slant));
+
     display: flex;
-    gap: 6px;
+    height: var(--height);
     margin-top: auto;
 
     a {
-      aspect-ratio: var(--aspect-ratio);
-      background: var(--placeholder) center / cover;
-      flex: var(--aspect-ratio) 1 0%;
+      /* Which sides are slanted; the end photos keep their outer edge straight. */
+      --fl: 1;
+      --fr: 1;
+      --l: calc(var(--run) * var(--fl));
+      --r: calc(var(--run) * var(--fr));
+
+      clip-path: polygon(
+        var(--l) 0,
+        100% 0,
+        calc(100% - var(--r)) 100%,
+        0 100%
+      );
+      container-type: size;
+      flex: 0 1
+        calc(var(--aspect-ratio) * var(--height) + (var(--l) + var(--r)) / 2);
       min-width: 0;
       position: relative;
+
+      time {
+        right: var(--r);
+      }
     }
+    a:first-child {
+      --fl: 0;
+    }
+    a:last-child {
+      --fr: 0;
+    }
+    a + a {
+      margin-left: calc(var(--seam) - var(--run));
+    }
+
+    /* An outline can't follow the slant, so focus draws a band just inside the
+       slice's edges instead: a box, which the slice's clip trims to its shape,
+       minus that shape inset by the band. */
+    a:focus-visible {
+      outline: none;
+
+      &::after {
+        --t: 3px;
+        /* A slanted edge must move further sideways to inset by the same width. */
+        --hyp: sqrt(1 + var(--slant) * var(--slant));
+        --dl: calc(var(--t) * (1 + var(--fl) * (var(--hyp) - 1)));
+        --dr: calc(var(--t) * (1 + var(--fr) * (var(--hyp) - 1)));
+        --sl: calc(var(--fl) * var(--slant) * var(--t));
+        --sr: calc(var(--fr) * var(--slant) * var(--t));
+
+        background: var(--color-accent);
+        clip-path: polygon(
+          evenodd,
+          0 0,
+          100% 0,
+          100% 100%,
+          0 100%,
+          0 0,
+          calc(var(--l) - var(--sl) + var(--dl)) var(--t),
+          calc(100% - var(--sr) - var(--dr)) var(--t),
+          calc(100% - var(--r) + var(--sr) - var(--dr)) calc(100% - var(--t)),
+          calc(var(--sl) + var(--dl)) calc(100% - var(--t)),
+          calc(var(--l) - var(--sl) + var(--dl)) var(--t)
+        );
+        content: '';
+        inset: 0;
+        position: absolute;
+      }
+    }
+
+    /* Cover, with the focal point as close to the center of the visible shape as
+       the edges allow. The slants shift that center (l - r) / 4 off the box's. */
     img {
+      --w: max(100cqw, 100cqh * var(--aspect-ratio));
+      --h: max(100cqh, 100cqw / var(--aspect-ratio));
+      --pos: clamp(
+          100cqw - var(--w),
+          50cqw + (var(--l) - var(--r)) / 4 - var(--focal-x) * var(--w),
+          0px
+        )
+        clamp(100cqh - var(--h), 50cqh - var(--focal-y) * var(--h), 0px);
+      background: var(--placeholder) var(--pos) / cover;
       height: 100%;
       object-fit: cover;
+      object-position: var(--pos);
       width: 100%;
     }
   }
