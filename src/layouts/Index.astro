@@ -25,7 +25,7 @@ const props: { title: string; tagline: string; links: Link[] } =
       document.body.classList.add('seen-animation');
     sessionStorage.setItem(key, '1');
     document
-      .querySelector('footer')
+      .querySelector('.photos')
       ?.addEventListener('animationend', () =>
         document.body.classList.add('seen-animation'),
       );
@@ -52,6 +52,9 @@ const props: { title: string; tagline: string; links: Link[] } =
             <p>{desc}</p>
           </li>
         ))}
+        <li class="colophon">
+          <a href="/colophon">Colophon</a>
+        </li>
       </ul>
     </nav>
   </main>
@@ -87,13 +90,10 @@ const props: { title: string; tagline: string; links: Link[] } =
       </a>
     ))}
   </section>
-  <footer>
-    <a href="/colophon">Colophon</a>
-  </footer>
   {/* Inline so the order is set during parsing, before fonts load and the fade-in starts. */}
   <script is:inline>
     document
-      .querySelectorAll('header, .bio > *, nav, .photos, footer')
+      .querySelectorAll('header, .bio > *, nav, .photos')
       .forEach((el, i) => el.style.setProperty('--animate-order', i + 1));
     // Arriving via a view transition, skip the fade-in so it doesn't fight the mark moving in.
     addEventListener('pagereveal', (e) => {
@@ -160,9 +160,13 @@ const props: { title: string; tagline: string; links: Link[] } =
       list-style: none;
       padding: 0;
     }
-    p {
+    p,
+    .colophon {
       color: var(--color-muted);
       font-size: 0.8em;
+    }
+    .colophon a {
+      color: inherit;
     }
   }
 
@@ -271,13 +275,6 @@ const props: { title: string; tagline: string; links: Link[] } =
     }
   }
 
-  footer {
-    color: var(--color-muted);
-    font-size: 0.8em;
-    margin-top: calc(0.75rem - var(--gap));
-    text-align: right;
-  }
-
   @media screen and (min-width: 750px) and (min-height: 350px) {
     :root {
       --gap: 3rem;
@@ -285,7 +282,7 @@ const props: { title: string; tagline: string; links: Link[] } =
   }
 
   @media screen and (prefers-reduced-motion: no-preference) {
-    :is(header, .bio > *, nav, .photos, footer) {
+    :is(header, .bio > *, nav, .photos) {
       animation-delay: calc(var(--animate-order) * 75ms);
       animation-duration: 500ms;
       animation-fill-mode: forwards;
@@ -293,14 +290,13 @@ const props: { title: string; tagline: string; links: Link[] } =
       opacity: 0;
     }
     body:is(.no-js, .loading, .seen-animation)
-      :is(header, .bio > *, nav, .photos, footer) {
+      :is(header, .bio > *, nav, .photos) {
       animation-name: none;
     }
-    body.loading:not(.no-js) :is(header, .bio > *, nav, .photos, footer) {
+    body.loading:not(.no-js) :is(header, .bio > *, nav, .photos) {
       opacity: 0;
     }
-    body:is(.no-js, .seen-animation)
-      :is(header, .bio > *, nav, .photos, footer) {
+    body:is(.no-js, .seen-animation) :is(header, .bio > *, nav, .photos) {
       opacity: 1;
     }
 
