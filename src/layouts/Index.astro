@@ -122,23 +122,32 @@ const props: { title: string; tagline: string; links: Link[] } =
     --max-width: 1550px;
   }
 
-  html {
-    overflow-x: clip;
-  }
-
+  /* Text sits in the middle column; the photos can span the full width. The
+     middle row grows to fill a tall window, so the photos sit on its bottom edge. */
   body {
+    --column: calc(var(--max-width) - 2 * var(--page-padding));
     --light-x: max(0px, 50% - var(--max-width) / 2);
 
-    display: flex;
-    flex-direction: column;
-    gap: var(--gap);
-    margin-inline: auto;
-    max-width: var(--max-width);
+    display: grid;
+    grid-template-columns:
+      [full-start] minmax(
+        max(env(safe-area-inset-left), var(--page-padding)),
+        1fr
+      )
+      [content-start] minmax(0, var(--column))
+      [content-end] minmax(
+        max(env(safe-area-inset-right), var(--page-padding)),
+        1fr
+      )
+      [full-end];
+    grid-template-rows: auto 1fr auto;
     min-height: 100dvh;
-    padding-block: max(env(safe-area-inset-top), var(--page-padding))
-      max(env(safe-area-inset-bottom), var(--page-padding));
-    padding-inline: max(env(safe-area-inset-left), var(--page-padding))
-      max(env(safe-area-inset-right), var(--page-padding));
+    padding-top: max(env(safe-area-inset-top), var(--page-padding));
+    row-gap: var(--gap);
+
+    > * {
+      grid-column: content;
+    }
   }
 
   header {
@@ -152,11 +161,9 @@ const props: { title: string; tagline: string; links: Link[] } =
     }
   }
 
-  /* Grows to fill a tall window so the photos sit on its bottom edge. */
   main {
     align-content: start;
     display: flex;
-    flex-grow: 1;
     flex-wrap: wrap;
     gap: 2rem 5rem;
     text-wrap: pretty;
@@ -191,28 +198,34 @@ const props: { title: string; tagline: string; links: Link[] } =
   }
 
   /* Seams run at the mark's slash angle. Each photo is widened by what the slant
-     clips off, so its visible area keeps its aspect ratio. The photos are the page's floor: full-bleed and
-     flush to the bottom, until the window outgrows the text column; then they
-     match its width, inset by a seam. */
-  .photos {
-    --row-width: min(100vw, var(--max-width) - 2 * var(--page-padding));
-    --seam: 6px;
-    --height: min(
-      calc((var(--row-width) - var(--seam) * var(--seams)) / var(--ratio-sum)),
-      40svh
-    );
-    --run: calc(var(--height) * var(--slant));
+     clips off, so its visible area keeps its aspect ratio. The photos are the
+     page's floor: full-bleed and flush to the bottom, until the window is wider
+     than --column; then they stop at that width, lifted by a seam. */
+  /* Registered so 100cqi resolves on each photo, against the row, rather than
+     inside the photo's own container where its contents use what derives from it. */
+  @property --height {
+    syntax: '<length>';
+    inherits: true;
+    initial-value: 0px;
+  }
 
+  .photos {
+    --seam: 6px;
+
+    container-type: inline-size;
     display: flex;
-    height: var(--height);
+    grid-column: full;
+    justify-self: center;
     /* Once the row stops at the column's edges, lift it off the bottom by a seam too. */
-    margin-bottom: calc(
-      min(var(--seam), 100vw - var(--row-width)) -
-        max(env(safe-area-inset-bottom), var(--page-padding))
-    );
-    margin-inline: calc(50% - var(--row-width) / 2);
+    margin-bottom: clamp(0px, 100% - var(--column), var(--seam));
+    width: min(100%, var(--column));
 
     a {
+      --height: min(
+        calc((100cqi - var(--seam) * var(--seams)) / var(--ratio-sum)),
+        40svh
+      );
+      --run: calc(var(--height) * var(--slant));
       /* Which sides are slanted; the end photos keep their outer edge straight. */
       --fl: 1;
       --fr: 1;
@@ -228,6 +241,7 @@ const props: { title: string; tagline: string; links: Link[] } =
       container-type: size;
       flex: calc(var(--aspect-ratio) + var(--slant)) 1
         calc(var(--aspect-ratio) * var(--height) + (var(--l) + var(--r)) / 2);
+      height: var(--height);
       min-width: 0;
       position: relative;
 
