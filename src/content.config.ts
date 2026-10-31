@@ -69,6 +69,12 @@ async function imagekitLoader() {
         pct(topCrop.y, topCrop.height),
       ].join(' ');
 
+      const thumbs = [500, 1000, 1500].map((height) => ({
+        src: url(file, { height }),
+        height,
+        width: Math.floor(height * (file.width! / file.height!)),
+      }));
+
       // @ts-expect-error: embeddedMetadata exists in the response but isn't documented in the SDK.
       const exif = file.embeddedMetadata;
       const tags = [
@@ -96,9 +102,8 @@ async function imagekitLoader() {
           width: file.width,
         },
         thumb: {
-          src: url(file, { height: 500 }),
-          height: 500,
-          width: Math.floor(500 * (file.width! / file.height!)),
+          ...thumbs[0],
+          srcset: thumbs.map((t) => `${t.src} ${t.width}w`).join(', '),
         },
         crop,
       };
@@ -129,6 +134,7 @@ export const collections = {
         src: z.string().url(),
         width: z.number().positive().int(),
         height: z.number().positive().int(),
+        srcset: z.string(),
       }),
       crop: z.string(),
     }),

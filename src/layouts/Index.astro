@@ -9,6 +9,7 @@ const photos = (await getCollection('photos'))
   .map((entry) => entry.data)
   .sort((a, b) => b.date.getTime() - a.date.getTime())
   .slice(0, 3);
+const ratioSum = photos.reduce((sum, p) => sum + p.width / p.height, 0);
 
 type Link = { href: string; title: string; desc: string };
 const props: { title: string; tagline: string; links: Link[] } =
@@ -63,6 +64,8 @@ const props: { title: string; tagline: string; links: Link[] } =
       >
         <img
           src={photo.thumb.src}
+          srcset={photo.thumb.srcset}
+          sizes={`calc(min(100vw, 1550px) * ${photo.width / photo.height / ratioSum})`}
           alt={photo.alt ?? ''}
           width={photo.thumb.width}
           height={photo.thumb.height}
