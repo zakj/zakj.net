@@ -13,6 +13,18 @@ const ratioSum = photos.reduce((sum, p) => sum + p.width / p.height, 0);
 // The mark's slash runs this far across for every 1 up (Mark.astro's polygon).
 const slant = 0.598;
 
+// The width a photo renders at, mirroring the row's flex layout: its share of the
+// row at height h, where a slanted side adds half a slant, plus its flex-grow share
+// of whatever width is left once 40svh caps h.
+const row = `(min(100vw, 1382px) - ${(photos.length - 1) * 6}px)`;
+const height = `min(40svh, ${row} / ${ratioSum})`;
+const growSum = ratioSum + photos.length * slant;
+const sizes = (ratio: number, slantedSides: number) => {
+  const grow = (ratio + slant) / growSum;
+  const perHeight = ratio + (slant * slantedSides) / 2 - ratioSum * grow;
+  return `calc(${height} * ${perHeight.toFixed(4)} + ${row} * ${grow.toFixed(4)})`;
+};
+
 type Link = { href: string; title: string; desc: string };
 const props: { title: string; tagline: string; links: Link[] } =
   Astro.props.frontmatter;
@@ -66,7 +78,7 @@ const props: { title: string; tagline: string; links: Link[] } =
       '--slant': slant,
     }}
   >
-    {photos.map((photo) => (
+    {photos.map((photo, i) => (
       <a
         href={`/photos/${photo.id}`}
         style={{
@@ -79,11 +91,13 @@ const props: { title: string; tagline: string; links: Link[] } =
         <img
           src={photo.thumb.src}
           srcset={photo.thumb.srcset}
-          sizes={`calc(min(100vw, 1550px) * ${(photo.width / photo.height + slant) / ratioSum})`}
+          sizes={sizes(
+            photo.width / photo.height,
+            Number(i > 0) + Number(i < photos.length - 1),
+          )}
           alt={photo.alt ?? ''}
           width={photo.thumb.width}
           height={photo.thumb.height}
-          loading="lazy"
           decoding="async"
         />
         <PhotoDate date={photo.date} />
@@ -108,10 +122,13 @@ const props: { title: string; tagline: string; links: Link[] } =
     --max-width: 1550px;
   }
 
+  html {
+    overflow-x: clip;
+  }
+
   body {
     --light-x: max(0px, 50% - var(--max-width) / 2);
 
-    container-type: inline-size;
     display: flex;
     flex-direction: column;
     gap: var(--gap);
@@ -135,8 +152,11 @@ const props: { title: string; tagline: string; links: Link[] } =
     }
   }
 
+  /* Grows to fill a tall window so the photos sit on its bottom edge. */
   main {
+    align-content: start;
     display: flex;
+    flex-grow: 1;
     flex-wrap: wrap;
     gap: 2rem 5rem;
     text-wrap: pretty;
@@ -170,23 +190,27 @@ const props: { title: string; tagline: string; links: Link[] } =
     }
   }
 
-  /* Registered so it resolves against the page width here, not each photo's own container below. */
-  @property --run {
-    syntax: '<length>';
-    inherits: true;
-    initial-value: 0px;
-  }
-
   /* Seams run at the mark's slash angle. Each photo is widened by what the slant
-     clips off, so its visible area keeps its aspect ratio. */
+     clips off, so its visible area keeps its aspect ratio. The photos are the page's floor: full-bleed and
+     flush to the bottom, until the window outgrows the text column; then they
+     match its width, inset by a seam. */
   .photos {
+    --row-width: min(100vw, var(--max-width) - 2 * var(--page-padding));
     --seam: 6px;
-    --height: calc((100cqi - var(--seam) * var(--seams)) / var(--ratio-sum));
+    --height: min(
+      calc((var(--row-width) - var(--seam) * var(--seams)) / var(--ratio-sum)),
+      40svh
+    );
     --run: calc(var(--height) * var(--slant));
 
     display: flex;
     height: var(--height);
-    margin-top: auto;
+    /* Once the row stops at the column's edges, lift it off the bottom by a seam too. */
+    margin-bottom: calc(
+      min(var(--seam), 100vw - var(--row-width)) -
+        max(env(safe-area-inset-bottom), var(--page-padding))
+    );
+    margin-inline: calc(50% - var(--row-width) / 2);
 
     a {
       /* Which sides are slanted; the end photos keep their outer edge straight. */
@@ -202,7 +226,7 @@ const props: { title: string; tagline: string; links: Link[] } =
         0 100%
       );
       container-type: size;
-      flex: 0 1
+      flex: calc(var(--aspect-ratio) + var(--slant)) 1
         calc(var(--aspect-ratio) * var(--height) + (var(--l) + var(--r)) / 2);
       min-width: 0;
       position: relative;
