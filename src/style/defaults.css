@@ -77,8 +77,10 @@ button.button {
   padding-inline: 0.5em;
   transition: --color 100ms ease-in;
 
-  &:hover:not(:disabled) {
-    --color: oklch(from var(--color-accent) 0.9 c h);
+  @media (hover: hover) {
+    &:hover:not(:disabled) {
+      --color: oklch(from var(--color-accent) 0.9 c h);
+    }
   }
   &:active:not(:disabled) {
     background: linear-gradient(
