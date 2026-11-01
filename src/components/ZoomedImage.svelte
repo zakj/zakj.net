@@ -2,7 +2,7 @@
   import type { Image } from '$util.svelte';
   import { fade, type TransitionConfig } from 'svelte/transition';
   import { cubicInOut } from 'svelte/easing';
-  import { untrack } from 'svelte';
+  import { onMount, untrack } from 'svelte';
 
   interface Props {
     image: Image;
@@ -20,32 +20,39 @@
 
   // TODO utils?
   // Stolen from https://github.com/sveltejs/svelte/blob/master/src/runtime/transition/index.ts
-  export function zoomFromElement(
+  // Deferred to a microtask, so the zoom in measures the figure after showModal has displayed the dialog.
+  // Measured once: Svelte calls this again to reverse a zoom in midway, while the figure is mid-flight.
+  function zoomFromElement(
     node: Element,
     from: DOMRect,
-  ): TransitionConfig {
-    const to = node.getBoundingClientRect();
+  ): () => TransitionConfig {
+    let config: TransitionConfig | undefined;
+    return () => (config ??= measure());
 
-    const dx = from.x - to.x;
-    const dy = from.y - to.y;
-    const dw = from.width / to.width;
-    const dh = from.height / to.height;
+    function measure(): TransitionConfig {
+      const to = node.getBoundingClientRect();
 
-    const style = getComputedStyle(node);
-    const transform = style.transform === 'none' ? '' : style.transform;
-    const opacity = +style.opacity;
+      const dx = from.x - to.x;
+      const dy = from.y - to.y;
+      const dw = from.width / to.width;
+      const dh = from.height / to.height;
 
-    return {
-      duration: 350,
-      easing: cubicInOut,
-      css: (t, u) => `
+      const style = getComputedStyle(node);
+      const transform = style.transform === 'none' ? '' : style.transform;
+      const opacity = +style.opacity;
+
+      return {
+        duration: 350,
+        easing: cubicInOut,
+        css: (t, u) => `
           opacity: ${t * opacity};
           transform-origin: top left;
           transform: ${transform}
             translate(${u * dx}px, ${u * dy}px)
             scale(${t + (1 - t) * dw}, ${t + (1 - t) * dh});
         `,
-    };
+      };
+    }
   }
 
   $effect(() => {
@@ -58,7 +65,21 @@
     return hrefs.map((h) => `url(${h})`).join(',');
   }
 
-  function closeOnEscOrSpace(e: KeyboardEvent) {
+  // A modal dialog keeps focus inside and makes the page behind it inert.
+  let dialog: HTMLDialogElement;
+  onMount(() => {
+    // The ring comes back only if the thumbnail showed one when it opened, i.e. from the keyboard.
+    const focusVisible = thumbNode.matches(':focus-visible');
+    dialog.showModal();
+    // The dialog is removed rather than closed, so focus goes back to the thumbnail by hand.
+    return () =>
+      (thumbNode as HTMLElement).focus({ preventScroll: true, focusVisible });
+  });
+
+  // Escape and Space close through the parent, which leaves the dialog open for the zoom out.
+  function onkeydown(e: KeyboardEvent) {
+    // A held Space would otherwise reopen and close the photo as the key repeats.
+    if (e.repeat) return;
     if (['Escape', ' '].includes(e.key)) {
       e.preventDefault();
       close();
@@ -66,9 +87,18 @@
   }
 </script>
 
-<svelte:window onkeydown={closeOnEscOrSpace} />
-
-<div role="button" tabindex="0" onclick={close} onkeydown={close}>
+<!-- oncancel and onclose catch a close the keydown handler didn't prevent. -->
+<dialog
+  bind:this={dialog}
+  aria-label={image.alt || 'Photo'}
+  onclick={close}
+  {onkeydown}
+  oncancel={(e) => {
+    e.preventDefault();
+    close();
+  }}
+  onclose={close}
+>
   <div class="backdrop" transition:fade={{ duration: 200 }}></div>
   <figure
     transition:zoomFromElement={thumbNode.getBoundingClientRect()}
@@ -81,29 +111,36 @@
   >
     <!-- TODO (maybe) {image.description} -->
   </figure>
-</div>
+</dialog>
 
 <style>
   /* TODO better styling on mobile? */
-  div {
+  dialog {
     --padding: 20px; /* TODO */
+    background: none;
+    border: none;
     cursor: zoom-out;
-    display: block;
     height: 100vh;
-    left: 0;
+    inset: 0;
+    margin: 0;
+    max-height: none;
+    max-width: none;
     padding: var(--padding);
-    position: fixed;
-    top: 0;
     width: 100vw;
-    z-index: 1;
+
+    /* The backdrop div fades with the zoom; the native one can't animate out. */
+    &::backdrop {
+      background: none;
+    }
+    &:focus-visible {
+      outline: none;
+    }
   }
 
   .backdrop {
     background: rgba(0, 0, 0, 0.8);
-    height: 100%;
+    inset: 0;
     position: absolute;
-    width: 100%;
-    z-index: 0;
   }
 
   figure {

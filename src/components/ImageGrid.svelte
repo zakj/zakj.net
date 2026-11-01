@@ -24,7 +24,12 @@
       transition:scale={{ duration: 250, easing: quintOut }}
       animate:flip={{ duration: 250, easing: quintOut }}
       onclick={(e) => select(img, e.currentTarget)}
-      onkeydown={(e) => e.key === 'Enter' && select(img, e.currentTarget)}
+      onkeydown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          select(img, e.currentTarget);
+        }
+      }}
       style:--aspect-ratio={img.width / img.height}
       style:--focal-x={img.focal.x}
       style:--focal-y={img.focal.y}

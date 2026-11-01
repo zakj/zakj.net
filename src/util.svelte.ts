@@ -1,4 +1,3 @@
-import type { Action } from 'svelte/action';
 import type { CollectionEntry } from 'astro:content';
 import { createSubscriber } from 'svelte/reactivity';
 
@@ -6,23 +5,6 @@ import { createSubscriber } from 'svelte/reactivity';
 export type Image = CollectionEntry<'photos'>['data'];
 
 export const isBrowser = !import.meta.env.SSR;
-
-// Workaround for https://github.com/sveltejs/svelte/issues/3105
-export const disableScroll: Action<HTMLBodyElement, boolean> = (
-  node,
-  toggled: boolean,
-) => {
-  const name = 'no-scroll';
-  node.classList.toggle(name, toggled);
-  return {
-    update(toggled: boolean) {
-      node.classList.toggle(name, toggled);
-    },
-    destroy() {
-      node.classList.remove(name);
-    },
-  };
-};
 
 // Return a random item from the passed-in list.
 export const choice = <T>(xs: T[]) => xs[Math.floor(Math.random() * xs.length)];

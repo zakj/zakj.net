@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { disableScroll, UrlState, type Image } from '$util.svelte';
+  import { UrlState, type Image } from '$util.svelte';
   import iconFilterOff from '$assets/icons/filter-off.svg?raw';
   import ImageGrid from './ImageGrid.svelte';
   import ZoomedImage from './ZoomedImage.svelte';
@@ -66,8 +66,6 @@
 
   // TODO exclude full images from service worker?
 </script>
-
-<svelte:body use:disableScroll={!!selected} />
 
 <header>
   <div class="title">

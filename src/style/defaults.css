@@ -1,4 +1,5 @@
-body.no-scroll {
+/* A modal dialog makes the page inert; this keeps it from scrolling behind too. */
+html:has(dialog[open]) {
   overflow: hidden;
 }
 
