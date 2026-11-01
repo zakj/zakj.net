@@ -96,7 +96,7 @@ const props: { title: string; tagline: string; links: Link[] } =
             photo.width / photo.height,
             Number(i > 0) + Number(i < photos.length - 1),
           )}
-          alt={photo.alt ?? ''}
+          alt={photo.alt}
           width={photo.thumb.width}
           height={photo.thumb.height}
           decoding="async"

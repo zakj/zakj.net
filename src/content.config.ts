@@ -43,110 +43,138 @@ async function imagekitLoader() {
     });
   }
 
-  async function fetchBuffer(url: string): Promise<Buffer> {
-    const response = await fetch(url);
-    return Buffer.from(await response.arrayBuffer());
+  // A dropped, stalled, or server-side failure gets a couple more tries before the build gives up.
+  async function fetchBuffer(url: string, attempts = 3): Promise<Buffer> {
+    for (let attempt = 1; ; attempt++) {
+      let failure: unknown;
+      let retryable = true;
+      try {
+        const response = await fetch(url, {
+          signal: AbortSignal.timeout(30_000),
+        });
+        if (response.ok) return Buffer.from(await response.arrayBuffer());
+        failure = new Error(`HTTP ${response.status}`);
+        // A missing or forbidden file won't turn up on a second try.
+        retryable = response.status === 429 || response.status >= 500;
+      } catch (cause) {
+        failure = cause;
+      }
+      if (!retryable || attempt >= attempts) {
+        const reason = failure instanceof Error ? failure.message : failure;
+        throw new Error(`Fetching ${url} failed: ${reason}`, {
+          cause: failure,
+        });
+      }
+      await new Promise((resolve) => setTimeout(resolve, 500 * attempt));
+    }
   }
 
-  return await Promise.all(
-    files.map(async (file) => {
-      if (file.type !== 'file' || file.fileType !== 'image') throw new Error();
+  async function photo(file: File) {
+    if (file.type !== 'file' || file.fileType !== 'image') throw new Error();
 
-      async function smartFocal(): Promise<{ x: number; y: number }> {
-        const cropSize = 500;
-        const buffer = await fetchBuffer(
-          url(file, { height: cropSize, width: cropSize, crop: 'at_least' }),
-        );
-        const { topCrop } = await smartcrop.crop(buffer, {
-          height: cropSize,
-          width: cropSize,
-        });
-        const scale = cropSize / Math.min(file.width!, file.height!);
-        return {
-          x: (topCrop.x + topCrop.width / 2) / (file.width! * scale),
-          y: (topCrop.y + topCrop.height / 2) / (file.height! * scale),
-        };
-      }
-
-      // A focus rectangle set by hand in ImageKit wins over smartcrop's guess.
-      const custom = file.customCoordinates?.split(',').map(Number);
-      const [placeholderData, focal] = await Promise.all([
-        fetchBuffer(
-          url(file, { height: 16, contrastStretch: true, format: 'webp' }),
-        ),
-        custom
-          ? {
-              x: (custom[0] + custom[2] / 2) / file.width!,
-              y: (custom[1] + custom[3] / 2) / file.height!,
-            }
-          : smartFocal(),
-      ]);
-
-      const thumbs = [500, 1000, 1500].map((height) => ({
-        src: url(file, { height }),
-        height,
-        width: Math.floor(height * (file.width! / file.height!)),
-      }));
-
-      // The share card: scaled to cover, then cut out around the focal point, kept
-      // inside the photo.
-      const card = { width: 1200, height: 630 };
-      const cardScale = Math.max(
-        card.width / file.width!,
-        card.height / file.height!,
+    async function smartFocal(): Promise<{ x: number; y: number }> {
+      const cropSize = 500;
+      const buffer = await fetchBuffer(
+        url(file, { height: cropSize, width: cropSize, crop: 'at_least' }),
       );
-      const cardOffset = (f: number, size: number, cardSize: number) =>
-        Math.max(
-          0,
-          Math.floor(
-            Math.min(
-              f * size * cardScale - cardSize / 2,
-              size * cardScale - cardSize,
-            ),
-          ),
-        );
-      const og = url(file, [
-        { ...card, crop: 'at_least' },
-        {
-          ...card,
-          cropMode: 'extract',
-          x: cardOffset(focal.x, file.width!, card.width),
-          y: cardOffset(focal.y, file.height!, card.height),
-        },
-      ]);
-
-      const exif = file.embeddedMetadata;
-      const tags = [
-        ...arrayOrItem(exif?.Keywords),
-        ...arrayOrItem(exif?.PersonInImage),
-        ...arrayOrItem(file.tags),
-      ]
-        .map((t) => t.toLowerCase())
-        .filter((t) => !['gram', '4 star', 'photo stream'].includes(t));
-
+      const { topCrop } = await smartcrop.crop(buffer, {
+        height: cropSize,
+        width: cropSize,
+      });
+      const scale = cropSize / Math.min(file.width!, file.height!);
       return {
-        id: file.fileId!,
-        path: file.filePath,
-        date: new Date((exif?.DateTimeOriginal as string) ?? file.createdAt),
-        width: file.width,
-        height: file.height,
-        tags,
-        desc: file.customMetadata?.desc,
-        alt: file.customMetadata?.alt,
-        placeholder: `data:image/webp;base64,${placeholderData.toString('base64')}`,
-        full: {
-          src: url(file),
-          height: file.height,
-          width: file.width,
-        },
-        thumb: {
-          ...thumbs[0],
-          srcset: thumbs.map((t) => `${t.src} ${t.width}w`).join(', '),
-        },
-        og,
-        focal,
+        x: (topCrop.x + topCrop.width / 2) / (file.width! * scale),
+        y: (topCrop.y + topCrop.height / 2) / (file.height! * scale),
       };
-    }),
+    }
+
+    // A focus rectangle set by hand in ImageKit wins over smartcrop's guess.
+    const custom = file.customCoordinates?.split(',').map(Number);
+    const [placeholderData, focal] = await Promise.all([
+      fetchBuffer(
+        url(file, { height: 16, contrastStretch: true, format: 'webp' }),
+      ),
+      custom
+        ? {
+            x: (custom[0] + custom[2] / 2) / file.width!,
+            y: (custom[1] + custom[3] / 2) / file.height!,
+          }
+        : smartFocal(),
+    ]);
+
+    const thumbs = [500, 1000, 1500].map((height) => ({
+      src: url(file, { height }),
+      height,
+      width: Math.floor(height * (file.width! / file.height!)),
+    }));
+
+    // The share card: scaled to cover, then cut out around the focal point, kept
+    // inside the photo.
+    const card = { width: 1200, height: 630 };
+    const cardScale = Math.max(
+      card.width / file.width!,
+      card.height / file.height!,
+    );
+    const cardOffset = (f: number, size: number, cardSize: number) =>
+      Math.max(
+        0,
+        Math.floor(
+          Math.min(
+            f * size * cardScale - cardSize / 2,
+            size * cardScale - cardSize,
+          ),
+        ),
+      );
+    const og = url(file, [
+      { ...card, crop: 'at_least' },
+      {
+        ...card,
+        cropMode: 'extract',
+        x: cardOffset(focal.x, file.width!, card.width),
+        y: cardOffset(focal.y, file.height!, card.height),
+      },
+    ]);
+
+    const exif = file.embeddedMetadata;
+    const tags = [
+      ...arrayOrItem(exif?.Keywords),
+      ...arrayOrItem(exif?.PersonInImage),
+      ...arrayOrItem(file.tags),
+    ]
+      .map((t) => t.toLowerCase())
+      .filter((t) => !['gram', '4 star', 'photo stream'].includes(t));
+
+    return {
+      id: file.fileId!,
+      path: file.filePath,
+      date: new Date((exif?.DateTimeOriginal as string) ?? file.createdAt),
+      width: file.width,
+      height: file.height,
+      tags,
+      desc: file.customMetadata?.desc,
+      alt: file.customMetadata?.alt,
+      placeholder: `data:image/webp;base64,${placeholderData.toString('base64')}`,
+      full: {
+        src: url(file),
+        height: file.height,
+        width: file.width,
+      },
+      thumb: {
+        ...thumbs[0],
+        srcset: thumbs.map((t) => `${t.src} ${t.width}w`).join(', '),
+      },
+      og,
+      focal,
+    };
+  }
+
+  // One photo failing fails the whole collection, so say which one.
+  return await Promise.all(
+    files.map((file) =>
+      photo(file).catch((cause) => {
+        throw new Error(`Loading photo ${file.filePath} failed`, { cause });
+      }),
+    ),
   );
 }
 
@@ -161,7 +189,8 @@ export const collections = {
       height: z.number().positive().int(),
       tags: z.string().array(),
       desc: z.string().optional(),
-      alt: z.string().optional(),
+      // Empty without a caption: the photo is then left out of the accessibility tree.
+      alt: z.string().default(''),
       placeholder: z.string(),
       full: z.object({
         src: z.url(),
