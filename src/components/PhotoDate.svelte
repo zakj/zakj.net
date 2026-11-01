@@ -28,7 +28,7 @@
     opacity: 1;
   }
 
-  @media screen and (min-width: 750px) {
+  @media (hover: hover) {
     :global(:hover) > time {
       opacity: 1;
     }
