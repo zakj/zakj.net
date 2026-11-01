@@ -3,7 +3,6 @@
   import iconFilterOff from '$assets/icons/filter-off.svg?raw';
   import ImageGrid from './ImageGrid.svelte';
   import ZoomedImage from './ZoomedImage.svelte';
-  import { SvelteSet } from 'svelte/reactivity';
 
   interface Props {
     images: Image[];
@@ -13,7 +12,7 @@
 
   type Selected = { image: Image; node: Element };
   let selected: Selected | undefined = $state();
-  const filterTags = new SvelteSet<string>();
+  let filterTag: string | undefined = $state();
   const url = new UrlState();
 
   const allTags: string[] = $derived(
@@ -26,29 +25,18 @@
   );
   const filteredImages = $derived(
     images
-      .filter(
-        (i) => filterTags.size === 0 || filterTags.isSubsetOf(new Set(i.tags)),
-      )
+      .filter((i) => !filterTag || i.tags.includes(filterTag))
       .toSorted((a, b) => b.date.getTime() - a.date.getTime()),
   );
-  const availableTags = $derived(
-    filteredImages.reduce(
-      (acc, img) => acc.union(new Set(img.tags)),
-      new Set<string>(),
-    ),
-  );
-
   function urlHashToState(loc?: Location) {
-    const hash = loc?.hash.slice(1);
-    filterTags.clear();
-    if (!hash) return;
-    hash.split(',').forEach((t) => filterTags.add(t));
+    // Older links could name several tags, comma-separated; keep the first.
+    filterTag = loc?.hash.slice(1).split(',')[0] || undefined;
   }
 
-  function serializeUrl(tags?: Set<string>, id?: string): string {
+  function serializeUrl(tag?: string, id?: string): string {
     let url = '/photos';
     if (id) url += `/${id}`;
-    if (tags?.size) url += '#' + [...tags].join(',');
+    if (tag) url += `#${tag}`;
     return url;
   }
 
@@ -63,11 +51,10 @@
     }
   });
   $effect(() => urlHashToState(url.current));
-  $effect(() => url.replace(serializeUrl(filterTags, selected?.image.id)));
+  $effect(() => url.replace(serializeUrl(filterTag, selected?.image.id)));
 
   function toggleTag(tag: string) {
-    if (filterTags.has(tag)) filterTags.delete(tag);
-    else filterTags.add(tag);
+    filterTag = filterTag === tag ? undefined : tag;
   }
 
   function select(value?: Selected) {
@@ -76,26 +63,26 @@
 
   // TODO exclude full images from service worker?
   // TODO header
-  // TODO tag button fg color is blue on mobile
-  // TODO tag buttons are broken fg color on mobile dark mode
 </script>
 
 <svelte:body use:disableScroll={!!selected} />
 
 <header>
-  <h1>Photos</h1>
+  <h1>
+    Photos{#if filterTag}<span class="title-tag">{' · '}{filterTag}</span>{/if}
+  </h1>
   <div class="filters">
     {#each allTags as tag (tag)}
       <button
-        class:tag
-        class:selected={filterTags.has(tag)}
-        disabled={!availableTags.has(tag)}
+        class="tag"
+        class:selected={filterTag === tag}
+        aria-pressed={filterTag === tag}
         onclick={() => toggleTag(tag)}>{tag}</button
       >
     {/each}
-    {#if filterTags.size}
+    {#if filterTag}
       <button
-        onclick={() => filterTags.clear()}
+        onclick={() => (filterTag = undefined)}
         class="icon"
         aria-label="Clear filters"
       >
@@ -119,33 +106,40 @@
 {/if}
 
 <style>
-  /* TODO: style tags/filters */
   header {
     margin: 1em;
   }
+  /* Tags as a line of muted words; the chosen one reads like a link. */
   .filters {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.5em;
+    column-gap: 0.6em;
     margin: 1em 0;
   }
-  .tag {
-    background-color: var(--color-bg-elevate);
-    border-radius: 4px;
-    border: none;
-    box-shadow: var(--shadow-card);
-    color: var(--color-fg);
-    padding: 0 0.5em;
-    &.selected {
-      outline: 2px solid var(--color-fg);
-      box-shadow: none;
-    }
-    &:disabled {
-      background-color: var(--color-bg);
-      box-shadow: var(--shadow-border);
-      color: oklch(from var(--color-fg) l c h / 0.4);
+  .tag,
+  .icon {
+    color: var(--color-muted);
+    text-decoration: underline 0.07em transparent;
+    text-underline-position: from-font;
+    transition:
+      color 150ms,
+      text-decoration-color 150ms;
+    @media (hover: hover) {
+      &:hover {
+        color: var(--color-fg);
+      }
     }
   }
+  .tag {
+    &.selected {
+      color: var(--color-fg);
+      text-decoration-color: var(--color-link);
+    }
+  }
+  .title-tag {
+    color: var(--color-muted);
+  }
+
   .icon {
     display: block;
     padding: 0 0.3em;
@@ -153,6 +147,6 @@
   }
   .icon :global(svg) {
     height: fluid(16px, 24px, 390px, 750px);
-    stroke: var(--color-fg);
+    stroke: currentColor;
   }
 </style>
