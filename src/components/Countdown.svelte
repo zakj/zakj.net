@@ -49,7 +49,7 @@
 
 <svelte:window {onkeydown} />
 
-<main>
+<div class="countdown">
   {#if target}
     <TimeDelta ts={target} />
   {:else}
@@ -58,17 +58,9 @@
       <button class="button" type="submit">Countdown!</button>
     </form>
   {/if}
-</main>
+</div>
 
 <style>
-  /* TODO font sizes on mobile especially */
-  main {
-    min-height: 100dvh;
-    display: grid;
-    place-content: center;
-    padding-bottom: 10vh; /* position contents slightly above center visually */
-  }
-
   /* Fixes a weird vertical-centering bug when the input is empty on Mobile Safari. */
   form {
     display: flex;

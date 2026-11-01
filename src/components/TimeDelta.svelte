@@ -92,22 +92,29 @@
 </section>
 
 <style>
+  /* The cards fill the section, and the numbers scale with its width.
+     A page can narrow it with --fit-width. */
+  section {
+    container-type: inline-size;
+    margin-inline: auto;
+    width: var(--fit-width, 100%);
+  }
+
   .container {
-    --width: 60vw;
-    --phi: 1.618;
+    --num-size: calc(100cqi / 3);
+    aspect-ratio: var(--phi);
     display: grid;
     gap: 1em;
+    /* fr units can't take var(--phi). */
     grid-template:
       'big med' 1.618fr
       'big small' 1fr
       / 1.618fr 1fr;
-    height: calc(var(--width) / var(--phi));
-    width: var(--width);
   }
 
   .card {
     background-color: var(--color-bg-elevate);
-    border-radius: 8px;
+    border-radius: var(--radius-card);
     box-shadow: var(--shadow-card);
     display: grid;
     font-family: var(--font-family-display);
@@ -138,7 +145,6 @@
   }
 
   .card .num {
-    --num-size: 20vw;
     font-size: var(--num-size);
     grid-area: num;
   }
@@ -150,32 +156,25 @@
   }
 
   .card .unit {
-    font-size: 1.2vw;
+    font-size: max(var(--font-size-small), 2cqi);
     grid-area: unit;
     opacity: 0.3;
     text-transform: uppercase;
   }
 
   footer {
-    opacity: 0.5;
+    color: var(--color-muted);
     margin-top: 0.5em;
   }
 
-  @media screen and (max-width: 750px) {
+  @media (orientation: portrait) {
     .container {
-      --width: 70vw;
-      height: calc(var(--width) * var(--phi));
-
+      --num-size: calc(100cqi / 2);
+      aspect-ratio: 1 / var(--phi);
       grid-template:
         'big big' 1.618fr
         'med small' 1fr
         / 1.618fr 1fr;
-    }
-    .card .num {
-      --num-size: 35vw;
-    }
-    .card .unit {
-      font-size: 3.5vw;
     }
   }
 </style>

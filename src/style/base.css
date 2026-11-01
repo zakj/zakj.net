@@ -33,6 +33,8 @@
   --font-size-h1: fluid(30px, 70px, 390px, 750px);
   /* Comfortable reading width for body text. */
   --measure: 30em;
+  /* The golden ratio, for proportions like the countdown's cards. */
+  --phi: 1.618;
 
   /* TODO maybe just use s/l and no semantics
   /* Corners */

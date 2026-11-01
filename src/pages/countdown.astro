@@ -1,15 +1,55 @@
 ---
 import hourglassIcon from '$assets/icons/hourglass-empty.svg';
-import Countdown_ from '$components/Countdown.svelte';
-import Base from '$layouts/Base.astro';
-
-// TODO: Astro doesn't allow importing a component with the same name as the current file?
+import Countdown from '$components/Countdown.svelte';
+import Text from '$layouts/Text.astro';
 ---
 
-<Base
+<Text
   title="Countdown"
   description="A simple countdown timer."
   favicon={hourglassIcon.src}
 >
-  <Countdown_ client:only="svelte" />
-</Base>
+  <Countdown client:only="svelte" />
+</Text>
+
+<style is:global>
+  /* The title stays at the top; the countdown centers in the space below it.
+     The cards shrink to fit the window's height, leaving it some air, and the
+     title narrows with them so it lines up with their left edge. */
+  body {
+    grid-template-rows: 1fr;
+  }
+  main {
+    /* Rem, not em: the header resolves this at its own, larger font size. */
+    --fit-height: calc(
+      100svh - 2 * var(--page-padding) - var(--font-size-h1) - 3rem - 15svh
+    );
+    /* Matches TimeDelta's switch between tall and wide cards; a short window
+       scrolls a little rather than shrink the cards past reading. */
+    --fit-width: min(100%, max(12rem, var(--fit-height) / var(--phi)));
+    @media (orientation: landscape) {
+      --fit-width: min(100%, max(12rem, var(--fit-height) * var(--phi)));
+    }
+
+    display: grid;
+    grid-template-rows: auto 1fr;
+    row-gap: 1rem;
+
+    > header {
+      justify-self: center;
+      min-width: max-content;
+      width: var(--fit-width);
+    }
+  }
+  .countdown {
+    align-self: center;
+    justify-self: center;
+    width: 100%;
+    padding-bottom: 10vh;
+    /* Short forms center themselves. */
+    &:has(form) {
+      display: flex;
+      justify-content: center;
+    }
+  }
+</style>
