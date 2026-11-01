@@ -77,6 +77,7 @@
   });
 
   // Escape and Space close through the parent, which leaves the dialog open for the zoom out.
+  // On the window: tabbing past the dialog's end moves focus to the page body.
   function onkeydown(e: KeyboardEvent) {
     // A held Space would otherwise reopen and close the photo as the key repeats.
     if (e.repeat) return;
@@ -87,12 +88,13 @@
   }
 </script>
 
+<svelte:window {onkeydown} />
+
 <!-- oncancel and onclose catch a close the keydown handler didn't prevent. -->
 <dialog
   bind:this={dialog}
   aria-label={image.alt || 'Photo'}
   onclick={close}
-  {onkeydown}
   oncancel={(e) => {
     e.preventDefault();
     close();

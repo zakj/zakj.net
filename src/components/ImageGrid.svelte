@@ -26,6 +26,8 @@
       onclick={(e) => select(img, e.currentTarget)}
       onkeydown={(e) => {
         if (!e.repeat && (e.key === 'Enter' || e.key === ' ')) {
+          // The opened photo closes on Space from the window; this press shouldn't reach it.
+          e.stopPropagation();
           e.preventDefault();
           select(img, e.currentTarget);
         }
