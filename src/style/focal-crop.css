@@ -1,0 +1,17 @@
+/* Positions a cover-fit image so its focal point sits as close to the box's center
+   as the image's edges allow. Set on the box, with --aspect-ratio, --focal-x and
+   --focal-y (0 to 1); --focal-shift-x moves the target off center. Descendants use
+   var(--focal-position) as their object-position or background-position. It is
+   left unregistered so its container units resolve there, against this box. */
+.focal-crop {
+  --focal-w: max(100cqw, 100cqh * var(--aspect-ratio));
+  --focal-h: max(100cqh, 100cqw / var(--aspect-ratio));
+  --focal-position: clamp(
+      100cqw - var(--focal-w),
+      50cqw + var(--focal-shift-x, 0px) - var(--focal-x) * var(--focal-w),
+      0px
+    )
+    clamp(100cqh - var(--focal-h), 50cqh - var(--focal-y) * var(--focal-h), 0px);
+
+  container-type: size;
+}

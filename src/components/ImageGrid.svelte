@@ -1,5 +1,6 @@
 <script lang="ts">
   import PhotoDate from '$components/PhotoDate.svelte';
+  import '$style/focal-crop.css';
   import type { Image } from '$util.svelte';
   import { flip } from 'svelte/animate';
   import { scale } from 'svelte/transition';
@@ -16,7 +17,7 @@
 <div class="grid">
   {#each images as img (img.id)}
     <div
-      class="img-container"
+      class="img-container focal-crop"
       role="button"
       tabindex="0"
       data-id={img.id}
@@ -25,7 +26,8 @@
       onclick={(e) => select(img, e.currentTarget)}
       onkeydown={(e) => e.key === 'Enter' && select(img, e.currentTarget)}
       style:--aspect-ratio={img.width / img.height}
-      style:--crop={img.crop}
+      style:--focal-x={img.focal.x}
+      style:--focal-y={img.focal.y}
       style:--placeholder={`url(${img.placeholder})`}
     >
       <figure>
@@ -53,8 +55,6 @@
 
   .img-container {
     aspect-ratio: 1;
-    background-position: var(--crop);
-    background-size: cover;
     overflow: hidden;
     position: relative;
   }
@@ -64,7 +64,7 @@
 
     &::before {
       background-image: var(--placeholder);
-      background-position: var(--crop);
+      background-position: var(--focal-position);
       background-repeat: no-repeat;
       background-size: cover;
       content: '';
@@ -80,7 +80,7 @@
 
   img {
     object-fit: cover;
-    object-position: var(--crop);
+    object-position: var(--focal-position);
     height: 100%;
   }
 

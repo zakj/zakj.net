@@ -3,6 +3,7 @@ import Base from '$layouts/Base.astro';
 import Mark from '$components/Mark.astro';
 import PhotoDate from '$components/PhotoDate.svelte';
 import '$style/corner-light.css';
+import '$style/focal-crop.css';
 import { getCollection } from 'astro:content';
 
 const photos = (await getCollection('photos'))
@@ -80,6 +81,7 @@ const props: { title: string; tagline: string; links: Link[] } =
   >
     {photos.map((photo, i) => (
       <a
+        class="focal-crop"
         href={`/photos/${photo.id}`}
         style={{
           '--aspect-ratio': photo.width / photo.height,
@@ -232,6 +234,8 @@ const props: { title: string; tagline: string; links: Link[] } =
       --fr: 1;
       --l: calc(var(--run) * var(--fl));
       --r: calc(var(--run) * var(--fr));
+      /* Center the focal point in the visible shape, which the slants shift off the box's center. */
+      --focal-shift-x: calc((var(--l) - var(--r)) / 4);
 
       clip-path: polygon(
         var(--l) 0,
@@ -239,7 +243,6 @@ const props: { title: string; tagline: string; links: Link[] } =
         calc(100% - var(--r)) 100%,
         0 100%
       );
-      container-type: size;
       flex: calc(var(--aspect-ratio) + var(--slant)) 1
         calc(var(--aspect-ratio) * var(--height) + (var(--l) + var(--r)) / 2);
       height: var(--height);
@@ -295,21 +298,11 @@ const props: { title: string; tagline: string; links: Link[] } =
       }
     }
 
-    /* Cover, with the focal point as close to the center of the visible shape as
-       the edges allow. The slants shift that center (l - r) / 4 off the box's. */
     img {
-      --w: max(100cqw, 100cqh * var(--aspect-ratio));
-      --h: max(100cqh, 100cqw / var(--aspect-ratio));
-      --pos: clamp(
-          100cqw - var(--w),
-          50cqw + (var(--l) - var(--r)) / 4 - var(--focal-x) * var(--w),
-          0px
-        )
-        clamp(100cqh - var(--h), 50cqh - var(--focal-y) * var(--h), 0px);
-      background: var(--placeholder) var(--pos) / cover;
+      background: var(--placeholder) var(--focal-position) / cover;
       height: 100%;
       object-fit: cover;
-      object-position: var(--pos);
+      object-position: var(--focal-position);
       width: 100%;
     }
   }
