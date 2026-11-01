@@ -4,6 +4,8 @@ import PreloadFont from '$components/PreloadFont.astro';
 import '$style/reset.css';
 import '$style/base.css';
 import '$style/defaults.css';
+import '$style/page-grid.css';
+import '$style/corner-light.css';
 import '@fontsource-variable/crimson-pro';
 import fontCrimsonPro from '@fontsource-variable/crimson-pro/files/crimson-pro-latin-wght-normal.woff2';
 
@@ -12,6 +14,8 @@ export type Props = {
   description?: string;
   favicon?: string;
   coverImage?: string;
+  /** False for a page that lays out the whole window itself, without the page grid or corner light. */
+  frame?: boolean;
 };
 
 const {
@@ -19,6 +23,7 @@ const {
   description = 'Whiskey ginger & a dash of bitters.',
   favicon = '/favicon.svg',
   coverImage = defaultCoverImage.src,
+  frame = true,
 }: Props = Astro.props;
 ---
 
@@ -67,7 +72,7 @@ const {
     <slot name="extra-head" />
   </head>
 
-  <body class="loading no-js">
+  <body class:list={['loading', 'no-js', { framed: frame }]}>
     <script is:inline>
       document.body.classList.remove('no-js');
       document.fonts.ready.then(() =>

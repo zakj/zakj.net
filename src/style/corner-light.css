@@ -1,6 +1,6 @@
 /* Faint light falling from the top left of the content, at --light-x
    (page-grid.css sets it). */
-body::before {
+:where(body.framed)::before {
   background: radial-gradient(
     circle at var(--light-x, 0px) 0,
     transparent 20%,
@@ -14,7 +14,7 @@ body::before {
 }
 
 @media (prefers-color-scheme: dark) {
-  body::before {
+  :where(body.framed)::before {
     background: radial-gradient(
       circle at var(--light-x, 0px) 0,
       rgb(255 255 255 / 0.045) 10%,

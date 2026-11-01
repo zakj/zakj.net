@@ -1,0 +1,39 @@
+---
+import Mark from '$components/Mark.astro';
+
+interface Props {
+  title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<header>
+  <Mark />
+  <h1>{title}</h1>
+</header>
+
+<style>
+  header {
+    align-items: baseline;
+    display: flex;
+    font-size: var(--font-size-h1);
+    gap: 0.25em;
+
+    /* The slash (0.64em) and gap hang into the left margin as far as the margin allows.
+       Needs an inline-size container the width of the page. */
+    :global(.mark) {
+      margin-left: calc(
+        -1 *
+          clamp(
+            0px,
+            (100cqi - var(--column-width)) / 2 - var(--page-padding),
+            0.89em
+          )
+      );
+    }
+  }
+  h1 {
+    font-size: inherit;
+  }
+</style>

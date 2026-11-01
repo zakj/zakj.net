@@ -1,5 +1,6 @@
 /* A centered column of --column-width between gutters, with named lines so a child
-   can span the full width. The gutters keep a little room past a notch. */
+   can span the full width. The gutters keep a little room past a notch. Zero
+   specificity, so a layout's plain body rule sets --column-width over the default. */
 
 /* Registered so the width resolves against the body font, then inherits as a length. */
 @property --column-width {
@@ -8,7 +9,8 @@
   initial-value: 0px;
 }
 
-body {
+:where(body.framed) {
+  --column-width: var(--measure);
   --light-x: max(0px, (100% - var(--column-width)) / 2 - var(--page-padding));
 
   display: grid;

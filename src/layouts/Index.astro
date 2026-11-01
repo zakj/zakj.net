@@ -2,9 +2,7 @@
 import Base from '$layouts/Base.astro';
 import Mark from '$components/Mark.astro';
 import PhotoDate from '$components/PhotoDate.svelte';
-import '$style/corner-light.css';
 import '$style/focal-crop.css';
-import '$style/page-grid.css';
 import { getCollection } from 'astro:content';
 
 const photos = (await getCollection('photos'))
@@ -138,7 +136,6 @@ const props: { title: string; tagline: string; links: Link[] } =
     h1 {
       font-size: fluid(46px, 72px, 390px, 750px);
       letter-spacing: -0.005em;
-      text-transform: none;
     }
     p {
       color: var(--color-muted);

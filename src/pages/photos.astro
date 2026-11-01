@@ -6,7 +6,7 @@ import { getCollection } from 'astro:content';
 const photos = (await getCollection('photos')).map((entry) => entry.data);
 ---
 
-<Base title="Photos" description="My local Instagram.">
+<Base title="Photos" description="My local Instagram." frame={false}>
   <Fragment slot="extra-head">
     <link
       rel="alternate"

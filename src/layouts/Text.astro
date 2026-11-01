@@ -1,8 +1,6 @@
 ---
 import Base, { type Props as BaseProps } from '$layouts/Base.astro';
-import Mark from '$components/Mark.astro';
-import '$style/corner-light.css';
-import '$style/page-grid.css';
+import PageHeader from '$components/PageHeader.astro';
 import type { MarkdownLayoutProps } from 'astro';
 
 type Props = BaseProps | MarkdownLayoutProps<BaseProps>;
@@ -13,10 +11,7 @@ const props: Props =
 
 <Base {...props}>
   <main>
-    <header>
-      <Mark />
-      <h1>{props.title}</h1>
-    </header>
+    <PageHeader title={props.title} />
     <slot />
   </main>
   <slot name="footer" />
@@ -24,35 +19,8 @@ const props: Props =
 
 <style is:global>
   body {
-    --column-width: var(--measure);
-
     container-type: inline-size;
     padding-bottom: max(env(safe-area-inset-bottom), var(--page-padding));
-  }
-
-  main {
-    > header {
-      align-items: baseline;
-      display: flex;
-      font-size: var(--font-size-h1);
-      gap: 0.25em;
-
-      /* The slash (0.64em) and gap hang into the left margin as far as the margin allows. */
-      .mark {
-        margin-left: calc(
-          -1 *
-            clamp(
-              0px,
-              (100cqi - var(--column-width)) / 2 - var(--page-padding),
-              0.89em
-            )
-        );
-      }
-      h1 {
-        font-size: inherit;
-        text-transform: none;
-      }
-    }
   }
 
   main > * + *,

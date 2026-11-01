@@ -16,7 +16,6 @@ h2,
 h3 {
   font-family: var(--font-family-display);
   line-height: 1;
-  text-transform: uppercase;
   text-wrap: pretty; /* lacks browser support as of 2024 */
 }
 h1 {
