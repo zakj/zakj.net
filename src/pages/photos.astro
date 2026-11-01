@@ -1,12 +1,13 @@
 ---
 import Photos_ from '$components/Photos.svelte';
+import Mark from '$components/Mark.astro';
 import Base from '$layouts/Base.astro';
 import { getCollection } from 'astro:content';
 
 const photos = (await getCollection('photos')).map((entry) => entry.data);
 ---
 
-<Base title="Photos" description="My local Instagram." frame={false}>
+<Base title="Photos" description="My local Instagram.">
   <Fragment slot="extra-head">
     <link
       rel="alternate"
@@ -15,5 +16,7 @@ const photos = (await getCollection('photos')).map((entry) => entry.data);
       href={new URL('/photos/feed.xml', Astro.site)}
     />
   </Fragment>
-  <Photos_ images={photos} client:idle />
+  <Photos_ images={photos} client:idle>
+    <Mark slot="mark" />
+  </Photos_>
 </Base>

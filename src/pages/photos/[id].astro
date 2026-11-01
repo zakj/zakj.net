@@ -2,6 +2,7 @@
 import { getCollection, getEntry } from 'astro:content';
 
 import Photos_ from '$components/Photos.svelte';
+import Mark from '$components/Mark.astro';
 import Base from '$layouts/Base.astro';
 
 export async function getStaticPaths() {
@@ -16,7 +17,7 @@ const photos = (await getCollection('photos')).map((entry) => entry.data);
 ---
 
 <Base
-  frame={false}
+ 
   title="Photos"
   description="My local Instagram."
   coverImage={entry.data.og}
@@ -29,5 +30,7 @@ const photos = (await getCollection('photos')).map((entry) => entry.data);
       href={new URL('/photos/feed.xml', Astro.site)}
     />
   </Fragment>
-  <Photos_ images={photos} selectedId={id} client:idle />
+  <Photos_ images={photos} selectedId={id} client:idle>
+    <Mark slot="mark" />
+  </Photos_>
 </Base>

@@ -3,12 +3,15 @@
   import iconFilterOff from '$assets/icons/filter-off.svg?raw';
   import ImageGrid from './ImageGrid.svelte';
   import ZoomedImage from './ZoomedImage.svelte';
+  import type { Snippet } from 'svelte';
 
   interface Props {
     images: Image[];
     selectedId?: string;
+    /** The site mark, rendered by Astro. */
+    mark?: Snippet;
   }
-  const { images, selectedId }: Props = $props();
+  const { images, selectedId, mark }: Props = $props();
 
   type Selected = { image: Image; node: Element };
   let selected: Selected | undefined = $state();
@@ -62,15 +65,18 @@
   }
 
   // TODO exclude full images from service worker?
-  // TODO header
 </script>
 
 <svelte:body use:disableScroll={!!selected} />
 
 <header>
-  <h1>
-    Photos{#if filterTag}<span class="title-tag">{' · '}{filterTag}</span>{/if}
-  </h1>
+  <div class="title">
+    {@render mark?.()}
+    <h1>
+      Photos{#if filterTag}<span class="title-tag">{' · '}{filterTag}</span
+        >{/if}
+    </h1>
+  </div>
   <div class="filters">
     {#each allTags as tag (tag)}
       <button
@@ -106,9 +112,30 @@
 {/if}
 
 <style>
-  header {
-    margin: 1em;
+  /* The header sits between the page gutters; the photos run edge to edge.
+     Rows keep their content's height, so a short grid stays at the top. */
+  :global(body) {
+    --column-width: 100vw;
+    align-content: start;
+    padding-bottom: env(safe-area-inset-bottom);
   }
+  /* The island's wrapper doesn't render a box, so its children are the page grid's items. */
+  :global(body > astro-island > *) {
+    grid-column: content;
+  }
+  :global(body > astro-island > .grid) {
+    grid-column: full;
+  }
+  .title {
+    align-items: baseline;
+    display: flex;
+    font-size: var(--font-size-h1);
+    gap: 0.25em;
+  }
+  h1 {
+    font-size: inherit;
+  }
+
   /* Tags as a line of muted words; the chosen one reads like a link. */
   .filters {
     display: flex;
