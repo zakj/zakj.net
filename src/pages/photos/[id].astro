@@ -1,7 +1,5 @@
 ---
 import { getCollection, getEntry } from 'astro:content';
-import ImageKit from '@imagekit/nodejs';
-import { IK_ENDPOINT, IK_PRIVATE_KEY } from 'astro:env/server';
 
 import Photos_ from '$components/Photos.svelte';
 import Base from '$layouts/Base.astro';
@@ -15,17 +13,13 @@ const { id } = Astro.params;
 const entry = await getEntry('photos', id);
 if (!entry) throw new Error();
 const photos = (await getCollection('photos')).map((entry) => entry.data);
-
-const ik = new ImageKit({ privateKey: IK_PRIVATE_KEY });
-
-const ogImage = ik.helper.buildSrc({
-  urlEndpoint: IK_ENDPOINT,
-  src: entry.data.path,
-  transformation: [{ width: 1200, height: 630, focus: entry.data.focus }],
-});
 ---
 
-<Base title="Photos" description="My local Instagram." coverImage={ogImage}>
+<Base
+  title="Photos"
+  description="My local Instagram."
+  coverImage={entry.data.og}
+>
   <Fragment slot="extra-head">
     <link
       rel="alternate"

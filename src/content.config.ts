@@ -87,6 +87,33 @@ async function imagekitLoader() {
         width: Math.floor(height * (file.width! / file.height!)),
       }));
 
+      // The share card: scaled to cover, then cut out around the focal point, kept
+      // inside the photo.
+      const card = { width: 1200, height: 630 };
+      const cardScale = Math.max(
+        card.width / file.width!,
+        card.height / file.height!,
+      );
+      const cardOffset = (f: number, size: number, cardSize: number) =>
+        Math.max(
+          0,
+          Math.floor(
+            Math.min(
+              f * size * cardScale - cardSize / 2,
+              size * cardScale - cardSize,
+            ),
+          ),
+        );
+      const og = url(file, [
+        { ...card, crop: 'at_least' },
+        {
+          ...card,
+          cropMode: 'extract',
+          x: cardOffset(focal.x, file.width!, card.width),
+          y: cardOffset(focal.y, file.height!, card.height),
+        },
+      ]);
+
       // @ts-expect-error: embeddedMetadata exists in the response but isn't documented in the SDK.
       const exif = file.embeddedMetadata;
       const tags = [
@@ -101,7 +128,6 @@ async function imagekitLoader() {
         id: file.fileId!,
         path: file.filePath,
         date: new Date((exif?.DateTimeOriginal as string) ?? file.createdAt),
-        focus: file.customCoordinates ? 'custom' : 'auto',
         width: file.width,
         height: file.height,
         tags,
@@ -117,6 +143,7 @@ async function imagekitLoader() {
           ...thumbs[0],
           srcset: thumbs.map((t) => `${t.src} ${t.width}w`).join(', '),
         },
+        og,
         focal,
       };
     }),
@@ -130,7 +157,6 @@ export const collections = {
       id: z.string(),
       path: z.string(),
       date: z.date().min(new Date('1980-01-01')).max(new Date()),
-      focus: z.enum(['custom', 'auto']),
       width: z.number().positive().int(),
       height: z.number().positive().int(),
       tags: z.string().array(),
@@ -148,6 +174,7 @@ export const collections = {
         height: z.number().positive().int(),
         srcset: z.string(),
       }),
+      og: z.string().url(),
       focal: z.object({
         x: z.number().min(0).max(1),
         y: z.number().min(0).max(1),
