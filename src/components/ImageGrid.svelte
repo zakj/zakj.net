@@ -14,7 +14,7 @@
   const { images, select }: Props = $props();
 </script>
 
-<div class="grid">
+<div class="grid bleed">
   {#each images as img (img.id)}
     <div
       class="img-container focal-crop"
@@ -25,7 +25,7 @@
       animate:flip={{ duration: 250, easing: quintOut }}
       onclick={(e) => select(img, e.currentTarget)}
       onkeydown={(e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
+        if (!e.repeat && (e.key === 'Enter' || e.key === ' ')) {
           e.preventDefault();
           select(img, e.currentTarget);
         }

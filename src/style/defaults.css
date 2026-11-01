@@ -29,27 +29,59 @@ h3 {
   font-size: fluid(20px, 35px, 390px, 750px);
 }
 
-a {
-  color: inherit;
+/* .link gives a non-link, like a toggle button, a link's underline. */
+a,
+.link {
   text-decoration-color: oklch(from var(--color-link) l c h / 0.4);
   text-decoration-thickness: 0.07em;
   text-underline-position: from-font;
   transition: text-decoration-color 150ms ease-in-out;
+  body.loading:not(.no-js) & {
+    /* Hide underlines until the font is loaded. */
+    text-decoration-line: none;
+  }
+}
+a {
+  color: inherit;
   @media (hover: hover) {
     &:hover {
       text-decoration-color: var(--color-link);
     }
   }
-  body.loading:not(.no-js) & {
-    /* Hide underlines until the font is loaded. */
-    text-decoration-line: none;
-  }
+}
+.link {
+  text-decoration-line: underline;
 }
 
 @property --color {
   syntax: '<color>';
   initial-value: currentColor;
   inherits: false;
+}
+
+/* A page's title row: the mark, then the title. The slash and gap hang into the
+   left margin as far as the margin allows, measured against an inline-size
+   container the width of the page. */
+.page-header {
+  align-items: baseline;
+  display: flex;
+  font-size: var(--font-size-h1);
+  gap: 0.25em;
+
+  .mark {
+    flex-shrink: 0;
+    margin-left: calc(
+      -1 *
+        clamp(
+          0px,
+          (100cqi - var(--column-width)) / 2 - var(--page-padding),
+          0.89em
+        )
+    );
+  }
+  h1 {
+    font-size: inherit;
+  }
 }
 
 /* Reset button styles so I can use button elements for interaction. */

@@ -31,7 +31,13 @@
   min-height: 100dvh;
   padding-top: max(env(safe-area-inset-top), var(--page-padding));
 
-  > * {
+  /* An island's wrapper renders no box, so its children are the grid's items. */
+  > *,
+  > astro-island > * {
     grid-column: content;
+  }
+  > .bleed,
+  > astro-island > .bleed {
+    grid-column: full;
   }
 }

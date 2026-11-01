@@ -17,7 +17,6 @@ const photos = (await getCollection('photos')).map((entry) => entry.data);
 ---
 
 <Base
- 
   title="Photos"
   description="My local Instagram."
   coverImage={entry.data.og}

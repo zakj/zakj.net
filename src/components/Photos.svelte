@@ -68,7 +68,7 @@
 </script>
 
 <header>
-  <div class="title">
+  <div class="page-header">
     {@render mark?.()}
     <h1>
       Photos{#if filterTag}<span class="title-tag">{' · '}{filterTag}</span
@@ -78,8 +78,7 @@
   <div class="filters">
     {#each allTags as tag (tag)}
       <button
-        class="tag"
-        class:selected={filterTag === tag}
+        class="tag link"
         aria-pressed={filterTag === tag}
         onclick={() => toggleTag(tag)}>{tag}</button
       >
@@ -117,22 +116,6 @@
     align-content: start;
     padding-bottom: env(safe-area-inset-bottom);
   }
-  /* The island's wrapper doesn't render a box, so its children are the page grid's items. */
-  :global(body > astro-island > *) {
-    grid-column: content;
-  }
-  :global(body > astro-island > .grid) {
-    grid-column: full;
-  }
-  .title {
-    align-items: baseline;
-    display: flex;
-    font-size: var(--font-size-h1);
-    gap: 0.25em;
-  }
-  h1 {
-    font-size: inherit;
-  }
 
   /* Tags as a line of muted words; the chosen one reads like a link. */
   .filters {
@@ -144,8 +127,6 @@
   .tag,
   .icon {
     color: var(--color-muted);
-    text-decoration: underline 0.07em transparent;
-    text-underline-position: from-font;
     transition:
       color 150ms,
       text-decoration-color 150ms;
@@ -156,7 +137,8 @@
     }
   }
   .tag {
-    &.selected {
+    text-decoration-color: transparent;
+    &[aria-pressed='true'] {
       color: var(--color-fg);
       text-decoration-color: var(--color-link);
     }
