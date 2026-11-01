@@ -1,0 +1,35 @@
+/* A centered column of --column-width between gutters, with named lines so a child
+   can span the full width. The gutters keep a little room past a notch. */
+
+/* Registered so the width resolves against the body font, then inherits as a length. */
+@property --column-width {
+  syntax: '<length>';
+  inherits: true;
+  initial-value: 0px;
+}
+
+body {
+  --light-x: max(0px, (100% - var(--column-width)) / 2 - var(--page-padding));
+
+  display: grid;
+  grid-template-columns:
+    [full-start]
+    minmax(
+      max(calc(env(safe-area-inset-left) + 0.5rem), var(--page-padding)),
+      1fr
+    )
+    [content-start]
+    minmax(0, var(--column-width))
+    [content-end]
+    minmax(
+      max(calc(env(safe-area-inset-right) + 0.5rem), var(--page-padding)),
+      1fr
+    )
+    [full-end];
+  min-height: 100dvh;
+  padding-top: max(env(safe-area-inset-top), var(--page-padding));
+
+  > * {
+    grid-column: content;
+  }
+}

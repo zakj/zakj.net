@@ -4,6 +4,7 @@ import Mark from '$components/Mark.astro';
 import PhotoDate from '$components/PhotoDate.svelte';
 import '$style/corner-light.css';
 import '$style/focal-crop.css';
+import '$style/page-grid.css';
 import { getCollection } from 'astro:content';
 
 const photos = (await getCollection('photos'))
@@ -125,32 +126,12 @@ const props: { title: string; tagline: string; links: Link[] } =
     --max-width: 1550px;
   }
 
-  /* Text sits in the middle column; the photos can span the full width. The
-     middle row grows to fill a tall window, so the photos sit on its bottom edge. */
+  /* The middle row grows to fill a tall window, so the photos sit on its bottom edge. */
   body {
-    --column: calc(var(--max-width) - 2 * var(--page-padding));
-    --light-x: max(0px, 50% - var(--max-width) / 2);
+    --column-width: calc(var(--max-width) - 2 * var(--page-padding));
 
-    display: grid;
-    grid-template-columns:
-      [full-start] minmax(
-        max(env(safe-area-inset-left), var(--page-padding)),
-        1fr
-      )
-      [content-start] minmax(0, var(--column))
-      [content-end] minmax(
-        max(env(safe-area-inset-right), var(--page-padding)),
-        1fr
-      )
-      [full-end];
     grid-template-rows: auto 1fr auto;
-    min-height: 100dvh;
-    padding-top: max(env(safe-area-inset-top), var(--page-padding));
     row-gap: var(--gap);
-
-    > * {
-      grid-column: content;
-    }
   }
 
   header {
@@ -203,7 +184,7 @@ const props: { title: string; tagline: string; links: Link[] } =
   /* Seams run at the mark's slash angle. Each photo is widened by what the slant
      clips off, so its visible area keeps its aspect ratio. The photos are the
      page's floor: full-bleed and flush to the bottom, until the window is wider
-     than --column; then they stop at that width, lifted by a seam. */
+     than --column-width; then they stop at that width, lifted by a seam. */
   /* Registered so 100cqi resolves on each photo, against the row, rather than
      inside the photo's own container where its contents use what derives from it. */
   @property --height {
@@ -220,8 +201,8 @@ const props: { title: string; tagline: string; links: Link[] } =
     grid-column: full;
     justify-self: center;
     /* Once the row stops at the column's edges, lift it off the bottom by a seam too. */
-    margin-bottom: clamp(0px, 100% - var(--column), var(--seam));
-    width: min(100%, var(--column));
+    margin-bottom: clamp(0px, 100% - var(--column-width), var(--seam));
+    width: min(100%, var(--column-width));
 
     a {
       --height: min(

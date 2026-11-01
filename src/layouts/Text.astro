@@ -2,6 +2,7 @@
 import Base, { type Props as BaseProps } from '$layouts/Base.astro';
 import Mark from '$components/Mark.astro';
 import '$style/corner-light.css';
+import '$style/page-grid.css';
 import type { MarkdownLayoutProps } from 'astro';
 
 type Props = BaseProps | MarkdownLayoutProps<BaseProps>;
@@ -22,38 +23,14 @@ const props: Props =
 </Base>
 
 <style is:global>
-  /* Registered so the width resolves against the body font, then inherits as a length. */
-  @property --column-width {
-    syntax: '<length>';
-    inherits: true;
-    initial-value: 0px;
-  }
-
   body {
     --column-width: var(--measure);
-    --light-x: max(0px, (100% - var(--column-width)) / 2 - var(--page-padding));
 
-    display: grid;
-    grid-template-columns:
-      [full-start]
-      minmax(
-        max(calc(env(safe-area-inset-left) + 0.5rem), var(--page-padding)),
-        1fr
-      )
-      [content-start]
-      minmax(auto, var(--column-width))
-      [content-end]
-      minmax(max(env(safe-area-inset-right), var(--page-padding)), 1fr)
-      [full-end];
     container-type: inline-size;
-    min-height: 100dvh;
-    padding-top: max(env(safe-area-inset-top), var(--page-padding));
     padding-bottom: max(env(safe-area-inset-bottom), var(--page-padding));
   }
 
   main {
-    grid-column: content;
-
     > header {
       align-items: baseline;
       display: flex;
