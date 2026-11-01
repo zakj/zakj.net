@@ -114,7 +114,6 @@ async function imagekitLoader() {
         },
       ]);
 
-      // @ts-expect-error: embeddedMetadata exists in the response but isn't documented in the SDK.
       const exif = file.embeddedMetadata;
       const tags = [
         ...arrayOrItem(exif?.Keywords),
