@@ -2,6 +2,7 @@
   import type { Image } from '$util.svelte';
   import { fade, type TransitionConfig } from 'svelte/transition';
   import { cubicInOut } from 'svelte/easing';
+  import { untrack } from 'svelte';
 
   interface Props {
     image: Image;
@@ -11,9 +12,11 @@
 
   const { image, fromNode, close }: Props = $props();
 
+  // Kept from mount: the parent clears its selection before the zoom-out runs.
+  const thumbNode = untrack(() => fromNode);
+
   // Animating a full-size image is slow; better to animate the thumb and then switch.
   let animating = $state(false);
-  let fromRect = fromNode.getBoundingClientRect();
 
   // TODO utils?
   // Stolen from https://github.com/sveltejs/svelte/blob/master/src/runtime/transition/index.ts
@@ -68,7 +71,7 @@
 <div role="button" tabindex="0" onclick={close} onkeydown={close}>
   <div class="backdrop" transition:fade={{ duration: 200 }}></div>
   <figure
-    transition:zoomFromElement={fromRect}
+    transition:zoomFromElement={thumbNode.getBoundingClientRect()}
     onintrostart={() => (animating = true)}
     onintroend={() => (animating = false)}
     style:aspect-ratio={image.width / image.height}

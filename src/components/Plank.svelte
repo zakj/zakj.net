@@ -7,7 +7,7 @@
     timer,
     type Timer,
   } from '$util.svelte';
-  import NoSleep, { type INoSleep } from '@zakj/no-sleep';
+  import NoSleep from '@zakj/no-sleep';
   import { onDestroy } from 'svelte';
 
   type Exercise = {
@@ -42,7 +42,7 @@
   let canvas: HTMLCanvasElement | undefined = $state();
   const exercise = $derived(EXERCISES[index]);
 
-  let noSleep: INoSleep;
+  let noSleep: InstanceType<typeof NoSleep>;
   let boop: HTMLAudioElement;
   if (isBrowser) {
     noSleep = new NoSleep();

@@ -7,7 +7,7 @@
 
   interface Props {
     images: Image[];
-    selectedId: string | undefined;
+    selectedId?: string;
   }
   const { images, selectedId }: Props = $props();
 

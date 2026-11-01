@@ -1,4 +1,5 @@
-import { defineCollection, z } from 'astro:content';
+import { defineCollection } from 'astro:content';
+import { z } from 'astro/zod';
 import ImageKit from '@imagekit/nodejs';
 import type { File, Transformation } from '@imagekit/nodejs/resources';
 import smartcrop from 'smartcrop-sharp';
@@ -163,17 +164,17 @@ export const collections = {
       alt: z.string().optional(),
       placeholder: z.string(),
       full: z.object({
-        src: z.string().url(),
+        src: z.url(),
         width: z.number().positive().int(),
         height: z.number().positive().int(),
       }),
       thumb: z.object({
-        src: z.string().url(),
+        src: z.url(),
         width: z.number().positive().int(),
         height: z.number().positive().int(),
         srcset: z.string(),
       }),
-      og: z.string().url(),
+      og: z.url(),
       focal: z.object({
         x: z.number().min(0).max(1),
         y: z.number().min(0).max(1),
