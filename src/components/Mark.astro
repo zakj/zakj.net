@@ -160,6 +160,20 @@ const attrs = z ? {} : { href: '/', 'aria-label': 'Home' };
 <script is:inline>
   // The leaving page records which shape its mark shows; the arriving page animates from it.
   (() => {
+    // A mark scrolled out of the window would fly in from off screen, so it sits the move out
+    // and the other page's mark appears in place. Set on both pages, every time: a page
+    // restored from the back/forward cache keeps whatever it had when it left.
+    const joinMove = () => {
+      const svg = document.querySelector('.mark svg');
+      if (!svg) return;
+      const r = svg.getBoundingClientRect();
+      const onScreen =
+        r.top >= 0 &&
+        r.left >= 0 &&
+        r.bottom <= innerHeight &&
+        r.right <= innerWidth;
+      svg.style.viewTransitionName = onScreen ? '' : 'none';
+    };
     const shape = () => {
       const mark = document.querySelector('.mark');
       if (!mark) return '';
@@ -169,9 +183,12 @@ const attrs = z ? {} : { href: '/', 'aria-label': 'Home' };
         : 'slash';
     };
     addEventListener('pageswap', (e) => {
-      if (e.viewTransition) sessionStorage.setItem('mark-shape', shape());
+      if (!e.viewTransition) return;
+      sessionStorage.setItem('mark-shape', shape());
+      joinMove();
     });
     addEventListener('pagereveal', (e) => {
+      if (e.viewTransition) joinMove();
       const from = sessionStorage.getItem('mark-shape');
       sessionStorage.removeItem('mark-shape');
       const to = shape();
