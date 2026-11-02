@@ -5,15 +5,6 @@ import type { File, Transformation } from '@imagekit/nodejs/resources';
 import smartcrop from 'smartcrop-sharp';
 import { IK_ENDPOINT, IK_PRIVATE_KEY } from 'astro:env/server';
 
-/*
-TODO could we reduce the amount of css silliness now that we have access to easier resizing?
-rows are 250px high
-images are either 3x2 or 2x3 aspect ratio
-so each image is max 250px high, max 375px width
-for taller aspect ratio images, should be 250px high by ~167px width
-can use conditional transformations based on ar
-*/
-
 function arrayOrItem(xs: unknown): string[] {
   if (Array.isArray(xs)) return xs;
   if (typeof xs === 'string') return [xs];

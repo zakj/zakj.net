@@ -18,7 +18,6 @@
   // Animating a full-size image is slow; better to animate the thumb and then switch.
   let animating = $state(false);
 
-  // TODO utils?
   // Stolen from https://github.com/sveltejs/svelte/blob/master/src/runtime/transition/index.ts
   // Deferred to a microtask, so the zoom in measures the figure after showModal has displayed the dialog.
   // Measured once: Svelte calls this again to reverse a zoom in midway, while the figure is mid-flight.
@@ -118,7 +117,7 @@
 <style>
   /* TODO better styling on mobile? */
   dialog {
-    --padding: 20px; /* TODO */
+    --padding: 20px;
     background: none;
     border: none;
     cursor: zoom-out;
