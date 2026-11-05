@@ -1,6 +1,7 @@
 ---
 import { getCollection, getEntry } from 'astro:content';
 
+import touchIcon from '$assets/photos-touch-icon.png';
 import Photos_ from '$components/Photos.svelte';
 import Mark from '$components/Mark.astro';
 import Base from '$layouts/Base.astro';
@@ -20,6 +21,8 @@ const photos = (await getCollection('photos')).map((entry) => entry.data);
   title="Photos"
   description="My local Instagram."
   coverImage={entry.data.og}
+  touchIcon={touchIcon.src}
+  webApp
 >
   <Fragment slot="extra-head">
     <link
