@@ -7,11 +7,10 @@
 
   interface Props {
     images: Image[];
-    selectedId?: string;
     /** The site mark, rendered by Astro. */
     mark?: Snippet;
   }
-  const { images, selectedId, mark }: Props = $props();
+  const { images, mark }: Props = $props();
 
   type Selected = { image: Image; node: Element };
   let selected: Selected | undefined = $state();
@@ -44,6 +43,9 @@
   }
 
   $effect(() => {
+    // From the address bar rather than a prop: offline, the service worker answers /photos/<id>
+    // with the /photos page.
+    const selectedId = location.pathname.match(/^\/photos\/([^/]+)/)?.[1];
     if (selectedId) {
       const image = images.find((image) => image.id === selectedId);
       const node = document.querySelector(`[data-id="${selectedId}"]`);

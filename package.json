@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
-    "build": "astro build",
+    "build": "astro build && test -f dist/service-worker.js",
     "preview": "astro preview",
     "astro": "astro",
     "check": "astro check && svelte-check --tsconfig ./tsconfig.json"

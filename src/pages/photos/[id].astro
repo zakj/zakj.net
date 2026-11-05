@@ -32,7 +32,7 @@ const photos = (await getCollection('photos')).map((entry) => entry.data);
       href={new URL('/photos/feed.xml', Astro.site)}
     />
   </Fragment>
-  <Photos_ images={photos} selectedId={id} client:idle>
+  <Photos_ images={photos} client:idle>
     <Mark slot="mark" />
   </Photos_>
 </Base>
