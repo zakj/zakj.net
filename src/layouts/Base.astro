@@ -13,6 +13,9 @@ export type Props = {
   title: string;
   description?: string;
   favicon?: string;
+  touchIcon?: string;
+  /** True for a page meant to be added to the home screen, where it opens without browser chrome under its title. */
+  webApp?: boolean;
   coverImage?: string;
   /** False for a page that lays out the whole window itself, without the page grid or corner light. */
   frame?: boolean;
@@ -22,6 +25,8 @@ const {
   title = 'Zak Johnson',
   description = 'Whiskey ginger & a dash of bitters.',
   favicon = '/favicon.svg',
+  touchIcon = '/apple-touch-icon.png',
+  webApp = false,
   coverImage = defaultCoverImage.src,
   frame = true,
 }: Props = Astro.props;
@@ -52,9 +57,14 @@ const {
     )}
 
     <link rel="icon" href={favicon} type="image/svg+xml" />
-    <!-- <link rel="apple-touch-icon" href="icon.png" /> -->
+    <link rel="apple-touch-icon" href={touchIcon} />
 
-    <meta name="apple-mobile-web-app-capable" content="yes" />
+    {webApp && (
+      <>
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-title" content={title} />
+      </>
+    )}
     <meta
       name="theme-color"
       content="#fff"
