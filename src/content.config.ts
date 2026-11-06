@@ -127,13 +127,17 @@ async function imagekitLoader() {
     ]);
 
     const exif = file.embeddedMetadata;
+    // Photos exports keywords as XMP Subject, and on older exports as IPTC Keywords too.
     const tags = [
-      ...arrayOrItem(exif?.Keywords),
-      ...arrayOrItem(exif?.PersonInImage),
-      ...arrayOrItem(file.tags),
-    ]
-      .map((t) => t.toLowerCase())
-      .filter((t) => !['gram', '4 star', 'photo stream'].includes(t));
+      ...new Set(
+        [
+          ...arrayOrItem(exif?.Subject),
+          ...arrayOrItem(exif?.Keywords),
+          ...arrayOrItem(exif?.PersonInImage),
+          ...arrayOrItem(file.tags),
+        ].map((t) => t.toLowerCase()),
+      ),
+    ].filter((t) => !['gram', '4 star', 'photo stream'].includes(t));
 
     return {
       id: file.fileId!,
